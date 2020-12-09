@@ -9,7 +9,8 @@ final class ExtractorBuilder implements Builder
 {
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
-    private ?Node\Identifier $method;
+    private Node\Expr|Node\Identifier|null $method;
+    private Node\Expr|Node\Identifier|null $endpoint;
     /** @var iterable<Node\Expr>  */
     private iterable $arguments;
 
@@ -18,6 +19,7 @@ final class ExtractorBuilder implements Builder
         $this->withEnterpriseSupport = false;
         $this->client = null;
         $this->method = null;
+        $this->endpoint = null;
         $this->arguments = [];
     }
 
@@ -35,9 +37,16 @@ final class ExtractorBuilder implements Builder
         return $this;
     }
 
-    public function withMethod(Node\Identifier $method, Node\Expr ...$arguments): self
+    public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
-        $this->method = $method;
+        $this->endpoint = $endpoint;
+
+        return $this;
+    }
+
+    public function withMethod(Node\Expr|Node\Identifier|null $method = null, Node\Expr ...$arguments): self
+    {
+        $this->method = $method ?? new Node\Identifier('all');
         $this->arguments = $arguments;
 
         return $this;
@@ -77,12 +86,14 @@ final class ExtractorBuilder implements Builder
                                     )
                                 ],
                                 'stmts' => [
-                                    new Node\Expr\Assign(
-                                        new Node\Expr\PropertyFetch(
-                                            new Node\Expr\Variable('this'),
-                                            new Node\Identifier('client'),
+                                    new Node\Stmt\Expression(
+                                        new Node\Expr\Assign(
+                                            new Node\Expr\PropertyFetch(
+                                                new Node\Expr\Variable('this'),
+                                                new Node\Identifier('client'),
+                                            ),
+                                            new Node\Expr\Variable('client'),
                                         ),
-                                        new Node\Expr\Variable('client'),
                                     ),
                                 ],
                             ],
@@ -94,14 +105,19 @@ final class ExtractorBuilder implements Builder
                                 'params' => [],
                                 'returnType' => new Node\Name('iterable'),
                                 'stmts' => [
-                                    new Node\Expr\YieldFrom(
-                                        new Node\Expr\MethodCall(
-                                            new Node\Expr\PropertyFetch(
-                                                new Node\Expr\Variable('this'),
-                                                new Node\Identifier('client')
+                                    new Node\Stmt\Expression(
+                                        new Node\Expr\YieldFrom(
+                                            new Node\Expr\MethodCall(
+                                                new Node\Expr\MethodCall(
+                                                    new Node\Expr\PropertyFetch(
+                                                        new Node\Expr\Variable('this'),
+                                                        new Node\Identifier('client')
+                                                    ),
+                                                    $this->endpoint
+                                                ),
+                                                $this->method,
+                                                $this->arguments
                                             ),
-                                            $this->method,
-                                            $this->arguments
                                         ),
                                     ),
                                 ],

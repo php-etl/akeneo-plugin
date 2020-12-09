@@ -1,0 +1,28 @@
+{
+    "name": "php-etl/flow-akeneo",
+    "description": "Adapters for the Akeneo API client",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Kiboko\\Component\\ETL\\Flow\\Akeneo\\": "src/"
+        }
+    },
+    "require": {
+        "php": "8.0",
+        "php-etl/contracts": "^1.0@dev",
+        "php-etl/configurator-contracts": "dev-master",
+        "akeneo/api-php-client-ee": "^4.0",
+        "nikic/php-parser": "^4.9@dev",
+        "symfony/config": "^4.0 || ^5.0"
+    },
+    "require-dev": {
+        "php-http/mock-client": "^1.4@dev"
+    },
+    "authors": [
+        {
+            "name": "Grégory Planchat",
+            "email": "gregory@kiboko.fr"
+        }
+    ],
+    "minimum-stability": "dev"
+}

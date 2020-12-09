@@ -15,6 +15,10 @@ final class ClientBuilder implements Builder
     private ?Node\Expr $password;
     private ?Node\Expr $token;
     private ?Node\Expr $refreshToken;
+    private ?Node\Expr $httpClient;
+    private ?Node\Expr $httpRequestFactory;
+    private ?Node\Expr $httpStreamFactory;
+    private ?Node\Expr $fileSystem;
 
     public function __construct(Node\Expr $baseUrl, Node\Expr $clientId, Node\Expr $secret)
     {
@@ -26,6 +30,10 @@ final class ClientBuilder implements Builder
         $this->password = null;
         $this->token = null;
         $this->refreshToken = null;
+        $this->httpClient = null;
+        $this->httpRequestFactory = null;
+        $this->httpStreamFactory = null;
+        $this->fileSystem = null;
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -51,17 +59,87 @@ final class ClientBuilder implements Builder
         return $this;
     }
 
+    public function withHttpClient(Node\Expr $httpClient): self
+    {
+        $this->httpClient = $httpClient;
+
+        return $this;
+    }
+
+    public function withHttpRequestFactory(Node\Expr $httpRequestFactory): self
+    {
+        $this->httpRequestFactory = $httpRequestFactory;
+
+        return $this;
+    }
+
+    public function withHttpStreamFactory(Node\Expr $httpStreamFactory): self
+    {
+        $this->httpStreamFactory = $httpStreamFactory;
+
+        return $this;
+    }
+
+    public function withFileSystem(Node\Expr $fileSystem): self
+    {
+        $this->fileSystem = $fileSystem;
+
+        return $this;
+    }
+
     public function getNode(): Node
     {
-        return new Node\Expr\MethodCall(
-            new Node\Expr\New_(
-                !$this->withEnterpriseSupport ?
-                    new Node\Name\FullyQualified('Akeneo\\Pim\\ApiClient\\AkeneoPimClientBuilder') :
-                    new Node\Name\FullyQualified('Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientBuilder'),
+        $instance = new Node\Expr\New_(
+            !$this->withEnterpriseSupport ?
+                new Node\Name\FullyQualified('Akeneo\\Pim\\ApiClient\\AkeneoPimClientBuilder') :
+                new Node\Name\FullyQualified('Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientBuilder'),
+            [
+                new Node\Arg($this->baseUrl),
+            ],
+        );
+
+        if ($this->httpClient !== null) {
+            $instance = new Node\Expr\MethodCall(
+                $instance,
+                'setHttpClient',
                 [
-                    new Node\Arg($this->baseUrl),
+                    new Node\Arg($this->httpClient),
                 ],
-            ),
+            );
+        }
+
+        if ($this->httpRequestFactory !== null) {
+            $instance = new Node\Expr\MethodCall(
+                $instance,
+                'setRequestFactory',
+                [
+                    new Node\Arg($this->httpRequestFactory),
+                ],
+            );
+        }
+
+        if ($this->httpStreamFactory !== null) {
+            $instance = new Node\Expr\MethodCall(
+                $instance,
+                'setStreamFactory',
+                [
+                    new Node\Arg($this->httpStreamFactory),
+                ],
+            );
+        }
+
+        if ($this->fileSystem !== null) {
+            $instance = new Node\Expr\MethodCall(
+                $instance,
+                'setFileSystem',
+                [
+                    new Node\Arg($this->fileSystem),
+                ],
+            );
+        }
+
+        return new Node\Expr\MethodCall(
+            $instance,
             $this->getFactoryMethod(),
             $this->getFactoryArguments(),
         );
@@ -77,7 +155,7 @@ final class ClientBuilder implements Builder
             return 'buildAuthenticatedByToken';
         }
 
-        throw new \RuntimeException('Please check your client builder, you should either call withToken() or withPassword() methods.');
+        throw new MissingAuthenticationMethodException('Please check your client builder, you should either call withToken() or withPassword() methods.');
     }
 
     private function getFactoryArguments(): array
@@ -100,6 +178,6 @@ final class ClientBuilder implements Builder
             ];
         }
 
-        throw new \RuntimeException('Please check your client builder, you should either call withToken() or withPassword() methods.');
+        throw new MissingAuthenticationMethodException('Please check your client builder, you should either call withToken() or withPassword() methods.');
     }
 }
