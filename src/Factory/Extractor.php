@@ -1,29 +1,33 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Configurator;
+namespace Kiboko\Component\ETL\Flow\Akeneo\Factory;
 
 use Kiboko\Component\ETL\Flow\Akeneo\Builder;
+use Kiboko\Component\ETL\Flow\Akeneo\Capacity;
 use Kiboko\Component\ETL\Flow\Akeneo\Configuration;
-use Kiboko\Component\ETL\Flow\Akeneo\Factory;
 use Kiboko\Component\ETL\Flow\Akeneo\MissingAuthenticationMethodException;
 use Kiboko\Contract\ETL\Configurator\ConfigurationException;
 use Kiboko\Contract\ETL\Configurator\ConfigurationExceptionInterface;
 use Kiboko\Contract\ETL\Configurator\FactoryInterface;
-use PhpParser\Node;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\Definition\Processor;
 
-final class ServiceFactory implements FactoryInterface
+final class Extractor implements FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
+    /** @var iterable<Capacity\CapacityInterface>  */
+    private iterable $capacities;
 
     public function __construct()
     {
         $this->processor = new Processor();
         $this->configuration = new Configuration();
+        $this->capacities = [
+            new Capacity\All(),
+        ];
     }
 
     public function configuration(): ConfigurationInterface
@@ -54,35 +58,17 @@ final class ServiceFactory implements FactoryInterface
         }
     }
 
-    private function compileFilters(array ...$filters): Node
-    {
-        $builder = new Builder\Search();
-        foreach ($filters as $filter) {
-            $builder->addFilter(...$filter);
-        }
-
-        return $builder->getNode();
-    }
-
-    /**
-     * @throws ConfigurationException
-     */
     public function compile(array $config): array
     {
-        $client = new Factory\Client();
-        $extractor = new Factory\Extractor();
+        $builder = new Builder\Extractor();
+        $client = new Client();
 
-        if (isset($config['extractor'])) {
-            return $extractor->compile($config['extractor']);
-        } else if (isset($config['loader'])) {
-            $builder = new Builder\Loader();
-
-            $builder->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['loader']['type']))));
-            $builder->withMethod(isset($config['loader']['method']) ? new Node\Identifier($config['loader']['method']) : null);
-        } else {
-            throw new ConfigurationException(
-                'Could not determine if the factory should build an extractor or a loader.'
-            );
+        foreach ($this->capacities as $capacity) {
+            var_dump($config, $capacity->applies($config));
+            if ($capacity->applies($config)) {
+                $builder->withCapacity($capacity->getBuilder($config));
+                break;
+            }
         }
 
         if (isset($config['enterprise'])) {

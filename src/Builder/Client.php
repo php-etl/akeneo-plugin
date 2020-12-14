@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo;
+namespace Kiboko\Component\ETL\Flow\Akeneo\Builder;
 
+use Kiboko\Component\ETL\Flow\Akeneo\MissingAuthenticationMethodException;
 use PhpParser\Builder;
 use PhpParser\Node;
 
-final class ClientBuilder implements Builder
+final class Client implements Builder
 {
     private bool $withEnterpriseSupport;
     private Node\Expr $baseUrl;

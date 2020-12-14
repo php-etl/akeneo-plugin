@@ -9,11 +9,12 @@
     },
     "require": {
         "php": "8.0",
-        "php-etl/contracts": "^1.0@dev",
         "php-etl/configurator-contracts": "dev-master",
         "akeneo/api-php-client-ee": "^4.0",
         "nikic/php-parser": "^4.9@dev",
-        "symfony/config": "^4.0 || ^5.0"
+        "symfony/config": "^4.0 || ^5.0",
+        "php-etl/pipeline-contracts": "^0.1.0@dev",
+        "phpunit/phpunit": "^8.0"
     },
     "require-dev": {
         "php-http/mock-client": "^1.4@dev"
