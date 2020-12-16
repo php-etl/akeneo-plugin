@@ -23,31 +23,62 @@ Usage
 This library will build for you either an extractor or a loader, compatible with the Akeneo API.
 
 ```php
-echo (new PhpParser\PrettyPrinter\Standard())->prettyPrint(
-    (new \Kiboko\Component\ETL\Flow\Akeneo\Configurator\ServiceFactory())
-        ->compile([
-            'akeneo' => [
-                'enterprise' => true,
-                'endpoint' => [
-                    'type' => 'productModel',
-                    'method' => 'listPerPage',
-                ],
-                'client' => [
-                    'context' => [
-                        'http_client' => 'Http\\Mock\\Client',
-                        'http_request_factory' => 'Foo\\Mock\\RequestFactory::bar',
-                        'http_stream_factory' => 'Foo\\Mock\\StreamFactory::foo',
-                        'filesystem' => 'Foo\\Mock\\Filesystem',
+echo (new PhpParser\PrettyPrinter\Standard())->prettyPrintFile([
+    new \PhpParser\Node\Stmt\Expression(
+        (new \Kiboko\Component\ETL\Flow\Akeneo\Service())
+            ->compile([
+                'akeneo' => [
+                    'enterprise' => true,
+                    'extractor' => [
+                        'type' => 'productModel',
+                        'method' => 'all',
+                        'search' => [
+                            [
+                                'field' => 'enabled',
+                                'operator' => '=',
+                                'value' => true,
+                            ],
+                            [
+                                'field' => 'completeness',
+                                'operator' => '>',
+                                'value' => 70,
+                                'scope' => 'ecommerce',
+                            ],
+                            [
+                                'field' => 'completeness',
+                                'operator' => '<',
+                                'value' => 85,
+                                'scope' => 'ecommerce',
+                            ],
+                            [
+                                'field' => 'categories',
+                                'operator' => 'IN',
+                                'value' => 'winter_collection',
+                            ],
+                            [
+                                'field' => 'family',
+                                'operator' => 'IN',
+                                'value' => ['camcorders', 'digital_cameras'],
+                            ],
+                        ]
                     ],
-                    'api_url' => 'https://demo.akeneo.com',
-                    'client_id' => '1234567890',
-                    'secret' => 'qwertyuiop',
-                    'username' => 'johndoe',
-                    'password' => 'lkjhgfdsa',
+                    'client' => [
+                        'context' => [
+                            'http_client' => 'Http\\Mock\\Client',
+                            'http_request_factory' => 'Foo\\Mock\\RequestFactory::bar',
+                            'http_stream_factory' => 'Foo\\Mock\\StreamFactory::foo',
+                            'filesystem' => 'Foo\\Mock\\Filesystem',
+                        ],
+                        'api_url' => 'https://demo.akeneo.com',
+                        'client_id' => '1234567890',
+                        'secret' => 'qwertyuiop',
+                        'username' => 'johndoe',
+                        'password' => 'lkjhgfdsa',
+                    ],
                 ],
-            ],
-        ]),
-    );
+            ])->getNode(),
+        )
+    ]);
 ```
 
 See also

@@ -5,7 +5,7 @@ namespace Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
 use PhpParser\Builder;
 use PhpParser\Node;
 
-final class All implements Builder
+final class ListPerPage implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
@@ -40,7 +40,7 @@ final class All implements Builder
                 ),
                 name: $this->endpoint
             ),
-            new Node\Identifier('all'),
+            new Node\Identifier('listPerPage'),
             [
                 new Node\Arg(
                     value: new Node\Expr\Array_(

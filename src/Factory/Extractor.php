@@ -26,6 +26,7 @@ final class Extractor implements FactoryInterface
         $this->configuration = new Configuration();
         $this->capacities = [
             new Capacity\All(),
+            new Capacity\ListPerPage(),
         ];
     }
 

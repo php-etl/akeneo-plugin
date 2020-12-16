@@ -2,11 +2,9 @@
 
 namespace Kiboko\Component\ETL\Flow\Akeneo\Capacity;
 
-use Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
-use Kiboko\Component\ETL\Flow\Akeneo\Builder\Search;
+use Kiboko\Component\ETL\Flow\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
-use PhpParser\Node\Identifier;
 
 final class ListPerPage implements CapacityInterface
 {
@@ -49,7 +47,7 @@ final class ListPerPage implements CapacityInterface
 
     private function compileFilters(array ...$filters): Node
     {
-        $builder = new Search();
+        $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
             $builder->addFilter(...$filter);
         }
@@ -59,8 +57,8 @@ final class ListPerPage implements CapacityInterface
 
     public function getBuilder(array $config): Builder
     {
-        $builder = (new Capacity\All())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['extractor']['type']))));
+        $builder = (new Akeneo\Builder\Capacity\ListPerPage())
+            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
 
         if (isset($config['search']) && is_array($config['search'])) {
             $builder->withSearch($this->compileFilters(...$config['search']));
