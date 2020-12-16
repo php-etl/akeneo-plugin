@@ -8,7 +8,7 @@ use PhpParser\Node;
 final class All implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr\Array_ $search;
+    private null|Node\Expr $search;
 
     public function __construct()
     {
@@ -23,7 +23,7 @@ final class All implements Builder
         return $this;
     }
 
-    public function withSearch(Node\Expr\Array_ $search): self
+    public function withSearch(Node\Expr $search): self
     {
         $this->search = $search;
 
@@ -44,12 +44,15 @@ final class All implements Builder
             [
                 new Node\Arg(
                     new Node\Expr\Array_(
-                        [
+                        items: [
                             new Node\Expr\ArrayItem(
                                 $this->search,
                                 new Node\Scalar\String_('search'),
                             ),
                         ],
+                        attributes: [
+                            'kind' => Node\Expr\Array_::KIND_SHORT,
+                        ]
                     ),
                     false,
                     false,

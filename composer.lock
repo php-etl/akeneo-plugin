@@ -512,12 +512,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/configurator-contracts.git",
-                "reference": "21404b45bb47b4ccfa95351826bf5fa4e5441fba"
+                "reference": "c7c99da13f71de92c78254b29604314a548f14c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/21404b45bb47b4ccfa95351826bf5fa4e5441fba",
-                "reference": "21404b45bb47b4ccfa95351826bf5fa4e5441fba",
+                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/c7c99da13f71de92c78254b29604314a548f14c0",
+                "reference": "c7c99da13f71de92c78254b29604314a548f14c0",
                 "shasum": ""
             },
             "require": {
@@ -528,6 +528,7 @@
             "require-dev": {
                 "phpstan/phpstan": "^0.12.0@dev"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -554,7 +555,11 @@
                 }
             ],
             "description": "This library describes contracts for defining configuration formats and building optimized code from it",
-            "time": "2020-12-10T22:10:10+00:00"
+            "support": {
+                "issues": "https://github.com/php-etl/configurator-contracts/issues",
+                "source": "https://github.com/php-etl/configurator-contracts/tree/master"
+            },
+            "time": "2020-12-16T18:24:09+00:00"
         },
         {
             "name": "php-etl/pipeline-contracts",

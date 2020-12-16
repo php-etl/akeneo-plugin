@@ -1,21 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Configurator;
+namespace Kiboko\Component\ETL\Flow\Akeneo;
 
 use Kiboko\Component\ETL\Flow\Akeneo\Builder;
-use Kiboko\Component\ETL\Flow\Akeneo\Configuration;
 use Kiboko\Component\ETL\Flow\Akeneo\Factory;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingAuthenticationMethodException;
-use Kiboko\Contract\ETL\Configurator\ConfigurationException;
+use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
 use Kiboko\Contract\ETL\Configurator\ConfigurationExceptionInterface;
 use Kiboko\Contract\ETL\Configurator\FactoryInterface;
 use PhpParser\Node;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
+use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 
-final class ServiceFactory implements FactoryInterface
+final class Service implements FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
@@ -38,8 +35,8 @@ final class ServiceFactory implements FactoryInterface
     {
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
-            throw new ConfigurationException($exception->getMessage(), 0, $exception);
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 
@@ -49,7 +46,7 @@ final class ServiceFactory implements FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             return false;
         }
     }
@@ -65,22 +62,30 @@ final class ServiceFactory implements FactoryInterface
     }
 
     /**
-     * @throws ConfigurationException
+     * @throws ConfigurationExceptionInterface
      */
-    public function compile(array $config): array
+    public function compile(array $config): \PhpParser\Builder
     {
-        $client = new Factory\Client();
-        $extractor = new Factory\Extractor();
+        $clientFactory = new Factory\Client();
+        $extractorFactory = new Factory\Extractor();
 
         if (isset($config['extractor'])) {
-            return $extractor->compile($config['extractor']);
+            $extractor = $extractorFactory->compile($config['extractor']);
+
+            $client = $clientFactory->compile($config['client']);
+
+            $client->withEnterpriseSupport($config['enterprise']);
+
+            $extractor->withClient($client->getNode());
+
+            return $extractor;
         } else if (isset($config['loader'])) {
             $builder = new Builder\Loader();
 
             $builder->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['loader']['type']))));
             $builder->withMethod(isset($config['loader']['method']) ? new Node\Identifier($config['loader']['method']) : null);
         } else {
-            throw new ConfigurationException(
+            throw new InvalidConfigurationException(
                 'Could not determine if the factory should build an extractor or a loader.'
             );
         }
@@ -90,21 +95,19 @@ final class ServiceFactory implements FactoryInterface
         }
 
         $builder->withClient(
-            ...$client->compile(['client' => $config['client']])
+            ...$clientFactory->compile(['client' => $config['client']])
         );
 
         try {
-            return [
-                $builder->getNode(),
-            ];
+            return $builder;
         } catch (MissingAuthenticationMethodException $exception) {
-            throw new ConfigurationException(
+            throw new InvalidConfigurationException(
                 'Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.',
                 0,
                 $exception,
             );
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
-            throw new ConfigurationException($exception->getMessage(), 0, $exception);
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 }

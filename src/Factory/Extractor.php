@@ -6,12 +6,11 @@ use Kiboko\Component\ETL\Flow\Akeneo\Builder;
 use Kiboko\Component\ETL\Flow\Akeneo\Capacity;
 use Kiboko\Component\ETL\Flow\Akeneo\Configuration;
 use Kiboko\Component\ETL\Flow\Akeneo\MissingAuthenticationMethodException;
-use Kiboko\Contract\ETL\Configurator\ConfigurationException;
 use Kiboko\Contract\ETL\Configurator\ConfigurationExceptionInterface;
 use Kiboko\Contract\ETL\Configurator\FactoryInterface;
+use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
+use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 
 final class Extractor implements FactoryInterface
@@ -42,8 +41,8 @@ final class Extractor implements FactoryInterface
     {
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
-            throw new ConfigurationException($exception->getMessage(), 0, $exception);
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 
@@ -53,18 +52,16 @@ final class Extractor implements FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             return false;
         }
     }
 
-    public function compile(array $config): array
+    public function compile(array $config): Builder\Extractor
     {
         $builder = new Builder\Extractor();
-        $client = new Client();
 
         foreach ($this->capacities as $capacity) {
-            var_dump($config, $capacity->applies($config));
             if ($capacity->applies($config)) {
                 $builder->withCapacity($capacity->getBuilder($config));
                 break;
@@ -75,22 +72,16 @@ final class Extractor implements FactoryInterface
             $builder->withEnterpriseSupport($config['enterprise']);
         }
 
-        $builder->withClient(
-            ...$client->compile(['client' => $config['client']])
-        );
-
         try {
-            return [
-                $builder->getNode(),
-            ];
+            return $builder;
         } catch (MissingAuthenticationMethodException $exception) {
-            throw new ConfigurationException(
+            throw new InvalidConfigurationException(
                 'Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.',
                 0,
                 $exception,
             );
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
-            throw new ConfigurationException($exception->getMessage(), 0, $exception);
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 }

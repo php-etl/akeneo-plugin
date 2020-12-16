@@ -4,13 +4,12 @@ namespace Kiboko\Component\ETL\Flow\Akeneo\Factory;
 
 use Kiboko\Component\ETL\Flow\Akeneo\Builder;
 use Kiboko\Component\ETL\Flow\Akeneo\Configuration;
-use Kiboko\Contract\ETL\Configurator\ConfigurationException;
+use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
 use Kiboko\Contract\ETL\Configurator\ConfigurationExceptionInterface;
 use Kiboko\Contract\ETL\Configurator\FactoryInterface;
 use PhpParser\Node;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
+use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 
 final class Client implements FactoryInterface
@@ -36,8 +35,8 @@ final class Client implements FactoryInterface
     {
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
-            throw new ConfigurationException($exception->getMessage(), 0, $exception);
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 
@@ -47,7 +46,7 @@ final class Client implements FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (InvalidTypeException|InvalidConfigurationException $exception) {
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             return false;
         }
     }
@@ -66,47 +65,41 @@ final class Client implements FactoryInterface
         }
     }
 
-    public function compile(array $config): array
+    public function compile(array $config): Builder\Client
     {
         $clientBuilder = new Builder\Client(
-            new Node\Scalar\String_($config['client']['api_url']),
-            new Node\Scalar\String_($config['client']['client_id']),
-            new Node\Scalar\String_($config['client']['secret']),
+            new Node\Scalar\String_($config['api_url']),
+            new Node\Scalar\String_($config['client_id']),
+            new Node\Scalar\String_($config['secret']),
         );
 
-        if (isset($config['enterprise'])) {
-            $clientBuilder->withEnterpriseSupport($config['enterprise']);
-        }
-
-        if (isset($config['client']['context'])) {
-            if (isset($config['client']['context']['http_client'])) {
-                $clientBuilder->withHttpClient($this->buildFactoryNode($config['client']['context']['http_client']));
+        if (isset($config['context'])) {
+            if (isset($config['context']['http_client'])) {
+                $clientBuilder->withHttpClient($this->buildFactoryNode($config['context']['http_client']));
             }
-            if (isset($config['client']['context']['http_request_factory'])) {
-                $clientBuilder->withHttpRequestFactory($this->buildFactoryNode($config['client']['context']['http_request_factory']));
+            if (isset($config['context']['http_request_factory'])) {
+                $clientBuilder->withHttpRequestFactory($this->buildFactoryNode($config['context']['http_request_factory']));
             }
-            if (isset($config['client']['context']['http_stream_factory'])) {
-                $clientBuilder->withHttpStreamFactory($this->buildFactoryNode($config['client']['context']['http_stream_factory']));
+            if (isset($config['context']['http_stream_factory'])) {
+                $clientBuilder->withHttpStreamFactory($this->buildFactoryNode($config['context']['http_stream_factory']));
             }
-            if (isset($config['client']['context']['filesystem'])) {
-                $clientBuilder->withFileSystem($this->buildFactoryNode($config['client']['context']['filesystem']));
+            if (isset($config['context']['filesystem'])) {
+                $clientBuilder->withFileSystem($this->buildFactoryNode($config['context']['filesystem']));
             }
         }
 
-        if (isset($config['client']['password'])) {
+        if (isset($config['password'])) {
             $clientBuilder->withPassword(
-                new Node\Scalar\String_($config['client']['username']),
-                new Node\Scalar\String_($config['client']['password']),
+                new Node\Scalar\String_($config['username']),
+                new Node\Scalar\String_($config['password']),
             );
         } else if (isset($config['refresh_token'])) {
             $clientBuilder->withPassword(
-                new Node\Scalar\String_($config['client']['token']),
-                new Node\Scalar\String_($config['client']['refresh_token']),
+                new Node\Scalar\String_($config['token']),
+                new Node\Scalar\String_($config['refresh_token']),
             );
         }
 
-        return [
-            $clientBuilder->getNode()
-        ];
+        return $clientBuilder;
     }
 }

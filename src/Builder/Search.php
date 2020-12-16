@@ -2,6 +2,7 @@
 
 namespace Kiboko\Component\ETL\Flow\Akeneo\Builder;
 
+use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
 use PhpParser\Builder;
 use PhpParser\Node;
 
@@ -9,10 +10,68 @@ final class Search implements Builder
 {
     private array $filters = [];
 
+    private function compileValue(null|bool|string|int|float|array $value): Node\Expr
+    {
+        if ($value === null) {
+            return new Node\Expr\ConstFetch(
+                name: new Node\Name('null'),
+            );
+        }
+        if ($value === true) {
+            return new Node\Expr\ConstFetch(
+                name: new Node\Name('true'),
+            );
+        }
+        if ($value === false) {
+            return new Node\Expr\ConstFetch(
+                name: new Node\Name('false'),
+            );
+        }
+        if (is_string($value)) {
+            return new Node\Scalar\String_($value);
+        }
+        if (is_int($value)) {
+            return new Node\Scalar\LNumber($value);
+        }
+        if (is_double($value)) {
+            return new Node\Scalar\DNumber($value);
+        }
+        if (is_array($value)) {
+            return $this->compileArray(values: $value);
+        }
+
+        throw new InvalidConfigurationException(
+            message: 'Could not determine the correct way to compile the provided filter.'
+        );
+    }
+
+    private function compileArray(array $values): Node\Expr
+    {
+        $items = [];
+        foreach ($values as $key => $value) {
+            $keyNode = null;
+            if (is_string($key)) {
+                $keyNode = new Node\Scalar\String_($key);
+            }
+
+            $items[] = new Node\Expr\ArrayItem(
+                value: $this->compileValue($value),
+                key: $keyNode,
+            );
+        }
+
+        return new Node\Expr\Array_(
+            $items,
+            [
+                'kind' => Node\Expr\Array_::KIND_SHORT,
+            ]
+        );
+    }
+
     public function addFilter(
         string $field,
         string $operator,
-        null|string|int|array $value = null,
+        null|bool|string|int|array $value = null,
         null|string|array $scope = null,
         null|string|array $locale = null
     ): self {
@@ -22,6 +81,9 @@ final class Search implements Builder
             ),
             new Node\Arg(
                 value: new Node\Scalar\String_($operator),
+            ),
+            new Node\Arg(
+                value: $this->compileValue($value),
             ),
         ];
 
@@ -39,25 +101,13 @@ final class Search implements Builder
             );
         }
 
-        if (null === $value && count($options) <= 0) {
-            $arguments[] = new Node\Arg(
-                new Node\Expr\ConstFetch(
-                    name: new Node\Name('null'),
-                ),
-            );
+        if (count($options) > 0) {
             $arguments[] = new Node\Expr\Array_(
                 items: $options,
                 attributes: [
                     'kind' => Node\Expr\Array_::KIND_SHORT
                 ]
             );
-        } else if (is_string($value)) {
-            $arguments[] = new Node\Arg(
-                value: new Node\Scalar\String_($value),
-            );
-            if (count($options) > 0) {
-                $arguments[] = new Node\Expr\Array_(items: $options, attributes: ['kind' => Node\Expr\Array_::KIND_SHORT]);
-            }
         }
 
         $this->filters[] = $arguments;
