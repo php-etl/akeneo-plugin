@@ -4,11 +4,12 @@ namespace Kiboko\Component\ETL\Flow\Akeneo\Factory;
 
 use Kiboko\Component\ETL\Flow\Akeneo;
 use Kiboko\Contract\ETL\Configurator;
+use PhpParser\Node;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 
-final class Search implements Configurator\FactoryInterface
+final class Logger implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
@@ -47,13 +48,14 @@ final class Search implements Configurator\FactoryInterface
         }
     }
 
-    public function compile(array $config): Akeneo\Builder\Search
+    public function compile(array $config): Akeneo\Builder\Logger
     {
+        $builder = new Akeneo\Builder\Logger();
         try {
-            $builder = new Builder\Search();
-
-            foreach ($config as $field) {
-                $builder->addFilter(...$field);
+            if ($config['type'] === 'stderr') {
+                $builder->withLogger((new Akeneo\Builder\StderrLogger())->getNode());
+            } else {
+                $builder->withLogger((new Akeneo\Builder\NullLogger())->getNode());
             }
 
             return $builder;

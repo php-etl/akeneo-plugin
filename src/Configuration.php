@@ -7,7 +7,12 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
-    private static array $endpoints = [];
+    private ConfigurationInterface $loggerConfiguration;
+
+    public function __construct(?ConfigurationInterface $loggerConfiguration = null)
+    {
+        $this->loggerConfiguration = $loggerConfiguration ?? new Configuration\Logger();
+    }
 
     public function getConfigTreeBuilder()
     {
@@ -28,6 +33,7 @@ final class Configuration implements ConfigurationInterface
                 ->append(node: $extractor->getConfigTreeBuilder()->getRootNode())
                 ->append(node: $loader->getConfigTreeBuilder()->getRootNode())
                 ->append(node: $client->getConfigTreeBuilder()->getRootNode())
+                ->append(node: $this->loggerConfiguration->getConfigTreeBuilder()->getRootNode())
             ->end()
         ;
 

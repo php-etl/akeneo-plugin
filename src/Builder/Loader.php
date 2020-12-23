@@ -9,18 +9,14 @@ final class Loader implements Builder
 {
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
-    private Node\Expr|Node\Identifier|null $method;
-    private Node\Expr|Node\Identifier|null $endpoint;
-    /** @var iterable<Node\Expr>  */
-    private iterable $arguments;
+    private ?Node\Expr $logger;
+    private ?Builder $capacity;
 
     public function __construct()
     {
         $this->withEnterpriseSupport = false;
         $this->client = null;
-        $this->method = null;
-        $this->endpoint = null;
-        $this->arguments = [];
+        $this->capacity = null;
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -37,17 +33,16 @@ final class Loader implements Builder
         return $this;
     }
 
-    public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
+    public function withLogger(Node\Expr $logger): self
     {
-        $this->endpoint = $endpoint;
+        $this->logger = $logger;
 
         return $this;
     }
 
-    public function withMethod(Node\Expr|Node\Identifier|null $method = null, Node\Expr ...$arguments): self
+    public function withCapacity(Builder $capacity): self
     {
-        $this->method = $method ?? new Node\Identifier('all');
-        $this->arguments = $arguments;
+        $this->capacity = $capacity;
 
         return $this;
     }
@@ -60,41 +55,24 @@ final class Loader implements Builder
                 subNodes: [
                     'implements' => [
                         new Node\Name\FullyQualified(name: 'Kiboko\\Contracts\\ETL\\Pipeline\\LoaderInterface'),
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contracts\\ETL\\Pipeline\\FlushableInterface'),
                     ],
                     'stmts' => [
-                        new Node\Stmt\Property(
-                            Node\Stmt\Class_::MODIFIER_PRIVATE,
-                            [
-                                new Node\Stmt\PropertyProperty('client'),
-                            ],
-                            [],
-                            !$this->withEnterpriseSupport ?
-                                new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
-                        ),
                         new Node\Stmt\ClassMethod(
-                            new Node\Identifier('__construct'),
-                            [
+                            name: new Node\Identifier(name: '__construct'),
+                            subNodes: [
                                 'flags' => Node\Stmt\Class_::MODIFIER_PUBLIC,
                                 'params' => [
                                     new Node\Param(
-                                        new Node\Expr\Variable('client'),
-                                        null,
-                                        !$this->withEnterpriseSupport ?
+                                        var: new Node\Expr\Variable('client'),
+                                        type: !$this->withEnterpriseSupport ?
                                             new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                            new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface')
-                                    )
-                                ],
-                                'stmts' => [
-                                    new Node\Stmt\Expression(
-                                        new Node\Expr\Assign(
-                                            new Node\Expr\PropertyFetch(
-                                                new Node\Expr\Variable(name: 'this'),
-                                                new Node\Identifier(name: 'client'),
-                                            ),
-                                            new Node\Expr\Variable(name: 'client'),
-                                        ),
+                                            new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
+                                        flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
+                                    ),
+                                    new Node\Param(
+                                        var: new Node\Expr\Variable('logger'),
+                                        type: new Node\Name\FullyQualified(name: 'Psr\\Log\\LoggerInterface'),
+                                        flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                 ],
                             ],
@@ -106,54 +84,50 @@ final class Loader implements Builder
                                 'params' => [],
                                 'returnType' => new Node\Name\FullyQualified(name: 'Iterator'),
                                 'stmts' => [
-                                    new Node\Stmt\While_(
-                                        cond: new Node\Expr\Assign(
-                                            var: new Node\Expr\Variable(name: 'line'),
-                                            expr: new Node\Expr\Yield_(),
-                                        ),
+                                    new Node\Stmt\TryCatch(
                                         stmts: [
-                                            new Node\Expr\MethodCall(
-                                                var: new Node\Expr\MethodCall(
-                                                    var: new Node\Expr\PropertyFetch(
-                                                        var: new Node\Expr\Variable(name: 'this'),
-                                                        name: new Node\Identifier(name: 'client')
-                                                    ),
-                                                    name: $this->endpoint
-                                                ),
-                                                name: $this->method,
-                                                args: $this->arguments
-                                            ),
-                                            new Node\Expr\Yield_(
-                                                value: new Node\Expr\New_(
-                                                    class: new Node\Name\FullyQualified(name: '')
-                                                )
-                                            )
+                                            $this->capacity->getNode(),
                                         ],
-                                    ),
-                                ],
-                            ],
-                        ),
-                        new Node\Stmt\ClassMethod(
-                            name: new Node\Identifier(name: 'flush'),
-                            subNodes: [
-                                'flags' => Node\Stmt\Class_::MODIFIER_PUBLIC,
-                                'params' => [],
-                                'returnType' => new Node\Name(name: 'iterable'),
-                                'stmts' => [
-                                    new Node\Stmt\Expression(
-                                        expr: new Node\Expr\YieldFrom(
-                                            expr: new Node\Expr\MethodCall(
-                                                var: new Node\Expr\MethodCall(
-                                                    var: new Node\Expr\PropertyFetch(
-                                                        var: new Node\Expr\Variable(name: 'this'),
-                                                        name: new Node\Identifier(name: 'client')
+                                        catches: [
+                                            new Node\Stmt\Catch_(
+                                                types: [
+                                                    new Node\Name\FullyQualified('Throwable')
+                                                ],
+                                                var: new Node\Expr\Variable('exception'),
+                                                stmts: [
+                                                    new Node\Stmt\Expression(
+                                                        expr: new Node\Expr\MethodCall(
+                                                            var: new Node\Expr\PropertyFetch(
+                                                                var: new Node\Expr\Variable('this'),
+                                                                name: 'logger',
+                                                            ),
+                                                            name: new Node\Identifier('critical'),
+                                                            args: [
+                                                                new Node\Arg(
+                                                                    value: new Node\Expr\PropertyFetch(
+                                                                        var: new Node\Expr\Variable('exception'),
+                                                                        name: new Node\Identifier('getMessage'),
+                                                                    ),
+                                                                ),
+                                                                new Node\Arg(
+                                                                    value: new Node\Expr\Array_(
+                                                                        items: [
+                                                                            new Node\Expr\ArrayItem(
+                                                                                value: new Node\Expr\Variable('exception'),
+                                                                                key: new Node\Scalar\String_('exception'),
+                                                                            ),
+                                                                        ],
+                                                                        attributes: [
+                                                                            'kind' => Node\Expr\Array_::KIND_SHORT,
+                                                                        ],
+                                                                    ),
+                                                                ),
+                                                            ],
+                                                        ),
                                                     ),
-                                                    name: $this->endpoint
-                                                ),
-                                                name: $this->method,
-                                                args: $this->arguments,
+                                                ],
                                             ),
-                                        ),
+                                        ],
                                     ),
                                 ],
                             ],
@@ -162,7 +136,8 @@ final class Loader implements Builder
                 ],
             ),
             args: [
-                new Node\Arg($this->client),
+                new Node\Arg(value: $this->client),
+                new Node\Arg(value: $this->logger),
             ],
         );
     }

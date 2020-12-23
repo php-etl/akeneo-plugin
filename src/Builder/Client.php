@@ -9,9 +9,6 @@ use PhpParser\Node;
 final class Client implements Builder
 {
     private bool $withEnterpriseSupport;
-    private Node\Expr $baseUrl;
-    private Node\Expr $clientId;
-    private Node\Expr $secret;
     private ?Node\Expr $username;
     private ?Node\Expr $password;
     private ?Node\Expr $token;
@@ -21,12 +18,12 @@ final class Client implements Builder
     private ?Node\Expr $httpStreamFactory;
     private ?Node\Expr $fileSystem;
 
-    public function __construct(Node\Expr $baseUrl, Node\Expr $clientId, Node\Expr $secret)
-    {
+    public function __construct(
+        private Node\Expr $baseUrl,
+        private Node\Expr $clientId,
+        private Node\Expr $secret
+    ) {
         $this->withEnterpriseSupport = false;
-        $this->baseUrl = $baseUrl;
-        $this->clientId = $clientId;
-        $this->secret = $secret;
         $this->username = null;
         $this->password = null;
         $this->token = null;

@@ -8,40 +8,41 @@ use PhpParser\Node;
 
 final class Search implements Builder
 {
-    private array $filters = [];
+    public function __construct(private array $filters = [])
+    {}
 
     private function compileValue(null|bool|string|int|float|array $value): Node\Expr
     {
         if ($value === null) {
             return new Node\Expr\ConstFetch(
-                name: new Node\Name('null'),
+                name: new Node\Name(name: 'null'),
             );
         }
         if ($value === true) {
             return new Node\Expr\ConstFetch(
-                name: new Node\Name('true'),
+                name: new Node\Name(name: 'true'),
             );
         }
         if ($value === false) {
             return new Node\Expr\ConstFetch(
-                name: new Node\Name('false'),
+                name: new Node\Name(name: 'false'),
             );
         }
         if (is_string($value)) {
-            return new Node\Scalar\String_($value);
+            return new Node\Scalar\String_(value: $value);
         }
         if (is_int($value)) {
-            return new Node\Scalar\LNumber($value);
+            return new Node\Scalar\LNumber(value: $value);
         }
         if (is_double($value)) {
-            return new Node\Scalar\DNumber($value);
+            return new Node\Scalar\DNumber(value: $value);
         }
         if (is_array($value)) {
             return $this->compileArray(values: $value);
         }
 
         throw new InvalidConfigurationException(
-            message: 'Could not determine the correct way to compile the provided filter.'
+            message: 'Could not determine the correct way to compile the provided filter.',
         );
     }
 

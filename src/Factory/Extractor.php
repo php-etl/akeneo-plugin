@@ -2,31 +2,26 @@
 
 namespace Kiboko\Component\ETL\Flow\Akeneo\Factory;
 
-use Kiboko\Component\ETL\Flow\Akeneo\Builder;
-use Kiboko\Component\ETL\Flow\Akeneo\Capacity;
-use Kiboko\Component\ETL\Flow\Akeneo\Configuration;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingAuthenticationMethodException;
-use Kiboko\Contract\ETL\Configurator\ConfigurationExceptionInterface;
-use Kiboko\Contract\ETL\Configurator\FactoryInterface;
-use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
+use Kiboko\Component\ETL\Flow\Akeneo;
+use Kiboko\Contract\ETL\Configurator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 
-final class Extractor implements FactoryInterface
+final class Extractor implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
-    /** @var iterable<Capacity\CapacityInterface>  */
+    /** @var iterable<Akeneo\Capacity\CapacityInterface>  */
     private iterable $capacities;
 
     public function __construct()
     {
         $this->processor = new Processor();
-        $this->configuration = new Configuration();
+        $this->configuration = new Akeneo\Configuration\Extractor();
         $this->capacities = [
-            new Capacity\All(),
-            new Capacity\ListPerPage(),
+            new Akeneo\Capacity\All(),
+            new Akeneo\Capacity\ListPerPage(),
         ];
     }
 
@@ -36,14 +31,14 @@ final class Extractor implements FactoryInterface
     }
 
     /**
-     * @throws ConfigurationExceptionInterface
+     * @throws Configurator\ConfigurationExceptionInterface
      */
     public function normalize(array $config): array
     {
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
+            throw new Configurator\InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 
@@ -58,15 +53,30 @@ final class Extractor implements FactoryInterface
         }
     }
 
-    public function compile(array $config): Builder\Extractor
+    private function findCapacity(array $config): Akeneo\Capacity\CapacityInterface
     {
-        $builder = new Builder\Extractor();
-
         foreach ($this->capacities as $capacity) {
             if ($capacity->applies($config)) {
-                $builder->withCapacity($capacity->getBuilder($config));
-                break;
+                return $capacity;
             }
+        }
+
+        throw new NoApplicableCapacityException(
+            message: 'No capacity was able to handle the configuration.'
+        );
+    }
+
+    public function compile(array $config): Akeneo\Builder\Extractor
+    {
+        $builder = new Akeneo\Builder\Extractor();
+
+        try {
+            $builder->withCapacity($this->findCapacity($config)->getBuilder($config));
+        } catch (NoApplicableCapacityException $exception) {
+            throw new Configurator\InvalidConfigurationException(
+                message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
+                previous: $exception,
+            );
         }
 
         if (isset($config['enterprise'])) {
@@ -75,14 +85,11 @@ final class Extractor implements FactoryInterface
 
         try {
             return $builder;
-        } catch (MissingAuthenticationMethodException $exception) {
-            throw new InvalidConfigurationException(
-                'Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.',
-                0,
-                $exception,
-            );
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
+            throw new Configurator\InvalidConfigurationException(
+                message: $exception->getMessage(),
+                previous: $exception
+            );
         }
     }
 }

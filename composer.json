@@ -9,15 +9,20 @@
     },
     "require": {
         "php": "8.0",
+        "ext-json": "*",
         "php-etl/configurator-contracts": "dev-master",
-        "akeneo/api-php-client-ee": "^4.0",
         "nikic/php-parser": "^4.9@dev",
         "symfony/config": "^4.0 || ^5.0",
-        "php-etl/pipeline-contracts": "^0.1.0@dev",
         "phpunit/phpunit": "^8.0"
     },
     "require-dev": {
-        "php-http/mock-client": "^1.4@dev"
+        "php-http/mock-client": "^1.4@dev",
+        "symfony/yaml": "5.x-dev",
+        "symfony/console": "5.x-dev",
+        "php-etl/bucket-contracts": "^0.1.0@dev",
+        "akeneo/api-php-client-ee": "^4.0",
+        "php-etl/pipeline-contracts": "^0.1.0@dev",
+        "php-etl/pipeline": "^0.2.0@dev"
     },
     "authors": [
         {
