@@ -2,6 +2,7 @@
     "name": "php-etl/flow-akeneo",
     "description": "Adapters for the Akeneo API client",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Kiboko\\Component\\ETL\\Flow\\Akeneo\\": "src/"
