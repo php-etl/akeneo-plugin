@@ -53,7 +53,7 @@ final class Upsert implements CapacityInterface
                 var: new Node\Expr\Variable('line'),
                 dim: new Node\Scalar\String_('code')
             ))
-            ->withLine(line: new Node\Expr\Variable('line'));
+            ->withData(line: new Node\Expr\Variable('line'));
 
         return $builder;
     }

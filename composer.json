@@ -8,13 +8,20 @@
             "Kiboko\\Component\\ETL\\Flow\\Akeneo\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "functional\\Kiboko\\Component\\ETL\\Flow\\Akeneo\\": "tests/functional/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
     "require": {
         "php": "8.0",
         "ext-json": "*",
         "php-etl/configurator-contracts": "dev-master",
         "nikic/php-parser": "^4.9@dev",
-        "symfony/config": "^4.0 || ^5.0",
-        "phpunit/phpunit": "^8.0"
+        "symfony/config": "^4.0 || ^5.0"
     },
     "require-dev": {
         "php-http/mock-client": "^1.4@dev",
@@ -23,7 +30,10 @@
         "php-etl/bucket-contracts": "^0.1.0@dev",
         "akeneo/api-php-client-ee": "^4.0",
         "php-etl/pipeline-contracts": "^0.1.0@dev",
-        "php-etl/pipeline": "^0.2.0@dev"
+        "php-etl/pipeline": "^0.2.0@dev",
+        "phpunit/phpunit": "^9.0",
+        "laminas/laminas-diactoros": "2.6.x-dev",
+        "adlawson/vfs": "dev-develop"
     },
     "authors": [
         {

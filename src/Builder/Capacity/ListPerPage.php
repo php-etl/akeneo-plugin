@@ -2,6 +2,7 @@
 
 namespace Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
 
+use Kiboko\Component\ETL\Flow\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
 
@@ -32,6 +33,12 @@ final class ListPerPage implements Builder
 
     public function getNode(): Node
     {
+        if ($this->endpoint === null) {
+            throw new MissingEndpointException(
+                message: 'Please check your capacity builder, you should have selected an endpoint.'
+            );
+        }
+
         return new Node\Stmt\Expression(
             expr: new Node\Expr\YieldFrom(
                 expr: new Node\Expr\MethodCall(
@@ -46,12 +53,7 @@ final class ListPerPage implements Builder
                     [
                         new Node\Arg(
                             value: new Node\Expr\Array_(
-                                items: [
-                                    new Node\Expr\ArrayItem(
-                                        $this->search,
-                                        new Node\Scalar\String_('search'),
-                                    ),
-                                ],
+                                items: $this->compileSearch(),
                                 attributes: [
                                     'kind' => Node\Expr\Array_::KIND_SHORT,
                                 ]
@@ -62,5 +64,19 @@ final class ListPerPage implements Builder
                 ),
             ),
         );
+    }
+
+    private function compileSearch(): array
+    {
+        if ($this->search === null) {
+            return [];
+        }
+
+        return [
+            new Node\Expr\ArrayItem(
+                $this->search,
+                new Node\Scalar\String_('search'),
+            ),
+        ];
     }
 }

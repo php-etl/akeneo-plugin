@@ -2,6 +2,8 @@
 
 namespace Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
 
+use Kiboko\Component\ETL\Flow\Akeneo\MissingEndpointException;
+use Kiboko\Component\ETL\Flow\Akeneo\MissingParameterException;
 use PhpParser\Builder;
 use PhpParser\Node;
 
@@ -9,13 +11,13 @@ final class Upsert implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $code;
-    private null|Node\Expr $line;
+    private null|Node\Expr $data;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->code = null;
-        $this->line = null;
+        $this->data = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -32,15 +34,31 @@ final class Upsert implements Builder
         return $this;
     }
 
-    public function withLine(Node\Expr $line): self
+    public function withData(Node\Expr $line): self
     {
-        $this->line = $line;
+        $this->data = $line;
 
         return $this;
     }
 
     public function getNode(): Node
     {
+        if ($this->endpoint === null) {
+            throw new MissingEndpointException(
+                message: 'Please check your capacity builder, you should have selected an endpoint.'
+            );
+        }
+        if ($this->code === null) {
+            throw new MissingParameterException(
+                message: 'Please check your capacity builder, you should have provided a code.'
+            );
+        }
+        if ($this->data === null) {
+            throw new MissingParameterException(
+                message: 'Please check your capacity builder, you should have provided some data.'
+            );
+        }
+
         return new Node\Stmt\While_(
             cond: new Node\Expr\Assign(
                 var: new Node\Expr\Variable(name: 'line'),
@@ -61,7 +79,7 @@ final class Upsert implements Builder
                                 new Node\Identifier('upsert'),
                                 [
                                     new Node\Arg(value: $this->code),
-                                    new Node\Arg(value: $this->line),
+                                    new Node\Arg(value: $this->data),
                                 ],
                             ),
                         ),
