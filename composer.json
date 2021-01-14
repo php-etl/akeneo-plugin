@@ -1,5 +1,5 @@
 {
-    "name": "php-etl/flow-akeneo",
+    "name": "php-etl/akeneo-plugin",
     "description": "Adapters for the Akeneo API client",
     "type": "library",
     "license": "MIT",
