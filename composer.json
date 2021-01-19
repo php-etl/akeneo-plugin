@@ -17,7 +17,7 @@
         "bin-dir": "bin"
     },
     "require": {
-        "php": "8.0",
+        "php": "^8.0",
         "ext-json": "*",
         "php-etl/configurator-contracts": "dev-master",
         "nikic/php-parser": "^4.9@dev",
