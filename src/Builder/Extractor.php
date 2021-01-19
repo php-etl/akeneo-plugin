@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Builder;
+namespace Kiboko\Plugin\Akeneo\Builder;
 
 use PhpParser\Builder;
 use PhpParser\Node;
@@ -54,7 +54,7 @@ final class Extractor implements Builder
                 name: null,
                 subNodes: [
                     'implements' => [
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contracts\\ETL\\Pipeline\\ExtractorInterface'),
+                        new Node\Name\FullyQualified(name: 'Kiboko\\Contracts\\Pipeline\\ExtractorInterface'),
                     ],
                     'stmts' => [
                         new Node\Stmt\ClassMethod(

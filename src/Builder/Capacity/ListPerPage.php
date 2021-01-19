@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
+namespace Kiboko\Plugin\Akeneo\Builder\Capacity;
 
-use Kiboko\Component\ETL\Flow\Akeneo\MissingEndpointException;
+use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
 

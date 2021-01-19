@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace functional\Kiboko\Component\ETL\Flow\Akeneo\Mock;
+namespace functional\Kiboko\Plugin\Akeneo\Mock;
 
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseFactoryInterface;

@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace functional\Kiboko\Component\ETL\Flow\Akeneo\Builder;
+namespace functional\Kiboko\Plugin\Akeneo\Builder;
 
 use Akeneo\Pim\ApiClient\AkeneoPimClientInterface;
 use Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientInterface;
-use functional\Kiboko\Component\ETL\Flow\Akeneo\Mock\ResponseFactory;
+use functional\Kiboko\Plugin\Akeneo\Mock\ResponseFactory;
 use Http\Mock\Client;
-use Kiboko\Component\ETL\Flow\Akeneo\Builder;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingAuthenticationMethodException;
+use Kiboko\Plugin\Akeneo\Builder;
+use Kiboko\Plugin\Akeneo\MissingAuthenticationMethodException;
 use PhpParser\Node;
 
 final class ClientTest extends BuilderTestCase

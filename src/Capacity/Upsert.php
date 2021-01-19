@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Capacity;
+namespace Kiboko\Plugin\Akeneo\Capacity;
 
-use Kiboko\Component\ETL\Flow\Akeneo;
+use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 

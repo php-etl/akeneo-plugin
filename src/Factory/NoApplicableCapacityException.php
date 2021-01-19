@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Factory;
+namespace Kiboko\Plugin\Akeneo\Factory;
 
 final class NoApplicableCapacityException extends \OutOfRangeException
 {

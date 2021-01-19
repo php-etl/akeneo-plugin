@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Builder;
+namespace Kiboko\Plugin\Akeneo\Builder;
 
 use PhpParser\Builder;
 use PhpParser\Node;

@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo;
+namespace Kiboko\Plugin\Akeneo;
 
-use Kiboko\Component\ETL\Flow\Akeneo\Builder;
-use Kiboko\Component\ETL\Flow\Akeneo\Factory;
-use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
-use Kiboko\Contract\ETL\Configurator\ConfigurationExceptionInterface;
-use Kiboko\Contract\ETL\Configurator\FactoryInterface;
+use Kiboko\Plugin\Akeneo\Factory;
+use Kiboko\Contract\Configurator\InvalidConfigurationException;
+use Kiboko\Contract\Configurator\ConfigurationExceptionInterface;
+use Kiboko\Contract\Configurator\FactoryInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;

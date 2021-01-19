@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Configuration;
+namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Symfony\Component\Config;
 

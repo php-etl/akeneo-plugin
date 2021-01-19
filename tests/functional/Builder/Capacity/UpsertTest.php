@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace functional\Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
+namespace functional\Kiboko\Plugin\Akeneo\Builder\Capacity;
 
-use functional\Kiboko\Component\ETL\Flow\Akeneo\Builder\BuilderTestCase;
-use Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity\Upsert;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingEndpointException;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingParameterException;
+use functional\Kiboko\Plugin\Akeneo\Builder\BuilderTestCase;
+use Kiboko\Plugin\Akeneo\Builder\Capacity\Upsert;
+use Kiboko\Plugin\Akeneo\MissingEndpointException;
+use Kiboko\Plugin\Akeneo\MissingParameterException;
 use PhpParser\Node;
 
 final class UpsertTest extends BuilderTestCase

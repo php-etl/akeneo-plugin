@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Builder;
+namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Kiboko\Contract\ETL\Configurator\InvalidConfigurationException;
+use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use PhpParser\Builder;
 use PhpParser\Node;
 

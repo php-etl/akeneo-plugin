@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace functional\Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
+namespace functional\Kiboko\Plugin\Akeneo\Builder\Capacity;
 
-use functional\Kiboko\Component\ETL\Flow\Akeneo\Builder\BuilderTestCase;
-use Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity\All;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingEndpointException;
+use functional\Kiboko\Plugin\Akeneo\Builder\BuilderTestCase;
+use Kiboko\Plugin\Akeneo\Builder\Capacity\All;
+use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Node;
 
 final class AllTest extends BuilderTestCase
@@ -18,7 +18,7 @@ final class AllTest extends BuilderTestCase
 
         $capacity->getNode();
     }
-    
+
     public function testWithEndpoint()
     {
         $capacity = new All();

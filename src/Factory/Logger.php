@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Factory;
+namespace Kiboko\Plugin\Akeneo\Factory;
 
-use Kiboko\Component\ETL\Flow\Akeneo;
-use Kiboko\Contract\ETL\Configurator;
-use PhpParser\Node;
+use Kiboko\Plugin\Akeneo;
+use Kiboko\Contract\Configurator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;

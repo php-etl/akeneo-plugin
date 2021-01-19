@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Component\ETL\Flow\Akeneo\Builder\Capacity;
+namespace Kiboko\Plugin\Akeneo\Builder\Capacity;
 
-use Kiboko\Component\ETL\Flow\Akeneo\MissingEndpointException;
-use Kiboko\Component\ETL\Flow\Akeneo\MissingParameterException;
+use Kiboko\Plugin\Akeneo\MissingEndpointException;
+use Kiboko\Plugin\Akeneo\MissingParameterException;
 use PhpParser\Builder;
 use PhpParser\Node;
 
@@ -86,7 +86,7 @@ final class Upsert implements Builder
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\Yield_(
                                 value: new Node\Expr\New_(
-                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\ETL\\Bucket\\AcceptanceResultBucket'),
+                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
                                     args: [
                                         new Node\Arg(
                                             value: new Node\Expr\Variable('line'),
@@ -143,7 +143,7 @@ final class Upsert implements Builder
                                     new Node\Expr\Yield_(
                                         value: new Node\Expr\New_(
                                             class: new Node\Name\FullyQualified(
-                                                name: 'Kiboko\\Component\\ETL\\Bucket\\RejectionResultBucket'
+                                                name: 'Kiboko\\Component\\Bucket\\RejectionResultBucket'
                                             ),
                                             args: [
                                                 new Node\Arg(

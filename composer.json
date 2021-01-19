@@ -5,12 +5,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Kiboko\\Component\\ETL\\Flow\\Akeneo\\": "src/"
+            "Kiboko\\Plugin\\Akeneo\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "functional\\Kiboko\\Component\\ETL\\Flow\\Akeneo\\": "tests/functional/"
+            "functional\\Kiboko\\Plugin\\Akeneo\\": "tests/functional/"
         }
     },
     "config": {
