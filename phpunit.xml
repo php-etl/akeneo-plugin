@@ -1,4 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
@@ -20,6 +22,11 @@
     timeoutForMediumTests="10"
     timeoutForLargeTests="60"
     verbose="false">
+    <groups>
+        <exclude>
+            <group>vendor</group>
+        </exclude>
+    </groups>
     <testsuites>
         <testsuite name="Functional tests">
             <directory>tests/functional/</directory>
@@ -28,4 +35,16 @@
     <php>
         <ini name="allow_url_include" value="1" />
     </php>
+    <listeners>
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
+            <arguments>
+                <array>
+                    <element key="slowThreshold">
+                        <integer>1000</integer>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+        <listener class="MyBuilder\PhpunitAccelerator\TestListener"/>
+    </listeners>
 </phpunit>

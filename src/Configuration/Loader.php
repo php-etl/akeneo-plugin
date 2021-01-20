@@ -173,6 +173,7 @@ final class Loader implements Config\Definition\ConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('loader');
 
+        /** @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
                 ->ifArray()

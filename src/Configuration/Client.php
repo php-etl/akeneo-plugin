@@ -10,6 +10,7 @@ final class Client implements Config\Definition\ConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('client');
 
+        /** @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
                 ->ifArray()

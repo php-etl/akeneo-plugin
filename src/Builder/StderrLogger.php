@@ -29,13 +29,13 @@ final class StderrLogger implements Builder
                                         new Node\Param(
                                             var: new Node\Expr\Variable(name: 'context'),
                                             default: new Node\Expr\Array_(
-                                            attributes: [
-                                                'kind' => Node\Expr\Array_::KIND_SHORT,
-                                            ],
+                                                attributes: [
+                                                    'kind' => Node\Expr\Array_::KIND_SHORT,
+                                                ],
+                                            ),
+                                            type: new Node\Name(name: 'array'),
                                         ),
-                                        type: new Node\Name(name: 'array'),
-                                    ),
-                                ],
+                                    ],
                                 'stmts' => [
                                     new Node\Stmt\Expression(
                                         new Node\Expr\FuncCall(

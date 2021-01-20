@@ -21,6 +21,8 @@ final class Configuration implements ConfigurationInterface
         $loader = new Configuration\Loader();
 
         $builder = new TreeBuilder('akeneo');
+
+        /** @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
                 ->ifTrue(function (array $value) {

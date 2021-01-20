@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.0",
         "ext-json": "*",
-        "php-etl/configurator-contracts": "dev-master",
+        "php-etl/configurator-contracts": "^0.1@dev",
         "nikic/php-parser": "^4.9@dev",
         "symfony/config": "^4.0 || ^5.0"
     },
@@ -33,7 +33,15 @@
         "php-etl/pipeline": "^0.2.0@dev",
         "phpunit/phpunit": "^9.0",
         "laminas/laminas-diactoros": "2.6.x-dev",
-        "adlawson/vfs": "dev-develop"
+        "adlawson/vfs": "dev-develop",
+        "friends-of-phpspec/phpspec-code-coverage": "^6.0",
+        "phpspec/phpspec": "^7.0",
+        "johnkary/phpunit-speedtrap": "*",
+        "mybuilder/phpunit-accelerator": "*",
+        "phpunit/php-invoker": "*",
+        "phpstan/phpstan": "^0.12",
+        "infection/infection": "^0.20",
+        "php-etl/phpspec-extension": "^0.2@dev"
     },
     "authors": [
         {

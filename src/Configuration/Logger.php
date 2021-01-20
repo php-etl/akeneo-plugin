@@ -10,6 +10,7 @@ final class Logger implements Config\Definition\ConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('logger');
 
+        /** @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->children()
                 ->enumNode('type')->values(['null', 'stderr'])->end()

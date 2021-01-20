@@ -50,7 +50,7 @@ final class Search implements Configurator\FactoryInterface
     public function compile(array $config): Akeneo\Builder\Search
     {
         try {
-            $builder = new Builder\Search();
+            $builder = new Akeneo\Builder\Search();
 
             foreach ($config as $field) {
                 $builder->addFilter(...$field);

@@ -85,7 +85,7 @@ final class Client implements Builder
         return $this;
     }
 
-    public function getNode(): Node
+    public function getNode(): Node\Expr\MethodCall
     {
         $instance = new Node\Expr\New_(
             !$this->withEnterpriseSupport ?

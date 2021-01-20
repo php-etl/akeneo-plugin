@@ -17,7 +17,7 @@ final class Logger implements Builder
         return $this;
     }
 
-    public function getNode(): Node
+    public function getNode(): Node\Expr
     {
         if ($this->logger === null) {
             return new Node\Expr\New_(

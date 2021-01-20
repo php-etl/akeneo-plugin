@@ -11,6 +11,7 @@ final class Search implements Config\Definition\ConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('search');
 
+        /** @phpstan-ignore-next-line */
         return $builder->getRootNode()
             ->arrayPrototype()
                 ->children()
