@@ -54,7 +54,7 @@ final class Loader implements Builder
                 name: null,
                 subNodes: [
                     'implements' => [
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contracts\\Pipeline\\LoaderInterface'),
+                        new Node\Name\FullyQualified(name: 'Kiboko\\Contract\\Pipeline\\LoaderInterface'),
                     ],
                     'stmts' => [
                         new Node\Stmt\ClassMethod(

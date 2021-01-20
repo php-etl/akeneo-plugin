@@ -54,7 +54,7 @@ final class Extractor implements Builder
                 name: null,
                 subNodes: [
                     'implements' => [
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contracts\\Pipeline\\ExtractorInterface'),
+                        new Node\Name\FullyQualified(name: 'Kiboko\\Contract\\Pipeline\\ExtractorInterface'),
                     ],
                     'stmts' => [
                         new Node\Stmt\ClassMethod(
