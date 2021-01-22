@@ -9,7 +9,8 @@ use PhpParser\Node;
 final class Search implements Builder
 {
     public function __construct(private array $filters = [])
-    {}
+    {
+    }
 
     private function compileValue(null|bool|string|int|float|array $value): Node\Expr
     {

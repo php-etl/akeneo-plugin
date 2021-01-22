@@ -6,7 +6,6 @@ use Symfony\Component\Config;
 
 final class Search implements Config\Definition\ConfigurationInterface
 {
-
     public function getConfigTreeBuilder()
     {
         $builder = new Config\Definition\Builder\TreeBuilder('search');

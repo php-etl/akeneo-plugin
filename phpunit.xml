@@ -45,6 +45,5 @@
                 </array>
             </arguments>
         </listener>
-        <listener class="MyBuilder\PhpunitAccelerator\TestListener"/>
     </listeners>
 </phpunit>

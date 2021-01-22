@@ -91,7 +91,7 @@ final class Client implements Configurator\FactoryInterface
                     new Node\Scalar\String_($config['username']),
                     new Node\Scalar\String_($config['password']),
                 );
-            } else if (isset($config['refresh_token'])) {
+            } elseif (isset($config['refresh_token'])) {
                 $clientBuilder->withToken(
                     new Node\Scalar\String_($config['token']),
                     new Node\Scalar\String_($config['refresh_token']),

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6df4f0e944efaf8ef5996f102268039",
+    "content-hash": "5ce480faf30702e9a93819b48bcce556",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -3174,12 +3174,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "cbe315f4d3b653ac0310862697866ffddabc502f"
+                "reference": "0bf76e406e6b1d08d8be732db3ec8e6cbe2f8cc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/cbe315f4d3b653ac0310862697866ffddabc502f",
-                "reference": "cbe315f4d3b653ac0310862697866ffddabc502f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/0bf76e406e6b1d08d8be732db3ec8e6cbe2f8cc2",
+                "reference": "0bf76e406e6b1d08d8be732db3ec8e6cbe2f8cc2",
                 "shasum": ""
             },
             "require": {
@@ -3243,7 +3243,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-01-02T06:24:37+00:00"
+            "time": "2021-01-21T05:59:53+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -6589,12 +6589,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "53c6779e1f7b11d5980524d0414d6577e632edc2"
+                "reference": "b1181c4c3af776c5e516b8b0fe1d86330840cd32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/53c6779e1f7b11d5980524d0414d6577e632edc2",
-                "reference": "53c6779e1f7b11d5980524d0414d6577e632edc2",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/b1181c4c3af776c5e516b8b0fe1d86330840cd32",
+                "reference": "b1181c4c3af776c5e516b8b0fe1d86330840cd32",
                 "shasum": ""
             },
             "require": {
@@ -6657,7 +6657,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-20T11:45:16+00:00"
+            "time": "2021-01-21T11:15:15+00:00"
         },
         {
             "name": "thecodingmachine/safe",
@@ -6853,12 +6853,12 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "9c89b265ccc4092d58e66d72af5d343ee77a41ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/9c89b265ccc4092d58e66d72af5d343ee77a41ae",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9c89b265ccc4092d58e66d72af5d343ee77a41ae",
                 "reference": "9c89b265ccc4092d58e66d72af5d343ee77a41ae",
                 "shasum": ""
             },
@@ -6902,8 +6902,8 @@
                 "validate"
             ],
             "support": {
-                "issues": "https://github.com/webmozart/assert/issues",
-                "source": "https://github.com/webmozart/assert/tree/master"
+                "issues": "https://github.com/webmozarts/assert/issues",
+                "source": "https://github.com/webmozarts/assert/tree/master"
             },
             "time": "2021-01-18T12:52:36+00:00"
         },

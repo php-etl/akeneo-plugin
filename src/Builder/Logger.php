@@ -8,7 +8,8 @@ use PhpParser\Node;
 final class Logger implements Builder
 {
     public function __construct(private ?Node\Expr $logger = null)
-    {}
+    {
+    }
 
     public function withLogger(Node\Expr $logger): self
     {
