@@ -104,7 +104,7 @@ final class Extractor implements Builder
                                                             name: new Node\Identifier('critical'),
                                                             args: [
                                                                 new Node\Arg(
-                                                                    value: new Node\Expr\PropertyFetch(
+                                                                    value: new Node\Expr\MethodCall(
                                                                         var: new Node\Expr\Variable('exception'),
                                                                         name: new Node\Identifier('getMessage'),
                                                                     ),
