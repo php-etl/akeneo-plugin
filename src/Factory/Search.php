@@ -47,7 +47,7 @@ final class Search implements Configurator\FactoryInterface
         }
     }
 
-    public function compile(array $config): Akeneo\Builder\Search
+    public function compile(array $config): Repository\Search
     {
         try {
             $builder = new Akeneo\Builder\Search();
@@ -56,7 +56,7 @@ final class Search implements Configurator\FactoryInterface
                 $builder->addFilter(...$field);
             }
 
-            return $builder;
+            return new Repository\Search($builder);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: $exception->getMessage(),

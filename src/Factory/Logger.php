@@ -47,7 +47,7 @@ final class Logger implements Configurator\FactoryInterface
         }
     }
 
-    public function compile(array $config): Akeneo\Builder\Logger
+    public function compile(array $config): Repository\Logger
     {
         $builder = new Akeneo\Builder\Logger();
         try {
@@ -57,7 +57,7 @@ final class Logger implements Configurator\FactoryInterface
                 $builder->withLogger((new Akeneo\Builder\NullLogger())->getNode());
             }
 
-            return $builder;
+            return new Repository\Logger($builder);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: $exception->getMessage(),

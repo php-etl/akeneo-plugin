@@ -66,7 +66,7 @@ final class Extractor implements Configurator\FactoryInterface
         );
     }
 
-    public function compile(array $config): Akeneo\Builder\Extractor
+    public function compile(array $config): Repository\Extractor
     {
         $builder = new Akeneo\Builder\Extractor();
 
@@ -84,7 +84,7 @@ final class Extractor implements Configurator\FactoryInterface
         }
 
         try {
-            return $builder;
+            return new Repository\Extractor($builder);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: $exception->getMessage(),

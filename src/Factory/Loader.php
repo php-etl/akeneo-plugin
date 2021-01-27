@@ -65,7 +65,7 @@ final class Loader implements Configurator\FactoryInterface
         );
     }
 
-    public function compile(array $config): Akeneo\Builder\Loader
+    public function compile(array $config): Repository\Loader
     {
         $builder = new Akeneo\Builder\Loader();
 
@@ -83,7 +83,7 @@ final class Loader implements Configurator\FactoryInterface
         }
 
         try {
-            return $builder;
+            return new Repository\Loader($builder);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: $exception->getMessage(),

@@ -62,7 +62,7 @@ final class Client implements Configurator\FactoryInterface
         }
     }
 
-    public function compile(array $config): Akeneo\Builder\Client
+    public function compile(array $config): Repository\Client
     {
         try {
             $clientBuilder = new Akeneo\Builder\Client(
@@ -98,7 +98,7 @@ final class Client implements Configurator\FactoryInterface
                 );
             }
 
-            return $clientBuilder;
+            return new Repository\Client($clientBuilder);
         } catch (Akeneo\MissingAuthenticationMethodException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: 'Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.',
