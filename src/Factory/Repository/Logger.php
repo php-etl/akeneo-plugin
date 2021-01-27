@@ -2,7 +2,7 @@
 
 namespace Kiboko\Plugin\Akeneo\Factory\Repository;
 
-use Kiboko\Contract\ETL\Configurator;
+use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo;
 
 final class Logger implements Configurator\RepositoryInterface

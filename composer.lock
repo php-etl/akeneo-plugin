@@ -68,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/configurator-contracts.git",
-                "reference": "5f515c7a7dd1a7c91440b81eaaa1b537718f41b7"
+                "reference": "ccf287d6f9a0cd2501a515496d1472d2db557abf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/5f515c7a7dd1a7c91440b81eaaa1b537718f41b7",
-                "reference": "5f515c7a7dd1a7c91440b81eaaa1b537718f41b7",
+                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/ccf287d6f9a0cd2501a515496d1472d2db557abf",
+                "reference": "ccf287d6f9a0cd2501a515496d1472d2db557abf",
                 "shasum": ""
             },
             "require": {
@@ -112,7 +112,7 @@
                 "issues": "https://github.com/php-etl/configurator-contracts/issues",
                 "source": "https://github.com/php-etl/configurator-contracts/tree/master"
             },
-            "time": "2021-01-27T20:42:48+00:00"
+            "time": "2021-01-27T21:27:06+00:00"
         },
         {
             "name": "symfony/config",
