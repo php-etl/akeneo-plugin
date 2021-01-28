@@ -59,7 +59,7 @@ final class Service implements FactoryInterface
         $loggerFactory = new Factory\Logger();
 
         try {
-            if (isset($config['extractor'])) {
+            if (array_key_exists('extractor', $config)) {
                 $extractorFactory = new Factory\Extractor();
 
                 $extractor = $extractorFactory->compile($config['extractor']);
@@ -79,7 +79,7 @@ final class Service implements FactoryInterface
                     ->merge($logger);
 
                 return $extractor;
-            } elseif (isset($config['loader'])) {
+            } else if (array_key_exists('loader', $config)) {
                 $loaderFactory = new Factory\Loader();
 
                 $loader = $loaderFactory->compile($config['loader']);
