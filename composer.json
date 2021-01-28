@@ -21,7 +21,8 @@
         "ext-json": "*",
         "php-etl/configurator-contracts": "^0.1@dev",
         "nikic/php-parser": "^4.9@dev",
-        "symfony/config": "^5.2@dev"
+        "symfony/config": "^5.2@dev",
+        "php-etl/log-plugin": "0.1.x-dev"
     },
     "require-dev": {
         "php-http/mock-client": "^1.4@dev",

@@ -2,6 +2,7 @@
 
 namespace Kiboko\Plugin\Akeneo;
 
+use Kiboko\Plugin\Log;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -11,7 +12,7 @@ final class Configuration implements ConfigurationInterface
 
     public function __construct(?ConfigurationInterface $loggerConfiguration = null)
     {
-        $this->loggerConfiguration = $loggerConfiguration ?? new Configuration\Logger();
+        $this->loggerConfiguration = $loggerConfiguration ?? new Log\Configuration();
     }
 
     public function getConfigTreeBuilder()
