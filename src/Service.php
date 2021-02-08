@@ -80,7 +80,7 @@ final class Service implements FactoryInterface
                     ->merge($logger);
 
                 return $extractor;
-            } else if (array_key_exists('loader', $config)) {
+            } elseif (array_key_exists('loader', $config)) {
                 $loaderFactory = new Factory\Loader();
 
                 $loader = $loaderFactory->compile($config['loader']);
