@@ -40,25 +40,32 @@ final class All implements Builder
         }
 
         return new Node\Stmt\Expression(
-            expr: new Node\Expr\YieldFrom(
-                expr: new Node\Expr\MethodCall(
-                    new Node\Expr\MethodCall(
-                        var: new Node\Expr\PropertyFetch(
-                            var: new Node\Expr\Variable('this'),
-                            name: new Node\Identifier('client')
-                        ),
-                        name: $this->endpoint
-                    ),
-                    new Node\Identifier('all'),
-                    [
+            expr: new Node\Expr\Yield_(
+                value: new Node\Expr\New_(
+                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                    args: [
                         new Node\Arg(
-                            value: new Node\Expr\Array_(
-                                items: $this->compileSearch(),
-                                attributes: [
-                                    'kind' => Node\Expr\Array_::KIND_SHORT,
-                                ]
+                            new Node\Expr\MethodCall(
+                                new Node\Expr\MethodCall(
+                                    var: new Node\Expr\PropertyFetch(
+                                        var: new Node\Expr\Variable('this'),
+                                        name: new Node\Identifier('client')
+                                    ),
+                                    name: $this->endpoint
+                                ),
+                                new Node\Identifier('all'),
+                                [
+                                    new Node\Arg(
+                                        value: new Node\Expr\Array_(
+                                            items: $this->compileSearch(),
+                                            attributes: [
+                                                'kind' => Node\Expr\Array_::KIND_SHORT,
+                                            ]
+                                        ),
+                                        name: new Node\Identifier('queryParameters')
+                                    ),
+                                ],
                             ),
-                            name: new Node\Identifier('queryParameters')
                         ),
                     ],
                 ),
