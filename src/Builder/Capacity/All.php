@@ -45,16 +45,16 @@ final class All implements Builder
                     class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
                     args: [
                         new Node\Arg(
-                            new Node\Expr\MethodCall(
-                                new Node\Expr\MethodCall(
+                            value: new Node\Expr\MethodCall(
+                                var: new Node\Expr\MethodCall(
                                     var: new Node\Expr\PropertyFetch(
                                         var: new Node\Expr\Variable('this'),
                                         name: new Node\Identifier('client')
                                     ),
                                     name: $this->endpoint
                                 ),
-                                new Node\Identifier('all'),
-                                [
+                                name: new Node\Identifier('all'),
+                                args: [
                                     new Node\Arg(
                                         value: new Node\Expr\Array_(
                                             items: $this->compileSearch(),
@@ -62,10 +62,11 @@ final class All implements Builder
                                                 'kind' => Node\Expr\Array_::KIND_SHORT,
                                             ]
                                         ),
-                                        name: new Node\Identifier('queryParameters')
+                                        name: new Node\Identifier('queryParameters'),
                                     ),
                                 ],
                             ),
+                            unpack: true,
                         ),
                     ],
                 ),
