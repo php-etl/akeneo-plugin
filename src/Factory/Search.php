@@ -3,7 +3,6 @@
 namespace Kiboko\Plugin\Akeneo\Factory;
 
 use Kiboko\Plugin\Akeneo;
-use Kiboko\Plugin\Log;
 use Kiboko\Contract\Configurator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
@@ -17,7 +16,7 @@ final class Search implements Configurator\FactoryInterface
     public function __construct()
     {
         $this->processor = new Processor();
-        $this->configuration = new Log\Configuration();
+        $this->configuration = new Akeneo\Configuration\Search();
     }
 
     public function configuration(): ConfigurationInterface

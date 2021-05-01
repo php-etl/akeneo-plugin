@@ -5,7 +5,7 @@ namespace Kiboko\Plugin\Akeneo\Factory\Repository;
 use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo;
 
-final class Extractor implements Configurator\RepositoryInterface
+final class Extractor implements Configurator\StepRepositoryInterface
 {
     use RepositoryTrait;
 

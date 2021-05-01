@@ -2,14 +2,17 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
+use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
 
-final class Extractor implements Builder
+final class Extractor implements StepBuilderInterface
 {
     private bool $withEnterpriseSupport;
-    private ?Node\Expr $client;
     private ?Node\Expr $logger;
+    private ?Node\Expr $rejection;
+    private ?Node\Expr $state;
+    private ?Node\Expr $client;
     private ?Builder $capacity;
 
     public function __construct()
@@ -36,6 +39,20 @@ final class Extractor implements Builder
     public function withLogger(Node\Expr $logger): self
     {
         $this->logger = $logger;
+
+        return $this;
+    }
+
+    public function withRejection(Node\Expr $rejection): self
+    {
+        $this->rejection = $rejection;
+
+        return $this;
+    }
+
+    public function withState(Node\Expr $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }

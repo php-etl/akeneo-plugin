@@ -7,7 +7,6 @@ use Kiboko\Plugin\Akeneo\Factory;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Contract\Configurator\ConfigurationExceptionInterface;
 use Kiboko\Contract\Configurator\FactoryInterface;
-use Kiboko\Plugin\Log;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
@@ -57,7 +56,6 @@ final class Service implements FactoryInterface
     public function compile(array $config): RepositoryInterface
     {
         $clientFactory = new Factory\Client();
-        $loggerFactory = new Log\Service();
 
         try {
             if (array_key_exists('extractor', $config)) {
@@ -66,18 +64,14 @@ final class Service implements FactoryInterface
                 $extractor = $extractorFactory->compile($config['extractor']);
                 $extractorBuilder = $extractor->getBuilder();
 
-                $logger = $loggerFactory->compile($config['logger'] ?? []);
-
                 $client = $clientFactory->compile($config['client']);
                 $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $extractorBuilder
-                    ->withClient($client->getBuilder()->getNode())
-                    ->withLogger($logger->getBuilder()->getNode());
+                    ->withClient($client->getBuilder()->getNode());
 
                 $extractor
-                    ->merge($client)
-                    ->merge($logger);
+                    ->merge($client);
 
                 return $extractor;
             } elseif (array_key_exists('loader', $config)) {
@@ -86,18 +80,14 @@ final class Service implements FactoryInterface
                 $loader = $loaderFactory->compile($config['loader']);
                 $loaderBuilder = $loader->getBuilder();
 
-                $logger = $loggerFactory->compile($config['logger'] ?? []);
-
                 $client = $clientFactory->compile($config['client']);
                 $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $loaderBuilder
-                    ->withClient($client->getBuilder()->getNode())
-                    ->withLogger($logger->getBuilder()->getNode());
+                    ->withClient($client->getBuilder()->getNode());
 
                 $loader
-                    ->merge($client)
-                    ->merge($logger);
+                    ->merge($client);
 
                 return $loader;
             } else {

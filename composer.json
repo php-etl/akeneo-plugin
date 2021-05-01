@@ -3,6 +3,36 @@
     "description": "Adapters for the Akeneo API client",
     "type": "library",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Grégory Planchat",
+            "email": "gregory@kiboko.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "php-etl/configurator-contracts": "^0.2.0",
+        "nikic/php-parser": "^4.10",
+        "symfony/config": "^5.2"
+    },
+    "require-dev": {
+        "php-http/mock-client": "^1.4@dev",
+        "symfony/yaml": "^5.2",
+        "php-etl/bucket-contracts": "^0.1.0",
+        "php-etl/pipeline-contracts": "^0.1.0",
+        "phpunit/phpunit": "^9.0",
+        "laminas/laminas-diactoros": "^2.6",
+        "adlawson/vfs": "dev-develop",
+        "friends-of-phpspec/phpspec-code-coverage": "*",
+        "phpspec/phpspec": "^7.0",
+        "johnkary/phpunit-speedtrap": "*",
+        "mybuilder/phpunit-accelerator": "*",
+        "phpunit/php-invoker": "*",
+        "php-etl/phpspec-extension": "*",
+        "akeneo/api-php-client-ee": "^4.0"
+    },
     "autoload": {
         "psr-4": {
             "Kiboko\\Plugin\\Akeneo\\": "src/"
@@ -13,47 +43,12 @@
             "functional\\Kiboko\\Plugin\\Akeneo\\": "tests/functional/"
         }
     },
-    "config": {
-        "bin-dir": "bin"
-    },
-    "require": {
-        "php": "^8.0",
-        "ext-json": "*",
-        "php-etl/configurator-contracts": "^0.1@dev",
-        "nikic/php-parser": "^4.9@dev",
-        "symfony/config": "^5.2@dev",
-        "php-etl/log-plugin": "0.1.x-dev"
-    },
-    "require-dev": {
-        "php-http/mock-client": "^1.4@dev",
-        "symfony/yaml": "^5.2@dev",
-        "symfony/console": "^5.2@dev",
-        "php-etl/bucket-contracts": "^0.1.0@dev",
-        "akeneo/api-php-client-ee": "^4.0",
-        "php-etl/pipeline-contracts": "^0.1.0@dev",
-        "php-etl/pipeline": "^0.2.0@dev",
-        "phpunit/phpunit": "^9.0",
-        "laminas/laminas-diactoros": "2.6.x-dev",
-        "adlawson/vfs": "dev-develop",
-        "friends-of-phpspec/phpspec-code-coverage": "*",
-        "phpspec/phpspec": "^7.0",
-        "johnkary/phpunit-speedtrap": "*",
-        "mybuilder/phpunit-accelerator": "*",
-        "phpunit/php-invoker": "*",
-        "phpstan/phpstan": "^0.12",
-        "infection/infection": "^0.20",
-        "php-etl/phpspec-extension": "^0.2@dev"
-    },
-    "authors": [
-        {
-            "name": "Grégory Planchat",
-            "email": "gregory@kiboko.fr"
-        }
-    ],
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.2.x-dev"
         }
+    },
+    "config": {
+        "bin-dir": "bin"
     }
 }
