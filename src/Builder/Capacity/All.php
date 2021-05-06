@@ -10,11 +10,13 @@ final class All implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
+    private null|string $code;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->search = null;
+        $this->code = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -27,6 +29,13 @@ final class All implements Builder
     public function withSearch(Node\Expr $search): self
     {
         $this->search = $search;
+
+        return $this;
+    }
+
+    public function withCode(string $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }
@@ -54,17 +63,23 @@ final class All implements Builder
                                     name: $this->endpoint
                                 ),
                                 name: new Node\Identifier('all'),
-                                args: [
-                                    new Node\Arg(
-                                        value: new Node\Expr\Array_(
-                                            items: $this->compileSearch(),
-                                            attributes: [
-                                                'kind' => Node\Expr\Array_::KIND_SHORT,
-                                            ]
+                                args: array_filter(
+                                    [
+                                        new Node\Arg(
+                                            value: new Node\Expr\Array_(
+                                                items: $this->compileSearch(),
+                                                attributes: [
+                                                    'kind' => Node\Expr\Array_::KIND_SHORT,
+                                                ]
+                                            ),
+                                            name: new Node\Identifier('queryParameters'),
                                         ),
-                                        name: new Node\Identifier('queryParameters'),
-                                    ),
-                                ],
+                                        $this->code === null ? null : new Node\Arg(
+                                            value: new Node\Scalar\String_($this->code),
+                                            name: new Node\Identifier('attributeCode'),
+                                        )
+                                    ],
+                                ),
                             ),
                             unpack: true,
                         ),

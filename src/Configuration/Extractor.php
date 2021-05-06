@@ -146,6 +146,10 @@ final class Extractor implements Config\Definition\ConfigurationInterface
                     return $item;
                 })
             ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
+                ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+            ->end()
             ->children()
                 ->scalarNode('type')
                     ->isRequired()
@@ -156,7 +160,8 @@ final class Extractor implements Config\Definition\ConfigurationInterface
                         )
                     ->end()
                 ->end()
-                ->scalarNode('method')->end()
+                ->scalarNode('method')->isRequired()->end()
+                ->scalarNode('code')->end()
                 ->append($filters->getConfigTreeBuilder())
             ->end();
 
