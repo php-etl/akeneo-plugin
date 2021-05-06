@@ -79,7 +79,7 @@ final class Extractor implements Configurator\FactoryInterface
             );
         }
 
-        if (isset($config['enterprise'])) {
+        if (array_key_exists('enterprise', $config)) {
             $builder->withEnterpriseSupport($config['enterprise']);
         }
 

@@ -64,6 +64,12 @@ final class All implements CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
+        if (in_array($config['type'], ['attributeOption'])
+            && array_key_exists('code', $config)
+        ) {
+            $builder->withCode($config['code']);
+        }
+
         return $builder;
     }
 }
