@@ -25,13 +25,10 @@
         "php-http/mock-client": "^1.4@dev",
         "symfony/yaml": "^5.2",
         "laminas/laminas-diactoros": "^2.6",
-        "phpspec/phpspec": "^7.0",
-        "friends-of-phpspec/phpspec-code-coverage": "*",
         "adlawson/vfs": "dev-develop",
         "mybuilder/phpunit-accelerator": "*",
         "php-etl/pipeline-contracts": "^0.1.0",
         "php-etl/bucket-contracts": "^0.1.0",
-        "php-etl/phpspec-extension": "*",
         "akeneo/api-php-client-ee": "^4.0"
     },
     "autoload": {
