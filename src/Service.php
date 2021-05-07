@@ -90,6 +90,22 @@ final class Service implements FactoryInterface
                     ->merge($client);
 
                 return $loader;
+            } elseif (array_key_exists('conditional', $config)) {
+                $loaderFactory = new Factory\Lookup();
+
+                $lookup = $loaderFactory->compile($config['conditional']);
+                $loaderBuilder = $lookup->getBuilder();
+
+                $client = $clientFactory->compile($config['client']);
+                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
+
+                $loaderBuilder
+                    ->withClient($client->getBuilder()->getNode());
+
+                $lookup
+                    ->merge($client);
+
+                return $lookup;
             } else {
                 throw new InvalidConfigurationException(
                     'Could not determine if the factory should build an extractor or a loader.'
