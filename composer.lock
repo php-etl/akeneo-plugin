@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1a48a4784805870c7557fd690914fd9",
+    "content-hash": "fbdc5ddfa6dc9984ff6732888ac812ec",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -68,24 +68,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/configurator-contracts.git",
-                "reference": "90bbde976e48e4578ec47c2b2407ca6f11928e1e"
+                "reference": "4f840f4f7e7f8dd0bab45d4f26e616d28820c483"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/90bbde976e48e4578ec47c2b2407ca6f11928e1e",
-                "reference": "90bbde976e48e4578ec47c2b2407ca6f11928e1e",
+                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/4f840f4f7e7f8dd0bab45d4f26e616d28820c483",
+                "reference": "4f840f4f7e7f8dd0bab45d4f26e616d28820c483",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.9@dev",
+                "nikic/php-parser": "^4.10",
                 "php": "^8.0",
+                "php-etl/packaging-contracts": "^0.1.0",
                 "symfony/config": "^5.2"
             },
             "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-master": "0.3.x-dev"
                 }
             },
             "autoload": {
@@ -112,7 +113,58 @@
                 "issues": "https://github.com/php-etl/configurator-contracts/issues",
                 "source": "https://github.com/php-etl/configurator-contracts/tree/master"
             },
-            "time": "2021-04-30T10:02:17+00:00"
+            "time": "2021-05-07T11:22:52+00:00"
+        },
+        {
+            "name": "php-etl/packaging-contracts",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-etl/packaging-contracts.git",
+                "reference": "dafc1dd7cffc004442e9072172e88eb430b78185"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-etl/packaging-contracts/zipball/dafc1dd7cffc004442e9072172e88eb430b78185",
+                "reference": "dafc1dd7cffc004442e9072172e88eb430b78185",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^4.10",
+                "php": "^8.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kiboko\\Contract\\Packaging\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kiboko SAS",
+                    "homepage": "http://kiboko.fr"
+                },
+                {
+                    "name": "Grégory Planchat",
+                    "email": "gregory@kiboko.fr"
+                }
+            ],
+            "description": "This library aims at providing contracts for building TAR archives, using PHP resources and streams",
+            "support": {
+                "issues": "https://github.com/php-etl/packaging-contracts/issues",
+                "source": "https://github.com/php-etl/packaging-contracts/tree/master"
+            },
+            "time": "2021-05-07T11:10:40+00:00"
         },
         {
             "name": "symfony/config",

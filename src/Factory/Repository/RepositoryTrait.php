@@ -3,22 +3,24 @@
 namespace Kiboko\Plugin\Akeneo\Factory\Repository;
 
 use Kiboko\Contract\Configurator;
+use Kiboko\Contract\Packaging\DirectoryInterface;
+use Kiboko\Contract\Packaging\FileInterface;
 
 trait RepositoryTrait
 {
-    /** @var Configurator\FileInterface[] */
+    /** @var array<FileInterface|DirectoryInterface> */
     private array $files;
     /** @var string[] */
     private array $packages;
 
-    public function addFiles(Configurator\FileInterface ...$files): Configurator\RepositoryInterface
+    public function addFiles(FileInterface|DirectoryInterface ...$files): Configurator\RepositoryInterface
     {
         array_push($this->files, ...$files);
 
         return $this;
     }
 
-    /** @return iterable<Configurator\FileInterface> */
+    /** @return iterable<FileInterface|DirectoryInterface> */
     public function getFiles(): iterable
     {
         return $this->files;
