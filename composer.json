@@ -1,7 +1,7 @@
 {
     "name": "php-etl/akeneo-plugin",
     "description": "Adapters for the Akeneo API client",
-    "type": "library",
+    "type": "satellite-plugin",
     "license": "MIT",
     "authors": [
         {
