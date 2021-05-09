@@ -44,6 +44,9 @@
     "extra": {
         "branch-alias": {
             "dev-master": "0.3.x-dev"
+        },
+        "satellite": {
+            "class": "Kiboko\\Plugin\\Akeneo\\Service"
         }
     },
     "config": {
