@@ -146,6 +146,10 @@ final class Lookup implements Config\Definition\ConfigurationInterface
                     return $item;
                 })
             ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
+                ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+            ->end()
             ->children()
                 ->scalarNode('type')
                     ->isRequired()
@@ -156,7 +160,7 @@ final class Lookup implements Config\Definition\ConfigurationInterface
                         )
                     ->end()
                 ->end()
-                ->scalarNode('field')->end()
+                ->scalarNode('code')->end()
                 ->scalarNode('method')->isRequired()->end()
                 ->append($filters->getConfigTreeBuilder())
             ->end();
@@ -170,15 +174,17 @@ final class Lookup implements Config\Definition\ConfigurationInterface
 
         /** @phpstan-ignore-next-line */
         $builder->getRootNode()
-            ->children()
-                ->scalarNode('condition')->end()
-                ->append($this->getLookupTreeBuilder()->getRootNode())
-                ->variableNode('merge')
-                    ->validate()
-                        ->ifTrue(function ($element) {
-                            return !is_array($element);
-                        })
-                        ->thenInvalid('The children element must be an array.')
+            ->arrayPrototype()
+                ->children()
+                    ->scalarNode('condition')->end()
+                    ->append($this->getLookupTreeBuilder()->getRootNode())
+                    ->variableNode('merge')
+                        ->validate()
+                            ->ifTrue(function ($element) {
+                                return !is_array($element);
+                            })
+                            ->thenInvalid('The children element must be an array.')
+                        ->end()
                     ->end()
                 ->end()
             ->end();

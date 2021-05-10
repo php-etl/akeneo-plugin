@@ -2,10 +2,14 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
+use Kiboko\Contract\Configurator\RepositoryInterface;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
+use PhpParser\BuilderFactory;
 use PhpParser\Node;
+use PhpParser\ParserFactory;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Lookup implements StepBuilderInterface
 {
@@ -15,12 +19,14 @@ final class Lookup implements StepBuilderInterface
     private ?Node\Expr $state;
     private ?Node\Expr $client;
     private ?Builder $capacity;
+    private iterable $alternatives;
 
-    public function __construct(private string $condition, private array $lookup, private array $merge)
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->withEnterpriseSupport = false;
         $this->client = null;
         $this->capacity = null;
+        $this->alternatives = [];
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -65,8 +71,20 @@ final class Lookup implements StepBuilderInterface
         return $this;
     }
 
+    public function withAlternative(string $condition): self
+    {
+        $this->alternatives[] = [$condition];
+
+        return $this;
+    }
+
     public function getNode(): Node
     {
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+
+        /** @var RepositoryInterface $repository */
+        [$condition] = array_shift($this->alternatives);
+
         return new Node\Expr\New_(
             class: new Node\Stmt\Class_(
             name: null,
@@ -100,21 +118,47 @@ final class Lookup implements StepBuilderInterface
                     subNodes: [
                     'flags' => Node\Stmt\Class_::MODIFIER_PUBLIC,
                     'params' => [],
-                    'returnType' => new Node\Name(name: 'iterable'),
+                    'returnType' => new Node\Name\FullyQualified(\Generator::class),
                     'stmts' => [
-//                        new Node\Expr\Assign(
-//                            var: new Node\Expr\Variable('input'),
-//                            expr: new Node\Expr\New_($this->capacity->getNode()),
-//                        ),
+                        new Node\Stmt\Expression(
+                            new Node\Expr\Assign(
+                                var: new Node\Expr\Variable('input'),
+                                expr: new Node\Expr\Yield_(null)
+                            ),
+                        ),
                         new Node\Stmt\If_(
-                            cond: new Node\Scalar\String_($this->condition),
+                            cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'output']) . ';')[0]->expr,
                             subNodes: [
                                 'stmts' => [
-                                    new Node\Stmt\Expression(
-                                        new Node\Expr\Assign(
-                                            var: new Node\Expr\Variable('line'),
-                                            expr: new Node\Expr\Yield_(null)
-                                        ),
+                                    new Node\Expr\Assign(
+                                        var: new Node\Expr\Variable('data'),
+//                                        expr: new Node\Expr\New_(
+//                                            class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+//                                            args: [
+//                                            new Node\Arg(
+//                                                value: new Node\Expr\MethodCall(
+//                                                var: new Node\Expr\MethodCall(
+//                                                var: new Node\Expr\PropertyFetch(
+//                                                var: new Node\Expr\Variable('this'),
+//                                                name: new Node\Identifier('client')
+//                                            ),
+////                                                name: $this->endpoint
+//                                                name: 'getAttributeOptionApi'
+//                                            ),
+//                                                name: new Node\Identifier('all'),
+//                                                args: array_filter(
+//                                                [
+//                                                    new Node\Arg(
+//                                                        value: new Node\Scalar\String_('camera_brand'),
+//                                                        name: new Node\Identifier('attributeCode'),
+//                                                    )
+//                                                ],
+//                                            ),
+//                                            ),
+//                                                unpack: true,
+//                                            ),
+//                                            ]
+//                                        ),
                                     ),
                                     new Node\Stmt\Do_(
                                         cond: new Node\Expr\Assign(
@@ -133,17 +177,33 @@ final class Lookup implements StepBuilderInterface
                                             )
                                         ),
                                         stmts: [
-                                            new Node\Expr\FuncCall(
-                                                name: new Node\Scalar\String_('merge'),
-                                                args: [
-                                                    new Node\Arg(new Node\Scalar\String_('d'))
-                                                ]
+                                            new Node\Stmt\Expression(
+                                                new Node\Expr\Assign(
+                                                    var: new Node\Expr\Variable('line'),
+                                                    expr: new Node\Expr\FuncCall(
+                                                        name: new Node\Scalar\String_('array_merge'),
+                                                    )
+                                                ),
                                             )
                                         ]
-                                    )
+                                    ),
                                 ]
                             ]
-                        )
+                        ),
+                        new Node\Stmt\Expression(
+                            new Node\Expr\Yield_(
+                                new Node\Expr\New_(
+                                    class: new Node\Name\FullyQualified(
+                                    'Kiboko\\Component\\Bucket\\AcceptanceResultBucket',
+                                ),
+                                    args: [
+                                    new Node\Arg(
+                                        new Node\Expr\Variable('line'),
+                                    ),
+                                ],
+                                ),
+                            )
+                        ),
                     ],
                 ],
                 ),

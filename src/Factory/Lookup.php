@@ -7,15 +7,16 @@ use Kiboko\Contract\Configurator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Lookup implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
-    /** @var iterable<Akeneo\Capacity\CapacityInterface>  */
+    /** @var iterable<Akeneo\Capacity\CapacityInterface> */
     private iterable $capacities;
 
-    public function __construct()
+    public function __construct(private ?ExpressionLanguage $interpreter)
     {
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Lookup();
@@ -37,7 +38,7 @@ final class Lookup implements Configurator\FactoryInterface
     {
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+        } catch (Symfony\InvalidTypeException | Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
@@ -48,7 +49,7 @@ final class Lookup implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+        } catch (Symfony\InvalidTypeException | Symfony\InvalidConfigurationException $exception) {
             return false;
         }
     }
@@ -69,27 +70,30 @@ final class Lookup implements Configurator\FactoryInterface
     public function compile(array $config): Repository\Lookup
     {
         $builder = new Akeneo\Builder\Lookup(
-            $config['condition'],
-            $config['lookup'],
-            $config['merge']
+            $this->interpreter
         );
 
-        try {
-            $builder->withCapacity($this->findCapacity($config['lookup'])->getBuilder($config['lookup']));
-        } catch (NoApplicableCapacityException $exception) {
-            throw new Configurator\InvalidConfigurationException(
-                message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
-                previous: $exception,
-            );
-        }
+        foreach ($config as $alternative) {
+            try {
+                $builder->withCapacity($this->findCapacity($alternative['lookup'])->getBuilder($alternative['lookup']));
+                $builder->withAlternative(
+                    $alternative['condition'],
+                );
+            } catch (NoApplicableCapacityException $exception) {
+                throw new Configurator\InvalidConfigurationException(
+                    message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
+                    previous: $exception,
+                );
+            }
 
-        if (array_key_exists('enterprise', $config)) {
-            $builder->withEnterpriseSupport($config['enterprise']);
+            if (array_key_exists('enterprise', $config)) {
+                $builder->withEnterpriseSupport($config['enterprise']);
+            }
         }
 
         try {
             return new Repository\Lookup($builder);
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+        } catch (Symfony\InvalidTypeException | Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: $exception->getMessage(),
                 previous: $exception
