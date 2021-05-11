@@ -9,13 +9,13 @@ final class Lookup implements Configurator\StepRepositoryInterface
 {
     use RepositoryTrait;
 
-    public function __construct(private Akeneo\Builder\Lookup $builder)
+    public function __construct(private Akeneo\Builder\Lookup|Akeneo\Builder\ConditionalLookup $builder)
     {
         $this->files = [];
         $this->packages = [];
     }
 
-    public function getBuilder(): Akeneo\Builder\Lookup
+    public function getBuilder(): Akeneo\Builder\Lookup|Akeneo\Builder\ConditionalLookup
     {
         return $this->builder;
     }

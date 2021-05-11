@@ -56,8 +56,6 @@ final class Service implements FactoryInterface
      */
     public function compile(array $config): RepositoryInterface
     {
-        $clientFactory = new Factory\Client();
-
         $interpreter = new ExpressionLanguage();
         if (array_key_exists('expression_language', $config)
             && is_array($config['expression_language'])
@@ -68,9 +66,11 @@ final class Service implements FactoryInterface
             }
         }
 
+        $clientFactory = new Factory\Client($interpreter);
+
         try {
             if (array_key_exists('extractor', $config)) {
-                $extractorFactory = new Factory\Extractor();
+                $extractorFactory = new Factory\Extractor($interpreter);
 
                 $extractor = $extractorFactory->compile($config['extractor']);
                 $extractorBuilder = $extractor->getBuilder();
@@ -86,7 +86,7 @@ final class Service implements FactoryInterface
 
                 return $extractor;
             } elseif (array_key_exists('loader', $config)) {
-                $loaderFactory = new Factory\Loader();
+                $loaderFactory = new Factory\Loader($interpreter);
 
                 $loader = $loaderFactory->compile($config['loader']);
                 $loaderBuilder = $loader->getBuilder();
@@ -101,16 +101,16 @@ final class Service implements FactoryInterface
                     ->merge($client);
 
                 return $loader;
-            } elseif (array_key_exists('conditional', $config)) {
-                $loaderFactory = new Factory\Lookup($interpreter);
+            } elseif (array_key_exists('lookup', $config)) {
+                $lookupFactory = new Factory\Lookup($interpreter);
 
-                $lookup = $loaderFactory->compile($config['conditional']);
-                $loaderBuilder = $lookup->getBuilder();
+                $lookup = $lookupFactory->compile($config['lookup']);
+                $lookupBuilder = $lookup->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
                 $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
-                $loaderBuilder
+                $lookupBuilder
                     ->withClient($client->getBuilder()->getNode());
 
                 $lookup

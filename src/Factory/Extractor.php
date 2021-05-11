@@ -7,6 +7,7 @@ use Kiboko\Contract\Configurator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Extractor implements Configurator\FactoryInterface
 {
@@ -15,13 +16,13 @@ final class Extractor implements Configurator\FactoryInterface
     /** @var iterable<Akeneo\Capacity\CapacityInterface>  */
     private iterable $capacities;
 
-    public function __construct()
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Extractor();
         $this->capacities = [
-            new Akeneo\Capacity\All(),
-            new Akeneo\Capacity\ListPerPage(),
+            new Akeneo\Capacity\Extractor\All($this->interpreter),
+            new Akeneo\Capacity\Extractor\ListPerPage($this->interpreter),
         ];
     }
 
@@ -68,10 +69,12 @@ final class Extractor implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Extractor
     {
-        $builder = new Akeneo\Builder\Extractor();
+        $builder = new Akeneo\Builder\Extractor($this->interpreter);
 
         try {
-            $builder->withCapacity($this->findCapacity($config)->getBuilder($config));
+            $builder->withCapacity(
+                $this->findCapacity($config)->getBuilder($config)
+            );
         } catch (NoApplicableCapacityException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',

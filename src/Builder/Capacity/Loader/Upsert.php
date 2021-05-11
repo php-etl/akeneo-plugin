@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Plugin\Akeneo\Builder\Capacity;
+namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Loader;
 
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use Kiboko\Plugin\Akeneo\MissingParameterException;

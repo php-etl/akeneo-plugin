@@ -2,7 +2,9 @@
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
+use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 final class Lookup implements Config\Definition\ConfigurationInterface
 {
@@ -126,20 +128,20 @@ final class Lookup implements Config\Definition\ConfigurationInterface
         ],
     ];
 
-    public function getLookupTreeBuilder(): Config\Definition\Builder\TreeBuilder
+    public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
-        $filters = new Search();
-
         $builder = new Config\Definition\Builder\TreeBuilder('lookup');
+
+        $filters = new Search();
 
         /** @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-                ->ifArray()
+                ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && is_array($data))
                 ->then(function (array $item) {
                     if (!in_array($item['method'], self::$endpoints[$item['type']])) {
                         throw new \InvalidArgumentException(
-                            sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), \json_encode($item['method']))
+                            sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), \json_encode($item['method']))
                         );
                     }
 
@@ -147,45 +149,90 @@ final class Lookup implements Config\Definition\ConfigurationInterface
                 })
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
+                ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
                 ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+            ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => array_key_exists('conditional', $data) && is_array($data['conditional']) && count($data['conditional']) <= 0)
+                ->then(function ($data) {
+                    unset($data['conditional']);
+                    return $data;
+                })
             ->end()
             ->children()
                 ->scalarNode('type')
-                    ->isRequired()
                     ->validate()
                         ->ifNotInArray(array_keys(self::$endpoints))
                         ->thenInvalid(
-                            sprintf('the value should be one of [%s], got %%s', implode(', ', array_keys(self::$endpoints)))
+                            sprintf('The value should be one of [%s], got %%s', implode(', ', array_keys(self::$endpoints)))
                         )
                     ->end()
                 ->end()
-                ->scalarNode('code')->end()
-                ->scalarNode('method')->isRequired()->end()
+                ->scalarNode('code')
+                    ->validate()
+                        ->ifTrue(fn ($data) => str_starts_with($data, '@='))
+                        ->then(fn ($data) => new Expression(substr($data, 2)))
+                    ->end()
+                ->end()
+                ->scalarNode('method')->end()
+                ->append((new FastMap\Configuration('merge'))->getConfigTreeBuilder()->getRootNode())
                 ->append($filters->getConfigTreeBuilder())
+                ->append($this->getConditionalTreeBuilder()->getRootNode())
             ->end();
 
         return $builder;
     }
 
-    public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
+    private function getConditionalTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
         $builder = new Config\Definition\Builder\TreeBuilder('conditional');
 
-        /** @phpstan-ignore-next-line */
+        $filters = new Search();
+
         $builder->getRootNode()
+            ->cannotBeEmpty()
+            ->requiresAtLeastOneElement()
+            ->validate()
+                ->ifTrue(fn ($data) => count($data) <= 0)
+                ->thenUnset()
+            ->end()
             ->arrayPrototype()
+                ->validate()
+                    ->ifArray()
+                    ->then(function (array $item) {
+                        if (!in_array($item['method'], self::$endpoints[$item['type']])) {
+                            throw new \InvalidArgumentException(
+                                sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), \json_encode($item['method']))
+                            );
+                        }
+
+                        return $item;
+                    })
+                ->end()
+                ->validate()
+                    ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
+                    ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+                ->end()
                 ->children()
                     ->scalarNode('condition')->end()
-                    ->append($this->getLookupTreeBuilder()->getRootNode())
-                    ->variableNode('merge')
+                    ->scalarNode('type')
+                        ->isRequired()
                         ->validate()
-                            ->ifTrue(function ($element) {
-                                return !is_array($element);
-                            })
-                            ->thenInvalid('The children element must be an array.')
+                            ->ifNotInArray(array_keys(self::$endpoints))
+                            ->thenInvalid(
+                                sprintf('The value should be one of [%s], got %%s', implode(', ', array_keys(self::$endpoints)))
+                            )
                         ->end()
                     ->end()
+                    ->scalarNode('code')
+                        ->validate()
+                            ->ifTrue(fn ($data) => str_starts_with($data, '@='))
+                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                        ->end()
+                    ->end()
+                    ->scalarNode('method')->isRequired()->end()
+                    ->append((new FastMap\Configuration('merge'))->getConfigTreeBuilder()->getRootNode())
+                    ->append($filters->getConfigTreeBuilder())
                 ->end()
             ->end();
 

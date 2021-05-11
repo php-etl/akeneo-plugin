@@ -9,7 +9,7 @@ use PhpParser\Node;
 use PhpParser\ParserFactory;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-final class Lookup implements StepBuilderInterface
+final class ConditionalLookup implements StepBuilderInterface
 {
     private bool $withEnterpriseSupport;
     private ?Node\Expr $logger;
@@ -17,7 +17,7 @@ final class Lookup implements StepBuilderInterface
     private ?Node\Expr $state;
     private ?Node\Expr $client;
     private ?Builder $capacity;
-    private ?Builder $merge;
+    private iterable $alternatives;
 
     public function __construct(private ExpressionLanguage $interpreter)
     {
@@ -27,7 +27,7 @@ final class Lookup implements StepBuilderInterface
         $this->withEnterpriseSupport = false;
         $this->client = null;
         $this->capacity = null;
-        $this->merge = null;
+        $this->alternatives = [];
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -40,6 +40,9 @@ final class Lookup implements StepBuilderInterface
     public function withClient(Node\Expr $client): self
     {
         $this->client = $client;
+        foreach ($this->alternatives as [$condition, $alternative]) {
+            $alternative->withClient($this->client);
+        }
 
         return $this;
     }
@@ -65,18 +68,53 @@ final class Lookup implements StepBuilderInterface
         return $this;
     }
 
-    public function withCapacity(Builder $capacity): self
+    public function addAlternative(string $condition, Lookup $lookup): self
     {
-        $this->capacity = $capacity;
+        $this->alternatives[] = [$condition, $lookup];
+        if ($this->client !== null) {
+            $lookup->withClient($this->client);
+        }
 
         return $this;
     }
 
-    public function withMerge(Builder $merge): self
+    /** @return Node[] */
+    private function compileAlternative(Lookup $builder): array
     {
-        $this->merge = $merge;
+        return [
+            new Node\Stmt\Expression(
+                new Node\Expr\Assign(
+                    var: new Node\Expr\Variable('lookup'),
+                    expr: $builder->getNode(),
+                ),
+            ),
+        ];
+    }
 
-        return $this;
+    private function compileAllAlternatives(): Node
+    {
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+
+        $alternatives = $this->alternatives;
+        [$condition, $alternative] = array_shift($alternatives);
+
+        return new Node\Stmt\If_(
+            cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
+            subNodes: [
+                'stmts' => [
+                    ...$this->compileAlternative($alternative),
+                ],
+                'else' => new Node\Stmt\Else_(
+                    stmts: [
+                        new Node\Stmt\Expression(
+                            new Node\Expr\Yield_(
+                                new Node\Expr\Variable('line')
+                            ),
+                        ),
+                    ],
+                ),
+            ],
+        );
     }
 
     public function getNode(): Node
@@ -113,40 +151,19 @@ final class Lookup implements StepBuilderInterface
                             name: new Node\Identifier(name: 'transform'),
                             subNodes: [
                                 'flags' => Node\Stmt\Class_::MODIFIER_PUBLIC,
-                                'params' => [],
+                                'params' => [
+
+                                ],
                                 'returnType' => new Node\Name\FullyQualified(\Generator::class),
-                                'stmts' => array_filter([
+                                'stmts' => [
                                     new Node\Stmt\Expression(
                                         new Node\Expr\Assign(
-                                            var: new Node\Expr\Variable('input'),
+                                            var: new Node\Expr\Variable('line'),
                                             expr: new Node\Expr\Yield_(null)
                                         ),
                                     ),
-                                    new Node\Stmt\Do_(
-                                        cond: new Node\Expr\Assign(
-                                            var: new Node\Expr\Variable('input'),
-                                            expr: new Node\Expr\Yield_(
-                                                value: new Node\Expr\New_(
-                                                    class: new Node\Name\FullyQualified('Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
-                                                    args: [
-                                                        new Node\Arg(
-                                                            value: new Node\Expr\Variable('output'),
-                                                        ),
-                                                    ],
-                                                )
-                                            )
-                                        ),
-                                        stmts: [
-                                            new Node\Stmt\Expression(
-                                                new Node\Expr\Assign(
-                                                    var: new Node\Expr\Variable('lookup'),
-                                                    expr: $this->capacity->getNode(),
-                                                ),
-                                            ),
-                                            $this->merge?->getNode(),
-                                        ]
-                                    ),
-                                ]),
+                                    $this->compileAllAlternatives(),
+                                ],
                             ],
                         ),
                     ],
