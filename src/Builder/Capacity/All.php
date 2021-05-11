@@ -5,18 +5,22 @@ namespace Kiboko\Plugin\Akeneo\Builder\Capacity;
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
+use PhpParser\ParserFactory;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class All implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
     private null|string $code;
+    private ExpressionLanguage $interpreter;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->search = null;
         $this->code = null;
+        $this->interpreter = new ExpressionLanguage();
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -40,8 +44,17 @@ final class All implements Builder
         return $this;
     }
 
+    public function withExpressionLanguage(ExpressionLanguage $interpreter): self
+    {
+        $this->interpreter = $interpreter;
+
+        return $this;
+    }
+
     public function getNode(): Node
     {
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+
         if ($this->endpoint === null) {
             throw new MissingEndpointException(
                 message: 'Please check your capacity builder, you should have selected an endpoint.'
@@ -75,7 +88,7 @@ final class All implements Builder
                                             name: new Node\Identifier('queryParameters'),
                                         ),
                                         $this->code === null ? null : new Node\Arg(
-                                            value: new Node\Scalar\String_($this->code),
+                                            value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
                                             name: new Node\Identifier('attributeCode'),
                                         )
                                     ],

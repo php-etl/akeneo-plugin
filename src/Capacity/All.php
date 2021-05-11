@@ -67,7 +67,9 @@ final class All implements CapacityInterface
         if (in_array($config['type'], ['attributeOption'])
             && array_key_exists('code', $config)
         ) {
-            $builder->withCode($config['code']);
+            $builder
+                ->withCode($config['code'])
+                ->withExpressionLanguage(new \Symfony\Component\ExpressionLanguage\ExpressionLanguage());
         }
 
         return $builder;

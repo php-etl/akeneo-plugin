@@ -5,7 +5,6 @@ namespace Kiboko\Plugin\Akeneo\Builder;
 use Kiboko\Contract\Configurator\RepositoryInterface;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
-use PhpParser\BuilderFactory;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
 use Psr\Log\LoggerInterface;
@@ -20,6 +19,7 @@ final class Lookup implements StepBuilderInterface
     private ?Node\Expr $client;
     private ?Builder $capacity;
     private iterable $alternatives;
+    private array $merge;
 
     public function __construct(private ExpressionLanguage $interpreter)
     {
@@ -27,6 +27,7 @@ final class Lookup implements StepBuilderInterface
         $this->client = null;
         $this->capacity = null;
         $this->alternatives = [];
+        $this->merge = [];
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -74,6 +75,13 @@ final class Lookup implements StepBuilderInterface
     public function withAlternative(string $condition): self
     {
         $this->alternatives[] = [$condition];
+
+        return $this;
+    }
+
+    public function withMerge(array $merge): self
+    {
+        $this->merge = $merge;
 
         return $this;
     }
@@ -132,33 +140,9 @@ final class Lookup implements StepBuilderInterface
                                 'stmts' => [
                                     new Node\Expr\Assign(
                                         var: new Node\Expr\Variable('data'),
-//                                        expr: new Node\Expr\New_(
-//                                            class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
-//                                            args: [
-//                                            new Node\Arg(
-//                                                value: new Node\Expr\MethodCall(
-//                                                var: new Node\Expr\MethodCall(
-//                                                var: new Node\Expr\PropertyFetch(
-//                                                var: new Node\Expr\Variable('this'),
-//                                                name: new Node\Identifier('client')
-//                                            ),
-////                                                name: $this->endpoint
-//                                                name: 'getAttributeOptionApi'
-//                                            ),
-//                                                name: new Node\Identifier('all'),
-//                                                args: array_filter(
-//                                                [
-//                                                    new Node\Arg(
-//                                                        value: new Node\Scalar\String_('camera_brand'),
-//                                                        name: new Node\Identifier('attributeCode'),
-//                                                    )
-//                                                ],
-//                                            ),
-//                                            ),
-//                                                unpack: true,
-//                                            ),
-//                                            ]
-//                                        ),
+                                        expr: new Node\Expr\Array_(
+                                            [$this->capacity->getNode()]
+                                        ),
                                     ),
                                     new Node\Stmt\Do_(
                                         cond: new Node\Expr\Assign(
@@ -181,7 +165,32 @@ final class Lookup implements StepBuilderInterface
                                                 new Node\Expr\Assign(
                                                     var: new Node\Expr\Variable('line'),
                                                     expr: new Node\Expr\FuncCall(
-                                                        name: new Node\Scalar\String_('array_merge'),
+                                                        name: new Node\Name('array_merge'),
+                                                        args: [
+                                                            new Node\Arg(
+                                                                value: new Node\Expr\Variable('input'),
+                                                            ),
+                                                            new Node\Arg(
+                                                                value: new Node\Expr\Array_(
+                                                                    [new Node\Stmt\Function_(
+                                                                        name: '',
+                                                                        subNodes: [
+                                                                            'stmts' => [
+                                                                                new Node\Stmt\Foreach_(
+                                                                                    expr: new Node\Expr\Variable('data'),
+                                                                                    valueVar: new Node\Expr\Variable('d'),
+                                                                                    subNodes: [
+                                                                                        'stmts' => [
+                                                                                            $parser->parse('<?php ' . $this->interpreter->compile($this->merge['expression'], ['lookup']) . ';')[0]->expr,
+                                                                                        ]
+                                                                                    ]
+                                                                                )
+                                                                            ]
+                                                                        ]
+                                                                    )]
+                                                                )
+                                                            )
+                                                        ]
                                                     )
                                                 ),
                                             )

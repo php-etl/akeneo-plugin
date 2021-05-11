@@ -79,6 +79,14 @@ final class Lookup implements Configurator\FactoryInterface
                 $builder->withAlternative(
                     $alternative['condition'],
                 );
+
+                if (array_key_exists('merge', $alternative)){
+                    foreach ($alternative['merge'] as $field) {
+                        $builder->withMerge(
+                            $field,
+                        );
+                    }
+                }
             } catch (NoApplicableCapacityException $exception) {
                 throw new Configurator\InvalidConfigurationException(
                     message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
