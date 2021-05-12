@@ -3,31 +3,28 @@
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Contract\Configurator\StepBuilderInterface;
-use PhpParser\Builder;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ConditionalLookup implements StepBuilderInterface
 {
-    private bool $withEnterpriseSupport;
     private ?Node\Expr $logger;
     private ?Node\Expr $rejection;
     private ?Node\Expr $state;
-    private ?Node\Expr $client;
-    private ?Builder $capacity;
+    /** @var iterable<array{0: string, 1: Node\Expr}> */
     private iterable $alternatives;
+    private bool $withEnterpriseSupport;
+    private ?Node\Expr $client;
 
     public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->logger = null;
         $this->rejection = null;
         $this->state = null;
+        $this->alternatives = [];
         $this->withEnterpriseSupport = false;
         $this->client = null;
-        $this->capacity = null;
-        $this->alternatives = [];
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -40,10 +37,6 @@ final class ConditionalLookup implements StepBuilderInterface
     public function withClient(Node\Expr $client): self
     {
         $this->client = $client;
-        // FIXME: violates single responsibility principle
-        foreach ($this->alternatives as [$condition, $alternative]) {
-            $alternative->withClient($this->client);
-        }
 
         return $this;
     }
@@ -72,10 +65,6 @@ final class ConditionalLookup implements StepBuilderInterface
     public function addAlternative(string $condition, AlternativeLookup $lookup): self
     {
         $this->alternatives[] = [$condition, $lookup];
-        // FIXME: violates single responsibility principle
-        if ($this->client !== null) {
-            $lookup->withClient($this->client);
-        }
 
         return $this;
     }

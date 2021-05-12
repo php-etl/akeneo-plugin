@@ -69,18 +69,32 @@ final class Lookup implements Configurator\FactoryInterface
         );
     }
 
+    private function merge(Akeneo\Builder\AlternativeLookup $alternativeBuilder, array $config)
+    {
+        if (array_key_exists('merge', $config)) {
+            if (array_key_exists('map', $config['merge'])) {
+                $mapper = new FastMapConfig\ArrayBuilder(
+                    interpreter: $this->interpreter,
+                );
+
+                $fastMap = new Akeneo\Builder\Inline($mapper);
+
+                (new FastMap\Configuration\ConfigurationApplier(['lookup' => []]))($mapper->children(), $config['merge']['map']);
+
+                $alternativeBuilder->withMerge($fastMap);
+            }
+        }
+    }
+
     public function compile(array $config): Repository\Lookup
     {
         if (!array_key_exists('conditional', $config)) {
-            $builder = new Akeneo\Builder\Lookup($this->interpreter);
+            $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->interpreter);
+            $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
             $repository = new Repository\Lookup($builder);
 
-            if (array_key_exists('enterprise', $config)) {
-                $builder->withEnterpriseSupport($config['enterprise']);
-            }
-
             try {
-                $builder->withCapacity(
+                $alternativeBuilder->withCapacity(
                     $this->findCapacity($config)->getBuilder($config)
                 );
             } catch (NoApplicableCapacityException $exception) {
@@ -90,19 +104,7 @@ final class Lookup implements Configurator\FactoryInterface
                 );
             }
 
-            if (array_key_exists('merge', $config)) {
-                if (array_key_exists('map', $config['merge'])) {
-                    $mapper = new FastMapConfig\ArrayBuilder(
-                        interpreter: $this->interpreter,
-                    );
-
-                    $fastMap = new Akeneo\Builder\Inline($mapper);
-
-                    (new FastMap\Configuration\ConfigurationApplier(['lookup' => []]))($mapper->children(), $config['merge']['map']);
-
-                    $builder->withMerge($fastMap);
-                }
-            }
+            $this->merge($alternativeBuilder, $config);
         } else {
             $builder = new Akeneo\Builder\ConditionalLookup($this->interpreter);
             $repository = new Repository\Lookup($builder);
@@ -126,19 +128,7 @@ final class Lookup implements Configurator\FactoryInterface
                     $alternativeBuilder
                 );
 
-                if (array_key_exists('merge', $alternative)) {
-                    if (array_key_exists('map', $alternative['merge'])) {
-                        $mapper = new FastMapConfig\ArrayBuilder(
-                            interpreter: $this->interpreter,
-                        );
-
-                        $fastMap = new Akeneo\Builder\Inline($mapper);
-
-                        (new FastMap\Configuration\ConfigurationApplier(['lookup' => []]))($mapper->children(), $alternative['merge']['map']);
-
-                        $alternativeBuilder->withMerge($fastMap);
-                    }
-                }
+                $this->merge($alternativeBuilder, $alternative);
             }
         }
 

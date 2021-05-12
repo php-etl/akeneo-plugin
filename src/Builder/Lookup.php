@@ -3,29 +3,21 @@
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Contract\Configurator\StepBuilderInterface;
-use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Lookup implements StepBuilderInterface
 {
-    private bool $withEnterpriseSupport;
     private ?Node\Expr $logger;
-    private ?Node\Expr $rejection;
-    private ?Node\Expr $state;
+    private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
-    private ?Builder $capacity;
-    private ?Builder $merge;
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct(private AlternativeLookup $alternative)
     {
         $this->logger = null;
         $this->rejection = null;
         $this->state = null;
         $this->withEnterpriseSupport = false;
         $this->client = null;
-        $this->capacity = null;
-        $this->merge = null;
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -63,18 +55,14 @@ final class Lookup implements StepBuilderInterface
         return $this;
     }
 
-    public function withCapacity(Builder $capacity): self
+    /** @return Node[] */
+    private function compileAlternative(AlternativeLookup $lookup): array
     {
-        $this->capacity = $capacity;
-
-        return $this;
-    }
-
-    public function withMerge(Builder $merge): self
-    {
-        $this->merge = $merge;
-
-        return $this;
+        return [
+            new Node\Stmt\Expression(
+                $lookup->getNode(),
+            ),
+        ];
     }
 
     public function getNode(): Node
@@ -95,8 +83,8 @@ final class Lookup implements StepBuilderInterface
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
                                         type: !$this->withEnterpriseSupport ?
-                                        new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                        new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
+                                            new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
+                                            new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(
@@ -134,15 +122,7 @@ final class Lookup implements StepBuilderInterface
                                                 )
                                             )
                                         ),
-                                        stmts: array_filter([
-                                            new Node\Stmt\Expression(
-                                                new Node\Expr\Assign(
-                                                    var: new Node\Expr\Variable('lookup'),
-                                                    expr: $this->capacity->getNode(),
-                                                ),
-                                            ),
-                                            $this->merge?->getNode(),
-                                        ])
+                                        stmts: $this->compileAlternative($this->alternative)
                                     ),
                                 ]),
                             ],

@@ -22,20 +22,6 @@ final class AlternativeLookup implements Builder
         $this->merge = null;
     }
 
-    public function withEnterpriseSupport(bool $withEnterpriseSupport): self
-    {
-        $this->withEnterpriseSupport = $withEnterpriseSupport;
-
-        return $this;
-    }
-
-    public function withClient(Node\Expr $client): self
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
     public function withCapacity(Builder $capacity): self
     {
         $this->capacity = $capacity;
