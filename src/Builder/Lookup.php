@@ -16,8 +16,9 @@ final class Lookup implements StepBuilderInterface
     private ?Node\Expr $client;
     private ?Builder $capacity;
     private ?Builder $merge;
+    private AlternativeLookup $alternative;
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct()
     {
         $this->logger = null;
         $this->rejection = null;
@@ -63,18 +64,33 @@ final class Lookup implements StepBuilderInterface
         return $this;
     }
 
-    public function withCapacity(Builder $capacity): self
+    public function setAlternative(AlternativeLookup $lookup): self
     {
-        $this->capacity = $capacity;
+        $this->alternative = $lookup;
+
+        if ($this->client !== null) {
+            $lookup->withClient($this->client);
+        }
+
+        if ($this->capacity !== null) {
+            $lookup->withCapacity($this->capacity);
+        }
+
+        if ($this->merge !== null) {
+            $lookup->withMerge($this->merge);
+        }
 
         return $this;
     }
 
-    public function withMerge(Builder $merge): self
+    /** @return Node[] */
+    private function compileAlternative(AlternativeLookup $lookup): array
     {
-        $this->merge = $merge;
-
-        return $this;
+        return [
+            new Node\Stmt\Expression(
+                $lookup->getNode(),
+            ),
+        ];
     }
 
     public function getNode(): Node
@@ -134,15 +150,7 @@ final class Lookup implements StepBuilderInterface
                                                 )
                                             )
                                         ),
-                                        stmts: array_filter([
-                                            new Node\Stmt\Expression(
-                                                new Node\Expr\Assign(
-                                                    var: new Node\Expr\Variable('lookup'),
-                                                    expr: $this->capacity->getNode(),
-                                                ),
-                                            ),
-                                            $this->merge?->getNode(),
-                                        ])
+                                        stmts: $this->compileAlternative($this->alternative)
                                     ),
                                 ]),
                             ],

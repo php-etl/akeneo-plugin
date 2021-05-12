@@ -6,7 +6,6 @@ use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ConditionalLookup implements StepBuilderInterface
