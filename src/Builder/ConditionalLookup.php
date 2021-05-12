@@ -2,11 +2,11 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Kiboko\Contract\Configurator\RepositoryInterface;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ConditionalLookup implements StepBuilderInterface
@@ -40,6 +40,7 @@ final class ConditionalLookup implements StepBuilderInterface
     public function withClient(Node\Expr $client): self
     {
         $this->client = $client;
+        // FIXME: violates single responsibility principle
         foreach ($this->alternatives as [$condition, $alternative]) {
             $alternative->withClient($this->client);
         }
@@ -68,9 +69,10 @@ final class ConditionalLookup implements StepBuilderInterface
         return $this;
     }
 
-    public function addAlternative(string $condition, Lookup $lookup): self
+    public function addAlternative(string $condition, AlternativeLookup $lookup): self
     {
         $this->alternatives[] = [$condition, $lookup];
+        // FIXME: violates single responsibility principle
         if ($this->client !== null) {
             $lookup->withClient($this->client);
         }
@@ -79,14 +81,11 @@ final class ConditionalLookup implements StepBuilderInterface
     }
 
     /** @return Node[] */
-    private function compileAlternative(Lookup $builder): array
+    private function compileAlternative(AlternativeLookup $lookup): array
     {
         return [
             new Node\Stmt\Expression(
-                new Node\Expr\Assign(
-                    var: new Node\Expr\Variable('lookup'),
-                    expr: $builder->getNode(),
-                ),
+                $lookup->getNode(),
             ),
         ];
     }
@@ -98,22 +97,54 @@ final class ConditionalLookup implements StepBuilderInterface
         $alternatives = $this->alternatives;
         [$condition, $alternative] = array_shift($alternatives);
 
-        return new Node\Stmt\If_(
-            cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
-            subNodes: [
-                'stmts' => [
-                    ...$this->compileAlternative($alternative),
-                ],
-                'else' => new Node\Stmt\Else_(
-                    stmts: [
-                        new Node\Stmt\Expression(
-                            new Node\Expr\Yield_(
-                                new Node\Expr\Variable('line')
+        return new Node\Stmt\Do_(
+            cond: new Node\Expr\Assign(
+                var: new Node\Expr\Variable('input'),
+                expr: new Node\Expr\Yield_(
+                    value: new Node\Expr\New_(
+                        class: new Node\Name\FullyQualified('Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                        args: [
+                            new Node\Arg(
+                                value: new Node\Expr\Variable('output'),
                             ),
+                        ],
+                    )
+                )
+            ),
+            stmts: array_filter([
+                new Node\Stmt\Expression(
+                    new Node\Expr\Assign(
+                        var: new Node\Expr\Variable('output'),
+                        expr:new Node\Expr\Variable('input'),
+                    ),
+                ),
+                new Node\Stmt\If_(
+                    cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
+                    subNodes: [
+                        'stmts' => [
+                            ...$this->compileAlternative($alternative),
+                        ],
+                        'elseifs' => array_map(
+                            fn (string $condition, AlternativeLookup $lookup)
+                                => new Node\Stmt\ElseIf_(
+                                    cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
+                                    stmts: $this->compileAlternative($lookup)
+                            ),
+                            array_column($alternatives, 0),
+                            array_column($alternatives, 1)
+                        ),
+                        'else' => new Node\Stmt\Else_(
+                            stmts: [
+                                new Node\Stmt\Expression(
+                                    new Node\Expr\Yield_(
+                                        new Node\Expr\Variable('line')
+                                    ),
+                                ),
+                            ],
                         ),
                     ],
                 ),
-            ],
+            ])
         );
     }
 
@@ -158,7 +189,7 @@ final class ConditionalLookup implements StepBuilderInterface
                                 'stmts' => [
                                     new Node\Stmt\Expression(
                                         new Node\Expr\Assign(
-                                            var: new Node\Expr\Variable('line'),
+                                            var: new Node\Expr\Variable('input'),
                                             expr: new Node\Expr\Yield_(null)
                                         ),
                                     ),

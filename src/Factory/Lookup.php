@@ -108,7 +108,7 @@ final class Lookup implements Configurator\FactoryInterface
             $repository = new Repository\Lookup($builder);
 
             foreach ($config['conditional'] as $alternative) {
-                $alternativeBuilder = new Akeneo\Builder\Lookup($this->interpreter);
+                $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->interpreter);
 
                 try {
                     $alternativeBuilder->withCapacity(
@@ -126,15 +126,15 @@ final class Lookup implements Configurator\FactoryInterface
                     $alternativeBuilder
                 );
 
-                if (array_key_exists('merge', $config)) {
-                    if (array_key_exists('map', $config['merge'])) {
+                if (array_key_exists('merge', $alternative)) {
+                    if (array_key_exists('map', $alternative['merge'])) {
                         $mapper = new FastMapConfig\ArrayBuilder(
                             interpreter: $this->interpreter,
                         );
 
                         $fastMap = new Akeneo\Builder\Inline($mapper);
 
-                        (new FastMap\Configuration\ConfigurationApplier(['lookup' => []]))($mapper->children(), $config['merge']['map']);
+                        (new FastMap\Configuration\ConfigurationApplier(['lookup' => []]))($mapper->children(), $alternative['merge']['map']);
 
                         $alternativeBuilder->withMerge($fastMap);
                     }

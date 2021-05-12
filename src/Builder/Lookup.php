@@ -2,11 +2,9 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Kiboko\Contract\Configurator\RepositoryInterface;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
-use PhpParser\ParserFactory;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Lookup implements StepBuilderInterface
@@ -136,7 +134,7 @@ final class Lookup implements StepBuilderInterface
                                                 )
                                             )
                                         ),
-                                        stmts: [
+                                        stmts: array_filter([
                                             new Node\Stmt\Expression(
                                                 new Node\Expr\Assign(
                                                     var: new Node\Expr\Variable('lookup'),
@@ -144,7 +142,7 @@ final class Lookup implements StepBuilderInterface
                                                 ),
                                             ),
                                             $this->merge?->getNode(),
-                                        ]
+                                        ])
                                     ),
                                 ]),
                             ],
