@@ -30,11 +30,20 @@ final class Inline implements Builder
 
         $mapper->addContextVariable(new Node\Expr\Variable('lookup'));
 
-        return (new IsolatedCodeBuilder(
-            new Node\Expr\Variable('input'),
-            new Node\Expr\Variable('output'),
-            $mapper->compile(new Node\Expr\Variable('output')),
-            new Node\Expr\Variable('lookup'),
-        ))->getNode();
+        return new Node\Stmt\Expression(
+            (new IsolatedCodeBuilder(
+                new Node\Expr\Variable('input'),
+                new Node\Expr\Variable('output'),
+                array_merge(
+                    $mapper->compile(new Node\Expr\Variable('output')),
+                    [
+                        new Node\Stmt\Return_(
+                            new Node\Expr\Variable('output')
+                        )
+                    ]
+                ),
+                new Node\Expr\Variable('lookup'),
+            ))->getNode()
+        );
     }
 }

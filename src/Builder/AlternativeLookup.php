@@ -49,6 +49,9 @@ final class AlternativeLookup implements Builder
                     ),
                 ),
                 $this->merge?->getNode(),
+                new Node\Stmt\Return_(
+                    new Node\Expr\Variable('output')
+                ),
             ]),
         ))->getNode();
     }
