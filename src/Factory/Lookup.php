@@ -73,7 +73,7 @@ final class Lookup implements Configurator\FactoryInterface
     {
         if (array_key_exists('merge', $config)) {
             if (array_key_exists('map', $config['merge'])) {
-                $mapper = new FastMapConfig\ArrayBuilder(
+                $mapper = new FastMapConfig\ArrayAppendBuilder(
                     interpreter: $this->interpreter,
                 );
 
