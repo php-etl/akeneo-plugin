@@ -2,7 +2,7 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Kiboko\Component\FastMap\Compiler\Builder\IsolatedCodeBuilder;
+use Kiboko\Component\FastMap\Compiler\Builder\IsolatedCodeAppendVariableBuilder;
 use Kiboko\Component\FastMapConfig\ArrayBuilderInterface;
 use Kiboko\Component\FastMapConfig\ObjectBuilderInterface;
 use Kiboko\Contract\Mapping\CompilableMapperInterface;
@@ -16,9 +16,6 @@ final class Inline implements Builder
 
     public function getNode(): Node
     {
-        $variables[] = new Node\Expr\Variable('lookup');
-        $variables[] = new Node\Expr\Variable('output');
-
         $mapper = $this->mapper->getMapper();
 
         if (!$mapper instanceof CompilableMapperInterface) {
@@ -32,10 +29,9 @@ final class Inline implements Builder
         }
 
         $mapper->addContextVariable(new Node\Expr\Variable('lookup'));
-        $mapper->addContextVariable(new Node\Expr\Variable('output'));
 
         return new Node\Stmt\Expression(
-            (new IsolatedCodeBuilder(
+            (new IsolatedCodeAppendVariableBuilder(
                 new Node\Expr\Variable('input'),
                 new Node\Expr\Variable('output'),
                 array_merge(
@@ -46,7 +42,7 @@ final class Inline implements Builder
                         )
                     ]
                 ),
-                ...$variables,
+                new Node\Expr\Variable('lookup'),
             ))->getNode()
         );
     }
