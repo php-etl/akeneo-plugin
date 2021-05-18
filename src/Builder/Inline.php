@@ -16,6 +16,9 @@ final class Inline implements Builder
 
     public function getNode(): Node
     {
+        $variables[] = new Node\Expr\Variable('lookup');
+        $variables[] = new Node\Expr\Variable('output');
+
         $mapper = $this->mapper->getMapper();
 
         if (!$mapper instanceof CompilableMapperInterface) {
@@ -29,6 +32,7 @@ final class Inline implements Builder
         }
 
         $mapper->addContextVariable(new Node\Expr\Variable('lookup'));
+        $mapper->addContextVariable(new Node\Expr\Variable('output'));
 
         return new Node\Stmt\Expression(
             (new IsolatedCodeBuilder(
@@ -42,7 +46,7 @@ final class Inline implements Builder
                         )
                     ]
                 ),
-                new Node\Expr\Variable('lookup'),
+                ...$variables,
             ))->getNode()
         );
     }
