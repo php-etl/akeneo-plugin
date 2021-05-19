@@ -7,6 +7,7 @@ use Kiboko\Contract\Configurator;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Loader implements Configurator\FactoryInterface
 {
@@ -15,7 +16,7 @@ final class Loader implements Configurator\FactoryInterface
     /** @var iterable<Akeneo\Capacity\CapacityInterface>  */
     private iterable $capacities;
 
-    public function __construct()
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Loader();
@@ -67,10 +68,12 @@ final class Loader implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Loader
     {
-        $builder = new Akeneo\Builder\Loader();
+        $builder = new Akeneo\Builder\Loader($this->interpreter);
 
         try {
-            $builder->withCapacity($this->findCapacity($config)->getBuilder($config));
+            $builder->withCapacity(
+                $this->findCapacity($config)->getBuilder($config)
+            );
         } catch (NoApplicableCapacityException $exception) {
             throw new Configurator\InvalidConfigurationException(
                 message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
@@ -78,7 +81,7 @@ final class Loader implements Configurator\FactoryInterface
             );
         }
 
-        if (isset($config['enterprise'])) {
+        if (array_key_exists('enterprise', $config)) {
             $builder->withEnterpriseSupport($config['enterprise']);
         }
 

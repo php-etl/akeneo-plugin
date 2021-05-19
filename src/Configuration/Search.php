@@ -3,6 +3,7 @@
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Symfony\Component\Config;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 final class Search implements Config\Definition\ConfigurationInterface
 {
@@ -16,9 +17,28 @@ final class Search implements Config\Definition\ConfigurationInterface
                 ->children()
                     ->scalarNode('field')->cannotBeEmpty()->isRequired()->end()
                     ->scalarNode('operator')->cannotBeEmpty()->isRequired()->end()
-                    ->variableNode('value')->cannotBeEmpty()->isRequired()->end()
-                    ->scalarNode('scope')->cannotBeEmpty()->end()
-                    ->scalarNode('locale')->cannotBeEmpty()->end()
+                    ->variableNode('value')
+                        ->cannotBeEmpty()
+                        ->isRequired()
+                        ->validate()
+                            ->ifTrue(fn ($data) => is_string($data) && $data !== '' && str_starts_with($data, '@='))
+                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                        ->end()
+                    ->end()
+                    ->scalarNode('scope')
+                        ->cannotBeEmpty()
+                        ->validate()
+                            ->ifTrue(fn ($data) => is_string($data) && $data !== '' && str_starts_with($data, '@='))
+                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                        ->end()
+                    ->end()
+                    ->scalarNode('locale')
+                        ->cannotBeEmpty()
+                        ->validate()
+                            ->ifTrue(fn ($data) => is_string($data) && $data !== '' && str_starts_with($data, '@='))
+                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                        ->end()
+                    ->end()
                 ->end()
             ->end();
     }

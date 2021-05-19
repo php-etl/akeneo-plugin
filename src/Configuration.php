@@ -11,6 +11,7 @@ final class Configuration implements ConfigurationInterface
     {
         $client = new Configuration\Client();
         $extractor = new Configuration\Extractor();
+        $lookup = new Configuration\Lookup();
         $loader = new Configuration\Loader();
 
         $builder = new TreeBuilder('akeneo');
@@ -25,7 +26,11 @@ final class Configuration implements ConfigurationInterface
             ->end()
             ->children()
                 ->booleanNode('enterprise')->defaultFalse()->end()
+                ->arrayNode('expression_language')
+                    ->scalarPrototype()->end()
+                ->end()
                 ->append(node: $extractor->getConfigTreeBuilder()->getRootNode())
+                ->append(node: $lookup->getConfigTreeBuilder()->getRootNode())
                 ->append(node: $loader->getConfigTreeBuilder()->getRootNode())
                 ->append(node: $client->getConfigTreeBuilder()->getRootNode())
                 ->variableNode('logger')

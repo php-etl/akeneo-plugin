@@ -5,14 +5,18 @@ namespace Kiboko\Plugin\Akeneo\Builder;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use PhpParser\Builder;
 use PhpParser\Node;
+use PhpParser\ParserFactory;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Search implements Builder
 {
-    public function __construct(private array $filters = [])
-    {
-    }
+    public function __construct(
+        private ExpressionLanguage $interpreter,
+        private array $filters = []
+    ) {}
 
-    private function compileValue(null|bool|string|int|float|array $value): Node\Expr
+    private function compileValue(null|bool|string|int|float|array|Expression $value): Node\Expr
     {
         if ($value === null) {
             return new Node\Expr\ConstFetch(
@@ -40,6 +44,10 @@ final class Search implements Builder
         }
         if (is_array($value)) {
             return $this->compileArray(values: $value);
+        }
+        if ($value instanceof Expression) {
+            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+            return $parser->parse('<?php ' . $this->interpreter->compile($value, ['input']) . ';')[0]->expr;
         }
 
         throw new InvalidConfigurationException(

@@ -1,18 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Plugin\Akeneo\Builder\Capacity;
+namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Extractor;
 
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
+use PhpParser\ParserFactory;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-final class All implements Builder
+final class ListPerPage implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
-    private null|string $code;
+    private null|string|Expression $code;
 
-    public function __construct()
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->endpoint = null;
         $this->search = null;
@@ -33,7 +36,7 @@ final class All implements Builder
         return $this;
     }
 
-    public function withCode(string $code): self
+    public function withCode(string|Expression $code): self
     {
         $this->code = $code;
 
@@ -42,6 +45,8 @@ final class All implements Builder
 
     public function getNode(): Node
     {
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+
         if ($this->endpoint === null) {
             throw new MissingEndpointException(
                 message: 'Please check your capacity builder, you should have selected an endpoint.'
@@ -62,7 +67,7 @@ final class All implements Builder
                                     ),
                                     name: $this->endpoint
                                 ),
-                                name: new Node\Identifier('all'),
+                                name: new Node\Identifier('listPerPage'),
                                 args: array_filter(
                                     [
                                         new Node\Arg(
@@ -74,10 +79,21 @@ final class All implements Builder
                                             ),
                                             name: new Node\Identifier('queryParameters'),
                                         ),
-                                        $this->code === null ? null : new Node\Arg(
-                                            value: new Node\Scalar\String_($this->code),
-                                            name: new Node\Identifier('attributeCode'),
-                                        )
+                                        (function() use ($parser) {
+                                            if (is_string($this->code)) {
+                                                return new Node\Arg(
+                                                    value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
+                                                    name: new Node\Identifier('attributeCode'),
+                                                );
+                                            }
+                                            if ($this->code instanceof Expression) {
+                                                return new Node\Arg(
+                                                    value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
+                                                    name: new Node\Identifier('attributeCode'),
+                                                );
+                                            }
+                                            return null;
+                                        })(),
                                     ],
                                 ),
                             ),

@@ -5,16 +5,19 @@ namespace Kiboko\Plugin\Akeneo\Factory;
 use Kiboko\Plugin\Akeneo;
 use Kiboko\Contract\Configurator;
 use PhpParser\Node;
+use PhpParser\ParserFactory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Client implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
 
-    public function __construct()
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Client();
@@ -62,13 +65,23 @@ final class Client implements Configurator\FactoryInterface
         }
     }
 
+    private function compileIfExpression(string|Expression $value): Node\Expr
+    {
+        if ($value instanceof Expression) {
+            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+            return $parser->parse('<?php ' . $this->interpreter->compile($value, ['input']) . ';')[0]->expr;
+        }
+
+        return new Node\Scalar\String_($value);
+    }
+
     public function compile(array $config): Repository\Client
     {
         try {
             $clientBuilder = new Akeneo\Builder\Client(
-                new Node\Scalar\String_($config['api_url']),
-                new Node\Scalar\String_($config['client_id']),
-                new Node\Scalar\String_($config['secret']),
+                $this->compileIfExpression($config['api_url']),
+                $this->compileIfExpression($config['client_id']),
+                $this->compileIfExpression($config['secret']),
             );
 
             if (isset($config['context'])) {
@@ -88,13 +101,13 @@ final class Client implements Configurator\FactoryInterface
 
             if (isset($config['password'])) {
                 $clientBuilder->withPassword(
-                    new Node\Scalar\String_($config['username']),
-                    new Node\Scalar\String_($config['password']),
+                    $this->compileIfExpression($config['username']),
+                    $this->compileIfExpression($config['password']),
                 );
             } elseif (isset($config['refresh_token'])) {
                 $clientBuilder->withToken(
-                    new Node\Scalar\String_($config['token']),
-                    new Node\Scalar\String_($config['refresh_token']),
+                    $this->compileIfExpression($config['token']),
+                    $this->compileIfExpression($config['refresh_token']),
                 );
             }
 

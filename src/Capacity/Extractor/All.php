@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Kiboko\Plugin\Akeneo\Capacity;
+namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-final class All implements CapacityInterface
+final class All implements Akeneo\Capacity\CapacityInterface
 {
     private static $endpoints = [
         // Core Endpoints
@@ -37,6 +38,9 @@ final class All implements CapacityInterface
         'referenceEntity',
     ];
 
+    public function __construct(private ExpressionLanguage $interpreter)
+    {}
+
     public function applies(array $config): bool
     {
         return isset($config['type'])
@@ -45,9 +49,9 @@ final class All implements CapacityInterface
             && $config['method'] === 'all';
     }
 
-    private function compileFilters(array ...$filters): Node
+    private function compileFilters(array ...$filters): Node\Expr
     {
-        $builder = new Akeneo\Builder\Search();
+        $builder = new Akeneo\Builder\Search($this->interpreter);
         foreach ($filters as $filter) {
             $builder->addFilter(...$filter);
         }
@@ -57,7 +61,7 @@ final class All implements CapacityInterface
 
     public function getBuilder(array $config): Builder
     {
-        $builder = (new Akeneo\Builder\Capacity\All())
+        $builder = (new Akeneo\Builder\Capacity\Extractor\All($this->interpreter))
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
 
         if (isset($config['search']) && is_array($config['search'])) {

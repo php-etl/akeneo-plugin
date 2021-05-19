@@ -10,6 +10,7 @@ use Kiboko\Contract\Configurator\FactoryInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Service implements FactoryInterface
 {
@@ -55,11 +56,21 @@ final class Service implements FactoryInterface
      */
     public function compile(array $config): RepositoryInterface
     {
-        $clientFactory = new Factory\Client();
+        $interpreter = new ExpressionLanguage();
+        if (array_key_exists('expression_language', $config)
+            && is_array($config['expression_language'])
+            && count($config['expression_language'])
+        ) {
+            foreach ($config['expression_language'] as $provider) {
+                $interpreter->registerProvider(new $provider);
+            }
+        }
+
+        $clientFactory = new Factory\Client($interpreter);
 
         try {
             if (array_key_exists('extractor', $config)) {
-                $extractorFactory = new Factory\Extractor();
+                $extractorFactory = new Factory\Extractor($interpreter);
 
                 $extractor = $extractorFactory->compile($config['extractor']);
                 $extractorBuilder = $extractor->getBuilder();
@@ -75,7 +86,7 @@ final class Service implements FactoryInterface
 
                 return $extractor;
             } elseif (array_key_exists('loader', $config)) {
-                $loaderFactory = new Factory\Loader();
+                $loaderFactory = new Factory\Loader($interpreter);
 
                 $loader = $loaderFactory->compile($config['loader']);
                 $loaderBuilder = $loader->getBuilder();
@@ -90,6 +101,22 @@ final class Service implements FactoryInterface
                     ->merge($client);
 
                 return $loader;
+            } elseif (array_key_exists('lookup', $config)) {
+                $lookupFactory = new Factory\Lookup($interpreter);
+
+                $lookup = $lookupFactory->compile($config['lookup']);
+                $lookupBuilder = $lookup->getBuilder();
+
+                $client = $clientFactory->compile($config['client']);
+                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
+
+                $lookupBuilder
+                    ->withClient($client->getBuilder()->getNode());
+
+                $lookup
+                    ->merge($client);
+
+                return $lookup;
             } else {
                 throw new InvalidConfigurationException(
                     'Could not determine if the factory should build an extractor or a loader.'
