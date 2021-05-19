@@ -5,6 +5,7 @@ namespace functional\Kiboko\Plugin\Akeneo\Configuration;
 use Kiboko\Plugin\Akeneo\Configuration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 final class LookupTest extends TestCase
 {
@@ -19,42 +20,88 @@ final class LookupTest extends TestCase
     {
         yield [
             'config' => [
-                'condition' => 'input["type"] === "pim_attribute_simpleselect"',
-                'lookup' => [
-                    'type' => 'attributeOption',
-                    'field' => '@=input["code"]',
-                    'method' => 'all',
-                    'search' => [],
-                ],
-                'merge' => [
+                'conditional' => [
                     0 => [
-                        'field' => '[options]',
-                        'expression' => 'join(",", lookup)'
+                        'condition' => 'input["type"] === "pim_attribute_simpleselect"',
+                        'type' => 'attributeOption',
+                        'code' => '@=input["code"]',
+                        'method' => 'all',
+                        'search' => [],
+                        'merge' => [
+                            'map' => [
+                                0 => [
+                                    'field' => '[options]',
+                                    'expression' => 'join(",", lookup)'
+                                ],
+                                1 => [
+                                    'field' => '[options]',
+                                    'expression' => 'join(",", lookup)'
+                                ],
+                            ],
+                        ],
                     ],
-                    1 => [
-                        'field' => '[options]',
-                        'expression' => 'join(",", lookup)'
-                    ]
-                ]
+                ],
             ],
             'expected' => [
-                'condition' => 'input["type"] === "pim_attribute_simpleselect"',
-                'lookup' => [
-                    'type' => 'attributeOption',
-                    'field' => '@=input["code"]',
-                    'method' => 'all',
-                    'search' => [],
-                ],
-                'merge' => [
+                'conditional' => [
                     0 => [
-                        'field' => '[options]',
-                        'expression' => 'join(",", lookup)'
+                        'condition' => 'input["type"] === "pim_attribute_simpleselect"',
+                        'type' => 'attributeOption',
+                        'code' => new Expression('input["code"]'),
+                        'method' => 'all',
+                        'merge' => [
+                            'map' => [
+                                0 => [
+                                    'field' => '[options]',
+                                    'expression' => 'join(",", lookup)'
+                                ],
+                                1 => [
+                                    'field' => '[options]',
+                                    'expression' => 'join(",", lookup)'
+                                ],
+                            ],
+                        ],
                     ],
-                    1 => [
-                        'field' => '[options]',
-                        'expression' => 'join(",", lookup)'
-                    ]
-                ]
+                ],
+            ],
+        ];
+
+        yield [
+            'config' => [
+                'type' => 'attributeOption',
+                'code' => '@=input["code"]',
+                'method' => 'all',
+                'search' => [],
+                'merge' => [
+                    'map' => [
+                        0 => [
+                            'field' => '[options]',
+                            'expression' => 'join(",", lookup)'
+                        ],
+                        1 => [
+                            'field' => '[options]',
+                            'expression' => 'join(",", lookup)'
+                        ],
+                    ],
+                ],
+            ],
+            'expected' => [
+                'type' => 'attributeOption',
+                'code' => new Expression('input["code"]'),
+                'method' => 'all',
+                'search' => [],
+                'merge' => [
+                    'map' => [
+                        0 => [
+                            'field' => '[options]',
+                            'expression' => 'join(",", lookup)'
+                        ],
+                        1 => [
+                            'field' => '[options]',
+                            'expression' => 'join(",", lookup)'
+                        ],
+                    ],
+                ],
             ],
         ];
     }
@@ -64,7 +111,7 @@ final class LookupTest extends TestCase
     {
         $client = new Configuration\Lookup();
 
-        $this->assertSame($expected, $this->processor->processConfiguration($client, [$config]));
+        $this->assertEquals($expected, $this->processor->processConfiguration($client, [$config]));
     }
 
     public function testInvalidConfig()
@@ -75,15 +122,13 @@ final class LookupTest extends TestCase
             Config\Definition\Exception\InvalidConfigurationException::class,
         );
         $this->expectExceptionMessage(
-            'Invalid configuration for path "conditional.lookup": the value should be one of [listPerPage, all, get], got "invalidValue"',
+            'Invalid configuration for path "lookup.method": the value should be one of [listPerPage, all, get], got "invalidValue"',
         );
 
         $this->processor->processConfiguration($client, [
             [
-                'lookup' => [
-                    'type' => 'product',
-                    'method' => 'invalidValue'
-                ]
+                'type' => 'product',
+                'method' => 'invalidValue'
             ]
         ]);
     }
