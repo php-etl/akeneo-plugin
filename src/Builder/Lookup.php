@@ -60,6 +60,12 @@ final class Lookup implements StepBuilderInterface
     {
         return [
             new Node\Stmt\Expression(
+                new Node\Expr\Assign(
+                    var: new Node\Expr\Variable('output'),
+                    expr: new Node\Expr\Variable('input'),
+                ),
+            ),
+            new Node\Stmt\Expression(
                 $lookup->getNode(),
             ),
         ];

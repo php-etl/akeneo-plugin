@@ -110,7 +110,7 @@ final class Lookup implements Configurator\FactoryInterface
             $repository = new Repository\Lookup($builder);
 
             foreach ($config['conditional'] as $alternative) {
-                $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->interpreter, true);
+                $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->interpreter);
 
                 try {
                     $alternativeBuilder->withCapacity(

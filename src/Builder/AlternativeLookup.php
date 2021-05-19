@@ -3,7 +3,6 @@
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Component\FastMap\Compiler\Builder\IsolatedCodeAppendVariableBuilder;
-use Kiboko\Component\FastMap\Compiler\Builder\IsolatedCodeBuilder;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -15,7 +14,7 @@ final class AlternativeLookup implements Builder
     private ?Builder $capacity;
     private ?Builder $merge;
 
-    public function __construct(private ExpressionLanguage $interpreter, private $withCondition = false)
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->withEnterpriseSupport = false;
         $this->client = null;
@@ -39,40 +38,21 @@ final class AlternativeLookup implements Builder
 
     public function getNode(): Node
     {
-        if ($this->withCondition) {
-            return (new IsolatedCodeAppendVariableBuilder(
-                new Node\Expr\Variable('input'),
-                new Node\Expr\Variable('output'),
-                array_filter([
-                    new Node\Stmt\Expression(
-                        new Node\Expr\Assign(
-                            var: new Node\Expr\Variable('lookup'),
-                            expr: $this->capacity->getNode(),
-                        ),
+        return (new IsolatedCodeAppendVariableBuilder(
+            new Node\Expr\Variable('input'),
+            new Node\Expr\Variable('output'),
+            array_filter([
+                new Node\Stmt\Expression(
+                    new Node\Expr\Assign(
+                        var: new Node\Expr\Variable('lookup'),
+                        expr: $this->capacity->getNode(),
                     ),
-                    $this->merge?->getNode(),
-                    new Node\Stmt\Return_(
-                        new Node\Expr\Variable('output')
-                    ),
-                ]),
-            ))->getNode();
-        } else {
-            return (new IsolatedCodeBuilder(
-                new Node\Expr\Variable('input'),
-                new Node\Expr\Variable('output'),
-                array_filter([
-                    new Node\Stmt\Expression(
-                        new Node\Expr\Assign(
-                            var: new Node\Expr\Variable('lookup'),
-                            expr: $this->capacity->getNode(),
-                        ),
-                    ),
-                    $this->merge?->getNode(),
-                    new Node\Stmt\Return_(
-                        new Node\Expr\Variable('output')
-                    ),
-                ]),
-            ))->getNode();
-        }
+                ),
+                $this->merge?->getNode(),
+                new Node\Stmt\Return_(
+                    new Node\Expr\Variable('output')
+                ),
+            ]),
+        ))->getNode();
     }
 }
