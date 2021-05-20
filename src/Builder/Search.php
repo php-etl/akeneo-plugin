@@ -81,7 +81,7 @@ final class Search implements Builder
     public function addFilter(
         string $field,
         string $operator,
-        null|bool|string|int|array $value = null,
+        null|bool|string|int|array|Expression $value = null,
         null|string|array $scope = null,
         null|string|array $locale = null
     ): self {
