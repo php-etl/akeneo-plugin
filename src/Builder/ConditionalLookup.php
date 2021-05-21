@@ -118,7 +118,7 @@ final class ConditionalLookup implements StepBuilderInterface
                                 => new Node\Stmt\ElseIf_(
                                     cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
                                     stmts: $this->compileAlternative($lookup)
-                            ),
+                                ),
                             array_column($alternatives, 0),
                             array_column($alternatives, 1)
                         ),

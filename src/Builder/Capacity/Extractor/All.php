@@ -79,10 +79,10 @@ final class All implements Builder
                                             ),
                                             name: new Node\Identifier('queryParameters'),
                                         ),
-                                        (function() use ($parser) {
+                                        (function () use ($parser) {
                                             if (is_string($this->code)) {
                                                 return new Node\Arg(
-                                                    value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
+                                                    value: new Node\Scalar\String_($this->code),
                                                     name: new Node\Identifier('attributeCode'),
                                                 );
                                             }

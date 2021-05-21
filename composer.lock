@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88674605feec51b082bb3336c4d76472",
+    "content-hash": "9d9597472e1415f5fe6a086fb81bbdc7",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -301,7 +301,7 @@
         },
         {
             "name": "php-etl/bucket",
-            "version": "dev-master",
+            "version": "v0.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/bucket.git",
@@ -321,7 +321,6 @@
                 "friends-of-phpspec/phpspec-code-coverage": "6.x-dev",
                 "phpspec/phpspec": "^7.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -873,6 +872,67 @@
                 "source": "https://github.com/php-etl/packaging-contracts/tree/master"
             },
             "time": "2021-05-07T11:10:40+00:00"
+        },
+        {
+            "name": "php-etl/satellite-toolbox",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-etl/satellite-toolbox.git",
+                "reference": "9d8f1ca6a0b24937eca7596e6527a5867d440f76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/9d8f1ca6a0b24937eca7596e6527a5867d440f76",
+                "reference": "9d8f1ca6a0b24937eca7596e6527a5867d440f76",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^4.10",
+                "php": "^8.0",
+                "symfony/expression-language": "^5.2"
+            },
+            "require-dev": {
+                "johnkary/phpunit-speedtrap": "*",
+                "mybuilder/phpunit-accelerator": "*",
+                "phpunit/php-invoker": "*",
+                "phpunit/phpunit": "^9.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kiboko\\Component\\SatelliteToolbox\\": "src/"
+                },
+                "files": [
+                    "src/configuration.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kiboko SAS",
+                    "homepage": "http://kiboko.fr"
+                },
+                {
+                    "name": "Grégory Planchat",
+                    "email": "gregory@kiboko.fr"
+                }
+            ],
+            "description": "This library aims at building and running lambda PHP functions",
+            "support": {
+                "issues": "https://github.com/php-etl/satellite-toolbox/issues",
+                "source": "https://github.com/php-etl/satellite-toolbox/tree/master"
+            },
+            "time": "2021-05-21T07:11:00+00:00"
         },
         {
             "name": "php-http/curl-client",
@@ -4582,12 +4642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "cb2d2a04cd0c918a6c1906f1fa62680135ea1620"
+                "reference": "731bdf45ad0f0418033c319bf927a1505deaabcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/cb2d2a04cd0c918a6c1906f1fa62680135ea1620",
-                "reference": "cb2d2a04cd0c918a6c1906f1fa62680135ea1620",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/731bdf45ad0f0418033c319bf927a1505deaabcc",
+                "reference": "731bdf45ad0f0418033c319bf927a1505deaabcc",
                 "shasum": ""
             },
             "require": {
@@ -4677,7 +4737,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-05-19T07:01:08+00:00"
+            "time": "2021-05-20T14:25:41+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -5785,12 +5845,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "f07851c5b43e4cb502c24068620e9af6cbdd953f"
+                "reference": "b9267e5bbbe35c18d87e88a187108eaa27400808"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/f07851c5b43e4cb502c24068620e9af6cbdd953f",
-                "reference": "f07851c5b43e4cb502c24068620e9af6cbdd953f",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/b9267e5bbbe35c18d87e88a187108eaa27400808",
+                "reference": "b9267e5bbbe35c18d87e88a187108eaa27400808",
                 "shasum": ""
             },
             "require": {
@@ -5836,7 +5896,7 @@
                 "issues": "https://github.com/webmozarts/assert/issues",
                 "source": "https://github.com/webmozarts/assert/tree/master"
             },
-            "time": "2021-03-11T07:08:13+00:00"
+            "time": "2021-05-20T19:29:08+00:00"
         }
     ],
     "aliases": [],

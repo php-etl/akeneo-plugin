@@ -14,7 +14,8 @@ final class Search implements Builder
     public function __construct(
         private ExpressionLanguage $interpreter,
         private array $filters = []
-    ) {}
+    ) {
+    }
 
     private function compileValue(null|bool|string|int|float|array|Expression $value): Node\Expr
     {

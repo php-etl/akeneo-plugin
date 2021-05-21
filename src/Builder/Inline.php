@@ -12,7 +12,8 @@ use PhpParser\Node;
 final class Inline implements Builder
 {
     public function __construct(private ArrayBuilderInterface|ObjectBuilderInterface $mapper)
-    {}
+    {
+    }
 
     public function getNode(): Node
     {
