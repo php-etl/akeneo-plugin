@@ -5,6 +5,7 @@ namespace Kiboko\Plugin\Akeneo\Builder;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ConditionalLookup implements StepBuilderInterface
@@ -62,7 +63,7 @@ final class ConditionalLookup implements StepBuilderInterface
         return $this;
     }
 
-    public function addAlternative(string $condition, AlternativeLookup $lookup): self
+    public function addAlternative(string|Expression $condition, AlternativeLookup $lookup): self
     {
         $this->alternatives[] = [$condition, $lookup];
 
@@ -108,7 +109,15 @@ final class ConditionalLookup implements StepBuilderInterface
                     ),
                 ),
                 new Node\Stmt\If_(
-                    cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
+                    cond: (function () use ($parser, $condition) {
+                        if (is_string($condition)) {
+                            return new Node\Scalar\String_($condition);
+                        }
+                        if ($condition instanceof Expression) {
+                            return $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input']) . ';')[0]->expr;
+                        }
+                        return null;
+                    })(),
                     subNodes: [
                         'stmts' => [
                             ...$this->compileAlternative($alternative),

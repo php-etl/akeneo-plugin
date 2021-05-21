@@ -1,0 +1,27 @@
+akeneo:
+  expression_language:
+    - 'Kiboko\Component\ArrayExpressionLanguage\ArrayExpressionLanguageProvider'
+#  extractor:
+#    type: attributeOption
+#    code: 'input["code"]'
+#    method: all
+#    search:
+#      - { field: enabled, operator: '=', value: '@=input["code"]', scope: '@=input["code"]', locale: '@=input["fr_FR"]' }
+  lookup:
+    conditional:
+      - condition: '@=(input["type"] in ["pim_catalog_simpleselect", "pim_catalog_multipleselect"])'
+        type: attributeOption
+        code: 'input["code"]'
+        method: listPerPage
+        search:
+          - { field: enabled, operator: '=', value: '@=input["code"]', scope: '@=input["code"]', locale: '@=input["fr_FR"]' }
+        merge:
+          map:
+            - field: '[options]'
+              expression: 'join("|", lookup["code"])'
+  client:
+    api_url: 'http://demo.akeneo.com/'
+    client_id: '5_5555o1hi5vggs8k0kw8gks80wwow4ckgogok48cgc8ggsco8os'
+    secret: 't04o6nh5vtw4wkcg0swocs8wcoskg0ck84sggcs4ok0oo8c8k'
+    username: 'sylius_9794'
+    password: 'a60d900c9'

@@ -6,9 +6,11 @@ use Kiboko\Component\FastMapConfig;
 use Kiboko\Plugin\Akeneo;
 use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\FastMap;
+use PhpParser\ParserFactory;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Lookup implements Configurator\FactoryInterface
@@ -84,6 +86,16 @@ final class Lookup implements Configurator\FactoryInterface
                 $alternativeBuilder->withMerge($fastMap);
             }
         }
+    }
+
+    private function compileIfExpression(string|Expression $value): Node\Expr
+    {
+        if ($value instanceof Expression) {
+            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+            return $parser->parse('<?php ' . $this->interpreter->compile($value, ['input']) . ';')[0]->expr;
+        }
+
+        return new Node\Scalar\String_($value);
     }
 
     public function compile(array $config): Repository\Lookup
