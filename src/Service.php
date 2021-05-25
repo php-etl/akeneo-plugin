@@ -16,11 +16,13 @@ final class Service implements FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
+    private ExpressionLanguage $interpreter;
 
-    public function __construct()
+    public function __construct(?ExpressionLanguage $interpreter = null)
     {
         $this->processor = new Processor();
         $this->configuration = new Configuration();
+        $this->interpreter = $interpreter ?? new ExpressionLanguage();
     }
 
     public function configuration(): ConfigurationInterface
@@ -56,21 +58,20 @@ final class Service implements FactoryInterface
      */
     public function compile(array $config): RepositoryInterface
     {
-        $interpreter = new ExpressionLanguage();
         if (array_key_exists('expression_language', $config)
             && is_array($config['expression_language'])
             && count($config['expression_language'])
         ) {
             foreach ($config['expression_language'] as $provider) {
-                $interpreter->registerProvider(new $provider);
+                $this->interpreter->registerProvider(new $provider);
             }
         }
 
-        $clientFactory = new Factory\Client($interpreter);
+        $clientFactory = new Factory\Client($this->interpreter);
 
         try {
             if (array_key_exists('extractor', $config)) {
-                $extractorFactory = new Factory\Extractor($interpreter);
+                $extractorFactory = new Factory\Extractor($this->interpreter);
 
                 $extractor = $extractorFactory->compile($config['extractor']);
                 $extractorBuilder = $extractor->getBuilder();
@@ -86,7 +87,7 @@ final class Service implements FactoryInterface
 
                 return $extractor;
             } elseif (array_key_exists('loader', $config)) {
-                $loaderFactory = new Factory\Loader($interpreter);
+                $loaderFactory = new Factory\Loader($this->interpreter);
 
                 $loader = $loaderFactory->compile($config['loader']);
                 $loaderBuilder = $loader->getBuilder();
@@ -102,7 +103,7 @@ final class Service implements FactoryInterface
 
                 return $loader;
             } elseif (array_key_exists('lookup', $config)) {
-                $lookupFactory = new Factory\Lookup($interpreter);
+                $lookupFactory = new Factory\Lookup($this->interpreter);
 
                 $lookup = $lookupFactory->compile($config['lookup']);
                 $lookupBuilder = $lookup->getBuilder();

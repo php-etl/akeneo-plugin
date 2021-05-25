@@ -88,16 +88,6 @@ final class Lookup implements Configurator\FactoryInterface
         }
     }
 
-    private function compileIfExpression(string|Expression $value): Node\Expr
-    {
-        if ($value instanceof Expression) {
-            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
-            return $parser->parse('<?php ' . $this->interpreter->compile($value, ['input']) . ';')[0]->expr;
-        }
-
-        return new Node\Scalar\String_($value);
-    }
-
     public function compile(array $config): Repository\Lookup
     {
         if (!array_key_exists('conditional', $config)) {
