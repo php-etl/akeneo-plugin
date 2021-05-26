@@ -13,9 +13,9 @@ final class ListPerPage implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
-    private null|string|Expression $code;
+    private null|Node\Expr $code;
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct()
     {
         $this->endpoint = null;
         $this->search = null;
@@ -36,7 +36,7 @@ final class ListPerPage implements Builder
         return $this;
     }
 
-    public function withCode(string|Expression $code): self
+    public function withCode(Node\Expr $code): self
     {
         $this->code = $code;
 
@@ -45,8 +45,6 @@ final class ListPerPage implements Builder
 
     public function getNode(): Node
     {
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
-
         if ($this->endpoint === null) {
             throw new MissingEndpointException(
                 message: 'Please check your capacity builder, you should have selected an endpoint.'
@@ -73,21 +71,10 @@ final class ListPerPage implements Builder
                         ),
                         name: new Node\Identifier('queryParameters'),
                     ),
-                    (function () use ($parser) {
-                        if (is_string($this->code)) {
-                            return new Node\Arg(
-                                value: new Node\Scalar\String_($this->code),
-                                name: new Node\Identifier('attributeCode'),
-                            );
-                        }
-                        if ($this->code instanceof Expression) {
-                            return new Node\Arg(
-                                value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
-                                name: new Node\Identifier('attributeCode'),
-                            );
-                        }
-                        return null;
-                    })(),
+                    $this->code !== null ? new Node\Arg(
+                        value: $this->code,
+                        name: new Node\Identifier('attributeCode'),
+                    ) : null
                 ],
             ),
         );
