@@ -18,7 +18,7 @@ final class ConditionalLookup implements StepBuilderInterface
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct()
     {
         $this->logger = null;
         $this->rejection = null;
@@ -63,7 +63,7 @@ final class ConditionalLookup implements StepBuilderInterface
         return $this;
     }
 
-    public function addAlternative(string|Expression $condition, AlternativeLookup $lookup): self
+    public function addAlternative(Node\Expr $condition, AlternativeLookup $lookup): self
     {
         $this->alternatives[] = [$condition, $lookup];
 
@@ -82,8 +82,6 @@ final class ConditionalLookup implements StepBuilderInterface
 
     private function compileAllAlternatives(): Node
     {
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
-
         $alternatives = $this->alternatives;
         [$condition, $alternative] = array_shift($alternatives);
 
@@ -109,23 +107,15 @@ final class ConditionalLookup implements StepBuilderInterface
                     ),
                 ),
                 new Node\Stmt\If_(
-                    cond: (function () use ($parser, $condition) {
-                        if (is_string($condition)) {
-                            return new Node\Scalar\String_($condition);
-                        }
-                        if ($condition instanceof Expression) {
-                            return $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input']) . ';')[0]->expr;
-                        }
-                        return null;
-                    })(),
+                    cond: $condition,
                     subNodes: [
                         'stmts' => [
                             ...$this->compileAlternative($alternative),
                         ],
                         'elseifs' => array_map(
-                            fn (string $condition, AlternativeLookup $lookup)
+                            fn (Node\Expr $condition, AlternativeLookup $lookup)
                                 => new Node\Stmt\ElseIf_(
-                                    cond: $parser->parse('<?php ' . $this->interpreter->compile($condition, ['input', 'lookup', 'output']) . ';')[0]->expr,
+                                    cond: $condition,
                                     stmts: $this->compileAlternative($lookup)
                                 ),
                             array_column($alternatives, 0),

@@ -69,7 +69,7 @@ final class Extractor implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Extractor
     {
-        $builder = new Akeneo\Builder\Extractor($this->interpreter);
+        $builder = new Akeneo\Builder\Extractor();
 
         try {
             $builder->withCapacity(

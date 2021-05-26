@@ -4,8 +4,8 @@ akeneo:
     - 'functional\Kiboko\Plugin\Akeneo\ExpressionLanguage\Provider'
 #  extractor:
 #    type: attributeOption
-#    code: 'input["code"]'
-#    method: all
+#    code: '@=input["code"]'
+#    method: listPerPage
 #    search:
 #      - { field: enabled, operator: '=', value: '@=input["code"]', scope: '@=input["code"]', locale: '@=input["fr_FR"]' }
   lookup:
@@ -20,6 +20,9 @@ akeneo:
           map:
             - field: '[options]'
               expression: 'join("|", lookup["code"])'
+#  loader:
+#    type: family
+#    method: upsert
   client:
     api_url: '@=env("API_URL")' # or, 'http://demo.akeneo.com/'
     client_id: '@=env("CLIENT_ID")' # or, '5_5555o1hi5vggs8k0kw8gks80wwow4ckgogok48cgc8ggsco8os'
