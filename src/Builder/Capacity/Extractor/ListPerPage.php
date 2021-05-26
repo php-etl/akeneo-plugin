@@ -13,9 +13,9 @@ final class ListPerPage implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
-    private null|Node\Expr $code;
+    private null|string|Expression $code;
 
-    public function __construct()
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->endpoint = null;
         $this->search = null;
@@ -36,7 +36,7 @@ final class ListPerPage implements Builder
         return $this;
     }
 
-    public function withCode(Node\Expr $code): self
+    public function withCode(string|Expression $code): self
     {
         $this->code = $code;
 
@@ -45,6 +45,8 @@ final class ListPerPage implements Builder
 
     public function getNode(): Node
     {
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
+
         if ($this->endpoint === null) {
             throw new MissingEndpointException(
                 message: 'Please check your capacity builder, you should have selected an endpoint.'
@@ -77,10 +79,21 @@ final class ListPerPage implements Builder
                                             ),
                                             name: new Node\Identifier('queryParameters'),
                                         ),
-                                        $this->code !== null ? new Node\Arg(
-                                            value: $this->code,
-                                            name: new Node\Identifier('attributeCode'),
-                                        ) : null
+                                        (function () use ($parser) {
+                                            if (is_string($this->code)) {
+                                                return new Node\Arg(
+                                                    value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
+                                                    name: new Node\Identifier('attributeCode'),
+                                                );
+                                            }
+                                            if ($this->code instanceof Expression) {
+                                                return new Node\Arg(
+                                                    value: $parser->parse('<?php ' . $this->interpreter->compile($this->code, ['input']) . ';')[0]->expr,
+                                                    name: new Node\Identifier('attributeCode'),
+                                                );
+                                            }
+                                            return null;
+                                        })(),
                                     ],
                                 ),
                             ),

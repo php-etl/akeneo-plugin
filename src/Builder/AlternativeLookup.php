@@ -14,7 +14,7 @@ final class AlternativeLookup implements Builder
     private ?Builder $capacity;
     private ?Builder $merge;
 
-    public function __construct()
+    public function __construct(private ExpressionLanguage $interpreter)
     {
         $this->withEnterpriseSupport = false;
         $this->client = null;

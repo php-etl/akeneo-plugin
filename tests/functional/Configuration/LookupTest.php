@@ -41,7 +41,6 @@ final class LookupTest extends TestCase
                         ],
                     ],
                 ],
-                'search' => [],
             ],
             'expected' => [
                 'conditional' => [
@@ -50,7 +49,6 @@ final class LookupTest extends TestCase
                         'type' => 'attributeOption',
                         'code' => new Expression('input["code"]'),
                         'method' => 'all',
-                        'search' => [],
                         'merge' => [
                             'map' => [
                                 0 => [
@@ -65,7 +63,6 @@ final class LookupTest extends TestCase
                         ],
                     ],
                 ],
-                'search' => [],
             ],
         ];
 
@@ -124,7 +121,6 @@ final class LookupTest extends TestCase
         $this->expectException(
             Config\Definition\Exception\InvalidConfigurationException::class,
         );
-
         $this->expectExceptionMessage(
             'Invalid configuration for path "lookup.method": the value should be one of [listPerPage, all, get], got "invalidValue"',
         );
