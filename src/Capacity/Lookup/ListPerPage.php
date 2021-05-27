@@ -2,13 +2,11 @@
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Lookup;
 
-use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
-use PhpParser\ParserFactory;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 
 final class ListPerPage implements Akeneo\Capacity\CapacityInterface
 {
@@ -58,77 +56,15 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
         $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
             $builder->addFilter(
-                field: $this->compileValue($filter["field"]),
-                operator: $this->compileValue($filter["operator"]),
-                value: $this->compileValue($filter["value"]),
-                scope: array_key_exists('scope', $filter) ? $this->compileValue($filter["scope"]) : null,
-                locale: array_key_exists('locale', $filter) ? $this->compileValue($filter["locale"]) : null
+                field: compileValue($this->interpreter, $filter["field"]),
+                operator: compileValue($this->interpreter, $filter["operator"]),
+                value: compileValue($this->interpreter, $filter["value"]),
+                scope: array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter["scope"]) : null,
+                locale: array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter["locale"]) : null
             );
         }
 
         return $builder->getNode();
-    }
-
-    private function compileValue(null|bool|string|int|float|array|Expression $value): Node\Expr
-    {
-        if ($value === null) {
-            return new Node\Expr\ConstFetch(
-                name: new Node\Name(name: 'null'),
-            );
-        }
-        if ($value === true) {
-            return new Node\Expr\ConstFetch(
-                name: new Node\Name(name: 'true'),
-            );
-        }
-        if ($value === false) {
-            return new Node\Expr\ConstFetch(
-                name: new Node\Name(name: 'false'),
-            );
-        }
-        if (is_string($value)) {
-            return new Node\Scalar\String_(value: $value);
-        }
-        if (is_int($value)) {
-            return new Node\Scalar\LNumber(value: $value);
-        }
-        if (is_double($value)) {
-            return new Node\Scalar\DNumber(value: $value);
-        }
-        if (is_array($value)) {
-            return $this->compileArray(values: $value);
-        }
-        if ($value instanceof Expression) {
-            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, null);
-            return $parser->parse('<?php ' . $this->interpreter->compile($value, ['input']) . ';')[0]->expr;
-        }
-
-        throw new InvalidConfigurationException(
-            message: 'Could not determine the correct way to compile the provided filter.',
-        );
-    }
-
-    private function compileArray(array $values): Node\Expr
-    {
-        $items = [];
-        foreach ($values as $key => $value) {
-            $keyNode = null;
-            if (is_string($key)) {
-                $keyNode = new Node\Scalar\String_($key);
-            }
-
-            $items[] = new Node\Expr\ArrayItem(
-                value: $this->compileValue($value),
-                key: $keyNode,
-            );
-        }
-
-        return new Node\Expr\Array_(
-            $items,
-            [
-                'kind' => Node\Expr\Array_::KIND_SHORT,
-            ]
-        );
     }
 
     public function getBuilder(array $config): Builder
@@ -143,7 +79,7 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
         if (in_array($config['type'], ['attributeOption'])
             && array_key_exists('code', $config)
         ) {
-            $builder->withCode($this->compileValue($config['code']));
+            $builder->withCode(compileValue($this->interpreter, $config['code']));
         }
 
         return $builder;
