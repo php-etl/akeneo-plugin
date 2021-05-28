@@ -6,6 +6,7 @@ use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 
 final class ListPerPage implements Akeneo\Capacity\CapacityInterface
 {
@@ -39,7 +40,8 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
-    {}
+    {
+    }
 
     public function applies(array $config): bool
     {
@@ -51,9 +53,15 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
 
     private function compileFilters(array ...$filters): Node\Expr
     {
-        $builder = new Akeneo\Builder\Search($this->interpreter);
+        $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
-            $builder->addFilter(...$filter);
+            $builder->addFilter(
+                field: compileValue($this->interpreter, $filter["field"]),
+                operator: compileValue($this->interpreter, $filter["operator"]),
+                value: compileValue($this->interpreter, $filter["value"]),
+                scope: array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter["scope"]) : null,
+                locale: array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter["locale"]) : null
+            );
         }
 
         return $builder->getNode();
@@ -61,7 +69,7 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
 
     public function getBuilder(array $config): Builder
     {
-        $builder = (new Akeneo\Builder\Capacity\Lookup\ListPerPage($this->interpreter))
+        $builder = (new Akeneo\Builder\Capacity\Lookup\ListPerPage())
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
 
         if (isset($config['search']) && is_array($config['search'])) {
@@ -71,7 +79,7 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
         if (in_array($config['type'], ['attributeOption'])
             && array_key_exists('code', $config)
         ) {
-            $builder->withCode($config['code']);
+            $builder->withCode(compileValue($this->interpreter, $config['code']));
         }
 
         return $builder;

@@ -4,6 +4,8 @@ namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Symfony\Component\Config;
 use Symfony\Component\ExpressionLanguage\Expression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Search implements Config\Definition\ConfigurationInterface
 {
@@ -21,22 +23,22 @@ final class Search implements Config\Definition\ConfigurationInterface
                         ->cannotBeEmpty()
                         ->isRequired()
                         ->validate()
-                            ->ifTrue(fn ($data) => is_string($data) && $data !== '' && str_starts_with($data, '@='))
-                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                            ->ifTrue(isExpression())
+                            ->then(asExpression())
                         ->end()
                     ->end()
                     ->scalarNode('scope')
                         ->cannotBeEmpty()
                         ->validate()
-                            ->ifTrue(fn ($data) => is_string($data) && $data !== '' && str_starts_with($data, '@='))
-                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                            ->ifTrue(isExpression())
+                            ->then(asExpression())
                         ->end()
                     ->end()
                     ->scalarNode('locale')
                         ->cannotBeEmpty()
                         ->validate()
-                            ->ifTrue(fn ($data) => is_string($data) && $data !== '' && str_starts_with($data, '@='))
-                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                            ->ifTrue(isExpression())
+                            ->then(asExpression())
                         ->end()
                     ->end()
                 ->end()

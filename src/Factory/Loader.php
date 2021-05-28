@@ -68,7 +68,7 @@ final class Loader implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Loader
     {
-        $builder = new Akeneo\Builder\Loader($this->interpreter);
+        $builder = new Akeneo\Builder\Loader();
 
         try {
             $builder->withCapacity(

@@ -3,6 +3,8 @@
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Symfony\Component\Config;
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Extractor implements Config\Definition\ConfigurationInterface
 {
@@ -161,7 +163,12 @@ final class Extractor implements Config\Definition\ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('method')->isRequired()->end()
-                ->scalarNode('code')->end()
+                ->scalarNode('code')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
                 ->append($filters->getConfigTreeBuilder())
             ->end();
 

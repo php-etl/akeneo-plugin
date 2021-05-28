@@ -10,6 +10,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Lookup implements Configurator\FactoryInterface
 {
@@ -89,7 +90,7 @@ final class Lookup implements Configurator\FactoryInterface
     public function compile(array $config): Repository\Lookup
     {
         if (!array_key_exists('conditional', $config)) {
-            $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->interpreter);
+            $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
             $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
             $repository = new Repository\Lookup($builder);
 
@@ -106,11 +107,11 @@ final class Lookup implements Configurator\FactoryInterface
 
             $this->merge($alternativeBuilder, $config);
         } else {
-            $builder = new Akeneo\Builder\ConditionalLookup($this->interpreter);
+            $builder = new Akeneo\Builder\ConditionalLookup();
             $repository = new Repository\Lookup($builder);
 
             foreach ($config['conditional'] as $alternative) {
-                $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->interpreter);
+                $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
 
                 try {
                     $alternativeBuilder->withCapacity(
@@ -124,7 +125,7 @@ final class Lookup implements Configurator\FactoryInterface
                 }
 
                 $builder->addAlternative(
-                    $alternative['condition'],
+                    compileValueWhenExpression($this->interpreter, $alternative['condition']),
                     $alternativeBuilder
                 );
 

@@ -22,7 +22,8 @@
         "php-etl/bucket": "0.1.x-dev",
         "php-etl/configurator-contracts": "^0.3.0",
         "php-etl/fast-map-plugin": "^0.4.0",
-        "php-etl/packaging-contracts": "^0.1.0"
+        "php-etl/packaging-contracts": "^0.1.0",
+        "php-etl/satellite-toolbox": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",

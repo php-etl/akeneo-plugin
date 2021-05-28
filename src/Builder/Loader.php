@@ -16,7 +16,7 @@ final class Loader implements StepBuilderInterface
     private ?Node\Expr $client;
     private ?Builder $capacity;
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct()
     {
         $this->logger = null;
         $this->rejection = null;

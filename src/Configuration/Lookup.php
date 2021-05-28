@@ -5,6 +5,8 @@ namespace Kiboko\Plugin\Akeneo\Configuration;
 use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config;
 use Symfony\Component\ExpressionLanguage\Expression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Lookup implements Config\Definition\ConfigurationInterface
 {
@@ -170,8 +172,8 @@ final class Lookup implements Config\Definition\ConfigurationInterface
                 ->end()
                 ->scalarNode('code')
                     ->validate()
-                        ->ifTrue(fn ($data) => str_starts_with($data, '@='))
-                        ->then(fn ($data) => new Expression(substr($data, 2)))
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
                     ->end()
                 ->end()
                 ->scalarNode('method')->end()
@@ -214,7 +216,12 @@ final class Lookup implements Config\Definition\ConfigurationInterface
                     ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
                 ->end()
                 ->children()
-                    ->scalarNode('condition')->end()
+                    ->scalarNode('condition')
+                        ->validate()
+                            ->ifTrue(isExpression())
+                            ->then(asExpression())
+                        ->end()
+                    ->end()
                     ->scalarNode('type')
                         ->isRequired()
                         ->validate()
@@ -226,8 +233,8 @@ final class Lookup implements Config\Definition\ConfigurationInterface
                     ->end()
                     ->scalarNode('code')
                         ->validate()
-                            ->ifTrue(fn ($data) => str_starts_with($data, '@='))
-                            ->then(fn ($data) => new Expression(substr($data, 2)))
+                            ->ifTrue(isExpression())
+                            ->then(asExpression())
                         ->end()
                     ->end()
                     ->scalarNode('method')->isRequired()->end()
