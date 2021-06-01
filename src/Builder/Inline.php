@@ -2,9 +2,9 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Kiboko\Component\FastMap\Compiler\Builder\IsolatedCodeAppendVariableBuilder;
 use Kiboko\Component\FastMapConfig\ArrayBuilderInterface;
 use Kiboko\Component\FastMapConfig\ObjectBuilderInterface;
+use Kiboko\Component\SatelliteToolbox\Builder\IsolatedValueAppendingBuilder;
 use Kiboko\Contract\Mapping\CompilableMapperInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
@@ -31,8 +31,8 @@ final class Inline implements Builder
 
         $mapper->addContextVariable(new Node\Expr\Variable('lookup'));
 
-        return new Node\Stmt\Expression(
-            (new IsolatedCodeAppendVariableBuilder(
+        return
+            (new IsolatedValueAppendingBuilder(
                 new Node\Expr\Variable('input'),
                 new Node\Expr\Variable('output'),
                 array_merge(
@@ -44,7 +44,6 @@ final class Inline implements Builder
                     ]
                 ),
                 new Node\Expr\Variable('lookup'),
-            ))->getNode()
-        );
+            ))->getNode();
     }
 }

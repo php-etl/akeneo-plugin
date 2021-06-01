@@ -2,10 +2,9 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Kiboko\Component\FastMap\Compiler\Builder\IsolatedCodeAppendVariableBuilder;
+use Kiboko\Component\SatelliteToolbox\Builder\IsolatedValueAppendingBuilder;
 use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class AlternativeLookup implements Builder
 {
@@ -38,7 +37,7 @@ final class AlternativeLookup implements Builder
 
     public function getNode(): Node
     {
-        return (new IsolatedCodeAppendVariableBuilder(
+        return (new IsolatedValueAppendingBuilder(
             new Node\Expr\Variable('input'),
             new Node\Expr\Variable('output'),
             array_filter([
