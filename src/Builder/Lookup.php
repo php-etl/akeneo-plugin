@@ -65,9 +65,7 @@ final class Lookup implements StepBuilderInterface
                     expr: new Node\Expr\Variable('input'),
                 ),
             ),
-            new Node\Stmt\Expression(
-                $lookup->getNode(),
-            ),
+            $lookup->getNode(),
         ];
     }
 

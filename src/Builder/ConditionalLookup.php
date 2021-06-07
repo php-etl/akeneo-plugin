@@ -4,9 +4,6 @@ namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Node;
-use PhpParser\ParserFactory;
-use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ConditionalLookup implements StepBuilderInterface
 {
@@ -74,9 +71,7 @@ final class ConditionalLookup implements StepBuilderInterface
     private function compileAlternative(AlternativeLookup $lookup): array
     {
         return [
-            new Node\Stmt\Expression(
-                $lookup->getNode(),
-            ),
+            $lookup->getNode(),
         ];
     }
 
