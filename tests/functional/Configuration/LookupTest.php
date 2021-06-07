@@ -126,13 +126,13 @@ final class LookupTest extends TestCase
         );
 
         $this->expectExceptionMessage(
-            'Invalid configuration for path "lookup.method": the value should be one of [listPerPage, all, get], got "invalidValue"',
+            'Invalid configuration for path "lookup.type": The value should be one of [product, category, attribute, attributeOption, attributeGroup, family, productMediaFile, locale, channel, currency, measureFamily, associationType, familyVariant, productModel, publishedProduct, productModelDraft, productDraft, asset, assetCategory, assetTag, referenceEntityRecord, referenceEntityAttribute, referenceEntityAttributeOption, referenceEntity], got "invalidType"',
         );
 
         $this->processor->processConfiguration($client, [
             [
-                'type' => 'product',
-                'method' => 'invalidValue'
+                'type' => 'invalidType',
+                'method' => 'all'
             ]
         ]);
     }
