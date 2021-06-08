@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "61e730e78d94c8db5a4bf1058181c8eb",
+    "content-hash": "3517153317aeb8b84c43d55cfcb85c57",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -306,16 +306,16 @@
         },
         {
             "name": "php-etl/bucket",
-            "version": "v0.1.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/bucket.git",
-                "reference": "3123b62f9ca64ef4b99a354cbfaa049be2bf3522"
+                "reference": "7e5801e285f88ddd4b1ceb5f2b22e1b5457fe7b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/bucket/zipball/3123b62f9ca64ef4b99a354cbfaa049be2bf3522",
-                "reference": "3123b62f9ca64ef4b99a354cbfaa049be2bf3522",
+                "url": "https://api.github.com/repos/php-etl/bucket/zipball/7e5801e285f88ddd4b1ceb5f2b22e1b5457fe7b1",
+                "reference": "7e5801e285f88ddd4b1ceb5f2b22e1b5457fe7b1",
                 "shasum": ""
             },
             "require": {
@@ -326,10 +326,11 @@
                 "friends-of-phpspec/phpspec-code-coverage": "6.x-dev",
                 "phpspec/phpspec": "^7.0"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.x-dev"
+                    "dev-master": "0.2.x-dev"
                 }
             },
             "autoload": {
@@ -356,7 +357,7 @@
                 "issues": "https://github.com/php-etl/bucket/issues",
                 "source": "https://github.com/php-etl/bucket/tree/master"
             },
-            "time": "2021-02-08T15:36:08+00:00"
+            "time": "2021-05-21T06:43:10+00:00"
         },
         {
             "name": "php-etl/bucket-contracts",
@@ -882,12 +883,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/satellite-toolbox.git",
-                "reference": "832d2244e6c31a6c76b65098ac41cb4fbee3feac"
+                "reference": "67cc16964a6d1d7f5067268bb3bd0faf3d4f618c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/832d2244e6c31a6c76b65098ac41cb4fbee3feac",
-                "reference": "832d2244e6c31a6c76b65098ac41cb4fbee3feac",
+                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/67cc16964a6d1d7f5067268bb3bd0faf3d4f618c",
+                "reference": "67cc16964a6d1d7f5067268bb3bd0faf3d4f618c",
                 "shasum": ""
             },
             "require": {
@@ -936,7 +937,7 @@
                 "issues": "https://github.com/php-etl/satellite-toolbox/issues",
                 "source": "https://github.com/php-etl/satellite-toolbox/tree/master"
             },
-            "time": "2021-06-01T15:07:51+00:00"
+            "time": "2021-06-07T08:50:29+00:00"
         },
         {
             "name": "php-http/curl-client",
@@ -5938,7 +5939,6 @@
     "stability-flags": {
         "php-http/curl-client": 20,
         "guzzlehttp/psr7": 20,
-        "php-etl/bucket": 20,
         "php-http/mock-client": 20,
         "adlawson/vfs": 20
     },
