@@ -46,6 +46,7 @@ final class Lookup implements Config\Definition\ConfigurationInterface
             'listPerPage',
             'all',
             'get',
+            'download',
         ],
         'locale' => [
             'listPerPage',
@@ -98,6 +99,7 @@ final class Lookup implements Config\Definition\ConfigurationInterface
             'listPerPage',
             'all',
             'get',
+            'download',
         ],
         'assetCategory' => [
             'listPerPage',

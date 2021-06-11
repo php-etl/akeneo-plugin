@@ -52,6 +52,7 @@ final class AlternativeLookup implements Builder
                     new Node\Expr\Variable('output')
                 ),
             ]),
+            new Node\Expr\Variable('bucket')
         ))->getNode();
     }
 }
