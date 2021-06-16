@@ -20,7 +20,6 @@
         "php-http/curl-client": "2.x-dev",
         "guzzlehttp/psr7": "2.0.x-dev",
         "php-http/message": "^1.11",
-        "php-etl/bucket": "^0.2.0",
         "php-etl/configurator-contracts": "^0.3.0",
         "php-etl/fast-map-plugin": "^0.4.0",
         "php-etl/packaging-contracts": "^0.1.0",
@@ -37,7 +36,8 @@
         "mybuilder/phpunit-accelerator": "*",
         "php-etl/pipeline-contracts": "^0.1.0",
         "php-etl/bucket-contracts": "^0.1.0",
-        "akeneo/api-php-client-ee": "^4.0"
+        "akeneo/api-php-client-ee": "^4.0",
+        "php-etl/bucket": "^0.2.0"
     },
     "autoload": {
         "psr-4": {

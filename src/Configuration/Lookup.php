@@ -4,7 +4,6 @@ namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config;
-use Symfony\Component\ExpressionLanguage\Expression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
