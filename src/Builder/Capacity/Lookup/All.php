@@ -51,32 +51,37 @@ final class All implements Builder
             );
         }
 
-        return new Node\Expr\MethodCall(
-            var: new Node\Expr\MethodCall(
-                var: new Node\Expr\PropertyFetch(
-                    var: new Node\Expr\Variable('this'),
-                    name: new Node\Identifier('client')
-                ),
-                name: $this->endpoint
-            ),
-            name: new Node\Identifier('all'),
-            args: array_filter(
-                [
-                    new Node\Arg(
-                        value: new Node\Expr\Array_(
-                            items: $this->compileSearch(),
-                            attributes: [
-                                'kind' => Node\Expr\Array_::KIND_SHORT,
-                            ]
+        return new Node\Stmt\Expression(
+            expr: new Node\Expr\Assign(
+                var: new Node\Expr\Variable('lookup'),
+                expr:  new Node\Expr\MethodCall(
+                    var: new Node\Expr\MethodCall(
+                        var: new Node\Expr\PropertyFetch(
+                            var: new Node\Expr\Variable('this'),
+                            name: new Node\Identifier('client')
                         ),
-                        name: new Node\Identifier('queryParameters'),
+                        name: $this->endpoint
                     ),
-                    $this->code !== null ? new Node\Arg(
-                        value: $this->code,
-                        name: new Node\Identifier('attributeCode'),
-                    ) : null
-                ],
-            ),
+                    name: new Node\Identifier('all'),
+                    args: array_filter(
+                        [
+                            new Node\Arg(
+                                value: new Node\Expr\Array_(
+                                    items: $this->compileSearch(),
+                                    attributes: [
+                                        'kind' => Node\Expr\Array_::KIND_SHORT,
+                                    ]
+                                ),
+                                name: new Node\Identifier('queryParameters'),
+                            ),
+                            $this->code !== null ? new Node\Arg(
+                                value: $this->code,
+                                name: new Node\Identifier('attributeCode'),
+                            ) : null
+                        ],
+                    ),
+                )
+            )
         );
     }
 
