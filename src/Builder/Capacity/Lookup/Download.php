@@ -2,15 +2,11 @@
 
 namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Lookup;
 
-use Kiboko\Component\SatelliteToolbox\Builder\IsolatedCodeBuilder;
+
 use Kiboko\Component\SatelliteToolbox\Builder\IsolatedValueAppendingBuilder;
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
-use PhpParser\Node\Name;
-use PhpParser\ParserFactory;
-use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Download implements Builder
 {

@@ -5,9 +5,6 @@ namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Lookup;
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
-use PhpParser\ParserFactory;
-use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class All implements Builder
 {
