@@ -26,6 +26,7 @@ final class Lookup implements Configurator\FactoryInterface
         $this->capacities = [
             new Akeneo\Capacity\Lookup\All($this->interpreter),
             new Akeneo\Capacity\Lookup\ListPerPage($this->interpreter),
+            new Akeneo\Capacity\Lookup\Download($this->interpreter),
         ];
     }
 

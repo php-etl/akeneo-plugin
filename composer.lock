@@ -775,12 +775,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/satellite-toolbox.git",
-                "reference": "67cc16964a6d1d7f5067268bb3bd0faf3d4f618c"
+                "reference": "ce201ce4c8dc12b8bc80220bafc5222c0c93c9ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/67cc16964a6d1d7f5067268bb3bd0faf3d4f618c",
-                "reference": "67cc16964a6d1d7f5067268bb3bd0faf3d4f618c",
+                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/ce201ce4c8dc12b8bc80220bafc5222c0c93c9ee",
+                "reference": "ce201ce4c8dc12b8bc80220bafc5222c0c93c9ee",
                 "shasum": ""
             },
             "require": {
@@ -790,8 +790,10 @@
                 "symfony/expression-language": "^5.2"
             },
             "require-dev": {
+                "adlawson/vfs": "dev-develop",
                 "johnkary/phpunit-speedtrap": "*",
                 "mybuilder/phpunit-accelerator": "*",
+                "php-etl/phpunit-extension": "^0.2.0",
                 "phpunit/php-invoker": "*",
                 "phpunit/phpunit": "^9.0"
             },
@@ -829,7 +831,7 @@
                 "issues": "https://github.com/php-etl/satellite-toolbox/issues",
                 "source": "https://github.com/php-etl/satellite-toolbox/tree/master"
             },
-            "time": "2021-06-07T08:50:29+00:00"
+            "time": "2021-06-24T09:55:37+00:00"
         },
         {
             "name": "php-http/curl-client",

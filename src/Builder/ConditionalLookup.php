@@ -84,17 +84,18 @@ final class ConditionalLookup implements StepBuilderInterface
             cond: new Node\Expr\Assign(
                 var: new Node\Expr\Variable('input'),
                 expr: new Node\Expr\Yield_(
-                    value: new Node\Expr\New_(
-                        class: new Node\Name\FullyQualified('Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
-                        args: [
-                            new Node\Arg(
-                                value: new Node\Expr\Variable('output'),
-                            ),
-                        ],
-                    )
+                    value: new Node\Expr\Variable('bucket')
                 )
             ),
             stmts: array_filter([
+                new Node\Stmt\Expression(
+                    expr:  new Node\Expr\Assign(
+                        var:  new Node\Expr\Variable('bucket'),
+                        expr: new Node\Expr\New_(
+                          new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
+                        )
+                    )
+                ),
                 new Node\Stmt\Expression(
                     new Node\Expr\Assign(
                         var: new Node\Expr\Variable('output'),
@@ -127,6 +128,13 @@ final class ConditionalLookup implements StepBuilderInterface
 //                        ),
                     ],
                 ),
+                new Node\Stmt\Expression(
+                    expr: new Node\Expr\MethodCall(
+                        var: new Node\Expr\Variable('bucket'),
+                        name: new Node\Identifier('accept'),
+                        args: [new Node\Arg(new Node\Expr\Variable('output'))]
+                    )
+                )
             ])
         );
     }

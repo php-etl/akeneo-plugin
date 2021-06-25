@@ -41,17 +41,13 @@ final class AlternativeLookup implements Builder
             new Node\Expr\Variable('input'),
             new Node\Expr\Variable('output'),
             array_filter([
-                new Node\Stmt\Expression(
-                    new Node\Expr\Assign(
-                        var: new Node\Expr\Variable('lookup'),
-                        expr: $this->capacity->getNode(),
-                    ),
-                ),
+                $this->capacity->getNode(),
                 $this->merge?->getNode(),
                 new Node\Stmt\Return_(
                     new Node\Expr\Variable('output')
                 ),
             ]),
+            new Node\Expr\Variable('bucket')
         ))->getNode();
     }
 }

@@ -66,6 +66,13 @@ final class Lookup implements StepBuilderInterface
                 ),
             ),
             $lookup->getNode(),
+            new Node\Stmt\Expression(
+                expr: new Node\Expr\MethodCall(
+                    var: new Node\Expr\Variable('bucket'),
+                    name: new Node\Identifier('accept'),
+                    args: [new Node\Arg(new Node\Expr\Variable('output'))]
+                )
+            )
         ];
     }
 
@@ -116,17 +123,20 @@ final class Lookup implements StepBuilderInterface
                                         cond: new Node\Expr\Assign(
                                             var: new Node\Expr\Variable('input'),
                                             expr: new Node\Expr\Yield_(
-                                                value: new Node\Expr\New_(
-                                                    class: new Node\Name\FullyQualified('Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
-                                                    args: [
-                                                        new Node\Arg(
-                                                            value: new Node\Expr\Variable('output'),
+                                                value: new Node\Expr\Variable('bucket'),
                                                         ),
-                                                    ],
-                                                )
-                                            )
                                         ),
-                                        stmts: $this->compileAlternative($this->alternative)
+                                        stmts: [
+                                            new Node\Stmt\Expression(
+                                                expr:  new Node\Expr\Assign(
+                                                    var:  new Node\Expr\Variable('bucket'),
+                                                    expr: new Node\Expr\New_(
+                                                        new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
+                                                    )
+                                                )
+                                            ),
+                                            ...$this->compileAlternative($this->alternative)
+                                        ]
                                     ),
                                 ]),
                             ],
