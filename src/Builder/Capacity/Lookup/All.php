@@ -11,12 +11,14 @@ final class All implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
     private null|Node\Expr $code;
+    private ?string $type;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->search = null;
         $this->code = null;
+        $this->type = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -36,6 +38,13 @@ final class All implements Builder
     public function withCode(Node\Expr $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function setType(string $type)
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -73,7 +82,7 @@ final class All implements Builder
                             ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
+                                name: new Node\Identifier($this->type === 'familyVariant' ? 'familyCode' : 'attributeCode'),
                             ) : null
                         ],
                     ),

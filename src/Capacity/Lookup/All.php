@@ -76,10 +76,11 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (in_array($config['type'], ['attributeOption'])
+        if (in_array($config['type'], ['attributeOption','familyVariant'])
             && array_key_exists('code', $config)
         ) {
             $builder->withCode(compileValue($this->interpreter, $config['code']));
+            $builder->setType($config['type']);
         }
 
         return $builder;
