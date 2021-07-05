@@ -22,6 +22,7 @@ final class Extractor implements Configurator\FactoryInterface
         $this->configuration = new Akeneo\Configuration\Extractor();
         $this->capacities = [
             new Akeneo\Capacity\Extractor\All($this->interpreter),
+            new Akeneo\Capacity\Extractor\Get($this->interpreter),
             new Akeneo\Capacity\Extractor\ListPerPage($this->interpreter),
         ];
     }
