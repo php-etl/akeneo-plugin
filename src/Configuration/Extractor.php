@@ -153,7 +153,7 @@ final class Extractor implements Config\Definition\ConfigurationInterface
                 ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
+                ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile']))
                 ->thenInvalid('The file option should only be used with the "productMediaFile" endpoint.')
             ->end()
             ->validate()
