@@ -35,12 +35,12 @@ final class Download implements Akeneo\Capacity\CapacityInterface
         $builder = (new Akeneo\Builder\Capacity\Lookup\Download())
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
 
-        if (!array_key_exists('code', $config)) {
+        if (!array_key_exists('file', $config)) {
             throw new Configurator\InvalidConfigurationException(
-                'The configuration option "code" should be defined.'
+                'The configuration option "file" should be defined.'
             );
         }
-        $builder->withCode(compileValue($this->interpreter, $config['code']));
+        $builder->withFile(compileValue($this->interpreter, $config['file']));
 
         return $builder;
     }
