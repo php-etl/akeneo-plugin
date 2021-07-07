@@ -42,7 +42,7 @@ final class All implements Builder
         return $this;
     }
 
-    public function setType(string $type)
+    public function withType(string $type)
     {
         $this->type = $type;
 

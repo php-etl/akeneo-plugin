@@ -80,7 +80,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
             && array_key_exists('code', $config)
         ) {
             $builder->withCode(compileValue($this->interpreter, $config['code']));
-            $builder->setType($config['type']);
+            $builder->withType($config['type']);
         }
 
         return $builder;
