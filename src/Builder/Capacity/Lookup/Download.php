@@ -26,7 +26,7 @@ final class Download implements Builder
         return $this;
     }
 
-    public function withCode(Node\Expr $code): self
+    public function withParameter(Node\Expr $code): self
     {
         $this->code = $code;
 

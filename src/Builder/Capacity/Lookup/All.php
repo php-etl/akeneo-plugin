@@ -10,15 +10,15 @@ final class All implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
-    private null|Node\Expr $code;
-    private ?string $type;
+    private null|Node\Expr $parameter;
+    private ?string $parameterName;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->search = null;
-        $this->code = null;
-        $this->type = null;
+        $this->parameter = null;
+        $this->parameterName = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -35,16 +35,16 @@ final class All implements Builder
         return $this;
     }
 
-    public function withCode(Node\Expr $code): self
+    public function withParameter(Node\Expr $code): self
     {
-        $this->code = $code;
+        $this->parameter = $code;
 
         return $this;
     }
 
-    public function withType(string $type)
+    public function withParameterName(string $parameterName)
     {
-        $this->type = $type;
+        $this->parameterName = $parameterName;
 
         return $this;
     }
@@ -80,9 +80,9 @@ final class All implements Builder
                                 ),
                                 name: new Node\Identifier('queryParameters'),
                             ),
-                            $this->code !== null ? new Node\Arg(
-                                value: $this->code,
-                                name: new Node\Identifier($this->type === 'familyVariant' ? 'familyCode' : 'attributeCode'),
+                            $this->parameter !== null ? new Node\Arg(
+                                value: $this->parameter,
+                                name: new Node\Identifier($this->parameterName),
                             ) : null
                         ],
                     ),

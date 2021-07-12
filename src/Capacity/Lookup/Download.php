@@ -40,7 +40,7 @@ final class Download implements Akeneo\Capacity\CapacityInterface
                 'The configuration option "code" should be defined.'
             );
         }
-        $builder->withCode(compileValue($this->interpreter, $config['code']));
+        $builder->withParameter(compileValue($this->interpreter, $config['code']));
 
         return $builder;
     }
