@@ -10,7 +10,7 @@ final class ConditionalLookup implements StepBuilderInterface
     private ?Node\Expr $logger;
     private ?Node\Expr $rejection;
     private ?Node\Expr $state;
-    /** @var iterable<array{0: string, 1: Node\Expr}> */
+    /** @var iterable<array{0: Node\Expr, 1: AlternativeLookup}> */
     private iterable $alternatives;
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
@@ -67,7 +67,7 @@ final class ConditionalLookup implements StepBuilderInterface
         return $this;
     }
 
-    /** @return Node[] */
+    /** @return array<int, Node> */
     private function compileAlternative(AlternativeLookup $lookup): array
     {
         return [

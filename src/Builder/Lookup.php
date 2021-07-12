@@ -8,6 +8,8 @@ use PhpParser\Node;
 final class Lookup implements StepBuilderInterface
 {
     private ?Node\Expr $logger;
+    private ?Node\Expr $rejection;
+    private ?Node\Expr $state;
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
 
