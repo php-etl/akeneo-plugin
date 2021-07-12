@@ -59,7 +59,7 @@ final class Search implements Builder
         return $this;
     }
 
-    public function getNode(): Node
+    public function getNode(): Node\Expr
     {
         $instance = new Node\Expr\New_(
             class: new Node\Name\FullyQualified('Akeneo\\Pim\\ApiClient\\Search\\SearchBuilder')

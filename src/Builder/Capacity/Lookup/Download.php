@@ -11,12 +11,12 @@ use PhpParser\Node;
 final class Download implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr $code;
+    private null|Node\Expr $parameter;
 
     public function __construct()
     {
         $this->endpoint = null;
-        $this->code = null;
+        $this->parameter = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -26,9 +26,9 @@ final class Download implements Builder
         return $this;
     }
 
-    public function withParameter(Node\Expr $code): self
+    public function withParameter(Node\Expr $parameter): self
     {
-        $this->code = $code;
+        $this->parameter = $parameter;
 
         return $this;
     }
@@ -50,8 +50,8 @@ final class Download implements Builder
                         name: new Node\Name('is_null'),
                         args: array_filter(
                             [
-                                $this->code !== null ? new Node\Arg(
-                                    value: $this->code,
+                                $this->parameter !== null ? new Node\Arg(
+                                    value: $this->parameter,
                                 ) : null
                             ],
                         ),
@@ -84,8 +84,8 @@ final class Download implements Builder
                                             name: new Node\Identifier('download'),
                                             args: array_filter(
                                                 [
-                                                    $this->code !== null ? new Node\Arg(
-                                                        value: $this->code,
+                                                    $this->parameter !== null ? new Node\Arg(
+                                                        value: $this->parameter,
                                                         name: new Node\Identifier('code'),
                                                     ) : null
                                                 ],
@@ -156,19 +156,5 @@ final class Download implements Builder
             ],
             new Node\Expr\Variable('bucket')
         ))->getNode();
-    }
-
-    private function compileSearch(): array
-    {
-        if ($this->search === null) {
-            return [];
-        }
-
-        return [
-            new Node\Expr\ArrayItem(
-                $this->search,
-                new Node\Scalar\String_('search'),
-            ),
-        ];
     }
 }
