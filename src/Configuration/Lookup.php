@@ -212,6 +212,7 @@ final class Lookup implements Config\Definition\ConfigurationInterface
 
         $filters = new Search();
 
+        /** @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->cannotBeEmpty()
             ->requiresAtLeastOneElement()
