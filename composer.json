@@ -20,8 +20,8 @@
         "php-http/curl-client": "2.x-dev",
         "guzzlehttp/psr7": "2.0.x-dev",
         "php-http/message": "^1.11",
-        "php-etl/configurator-contracts": "^0.3.0",
-        "php-etl/fast-map-plugin": "^0.4.0",
+        "php-etl/configurator-contracts": "^0.4.0",
+        "php-etl/fast-map-plugin": "^0.5.0",
         "php-etl/packaging-contracts": "^0.1.0",
         "php-etl/satellite-toolbox": "^0.1.0"
     },
@@ -51,7 +51,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.3.x-dev"
+            "dev-master": "0.4.x-dev"
         },
         "satellite": {
             "class": "Kiboko\\Plugin\\Akeneo\\Service"
