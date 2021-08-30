@@ -48,9 +48,8 @@ final class ListPerPage implements Builder
             );
         }
 
-        return new Node\Stmt\Expression(
-            new Node\Expr\Assign(
-                var: new Node\Expr\Variable('lookup'),
+        return
+            new Node\Stmt\Foreach_(
                 expr: new Node\Expr\MethodCall(
                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
@@ -64,11 +63,11 @@ final class ListPerPage implements Builder
                         [
                             new Node\Arg(
                                 value: new Node\Expr\Array_(
-                                items: $this->compileSearch(),
-                                attributes: [
-                                    'kind' => Node\Expr\Array_::KIND_SHORT,
-                                ]
-                            ),
+                                    items: $this->compileSearch(),
+                                    attributes: [
+                                        'kind' => Node\Expr\Array_::KIND_SHORT,
+                                    ]
+                                ),
                                 name: new Node\Identifier('queryParameters'),
                             ),
                             $this->code !== null ? new Node\Arg(
@@ -77,9 +76,25 @@ final class ListPerPage implements Builder
                             ) : null
                         ],
                     ),
-                )
-            )
-        );
+                ),
+                valueVar: new Node\Expr\Variable('item'),
+                subNodes: [
+                    'stmts' => [
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\Yield_(
+                                value: new Node\Expr\New_(
+                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                                    args: [
+                                        new Node\Arg(
+                                            new Node\Expr\Variable('item')
+                                        )
+                                    ],
+                                ),
+                            ),
+                        )
+                    ]
+                ]
+            );
     }
 
     private function compileSearch(): array
