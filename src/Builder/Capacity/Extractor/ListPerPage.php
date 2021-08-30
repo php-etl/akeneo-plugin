@@ -51,45 +51,53 @@ final class ListPerPage implements Builder
             );
         }
 
-        return new Node\Stmt\Expression(
-            expr: new Node\Expr\Yield_(
-                value: new Node\Expr\New_(
-                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
-                    args: [
-                        new Node\Arg(
-                            value: new Node\Expr\MethodCall(
-                                var: new Node\Expr\MethodCall(
-                                    var: new Node\Expr\PropertyFetch(
-                                        var: new Node\Expr\Variable('this'),
-                                        name: new Node\Identifier('client')
-                                    ),
-                                    name: $this->endpoint
+        return
+            new Node\Stmt\Foreach_(
+                expr: new Node\Expr\MethodCall(
+                    var: new Node\Expr\MethodCall(
+                        var: new Node\Expr\PropertyFetch(
+                            var: new Node\Expr\Variable('this'),
+                            name: new Node\Identifier('client')
+                        ),
+                        name: $this->endpoint
+                    ),
+                    name: new Node\Identifier('listPerPage'),
+                    args: array_filter(
+                        [
+                            new Node\Arg(
+                                value: new Node\Expr\Array_(
+                                    items: $this->compileSearch(),
+                                    attributes: [
+                                        'kind' => Node\Expr\Array_::KIND_SHORT,
+                                    ]
                                 ),
-                                name: new Node\Identifier('listPerPage'),
-                                args: array_filter(
-                                    [
+                                name: new Node\Identifier('queryParameters'),
+                            ),
+                            $this->code !== null ? new Node\Arg(
+                                value: $this->code,
+                                name: new Node\Identifier('attributeCode'),
+                            ) : null
+                        ],
+                    ),
+                ),
+                valueVar: new Node\Expr\Variable('item'),
+                subNodes: [
+                    'stmts' => [
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\Yield_(
+                                value: new Node\Expr\New_(
+                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                                    args: [
                                         new Node\Arg(
-                                            value: new Node\Expr\Array_(
-                                                items: $this->compileSearch(),
-                                                attributes: [
-                                                    'kind' => Node\Expr\Array_::KIND_SHORT,
-                                                ]
-                                            ),
-                                            name: new Node\Identifier('queryParameters'),
-                                        ),
-                                        $this->code !== null ? new Node\Arg(
-                                            value: $this->code,
-                                            name: new Node\Identifier('attributeCode'),
-                                        ) : null
+                                            new Node\Expr\Variable('item')
+                                        )
                                     ],
                                 ),
                             ),
-                            unpack: true,
-                        ),
-                    ],
-                ),
-            ),
-        );
+                        )
+                    ]
+                ]
+            );
     }
 
     private function compileSearch(): array
