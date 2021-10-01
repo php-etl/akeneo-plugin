@@ -2,10 +2,10 @@
 
 namespace Kiboko\Plugin\Akeneo;
 
+use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-final class Configuration implements ConfigurationInterface
+final class Configuration implements PluginConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
