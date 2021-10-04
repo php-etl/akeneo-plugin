@@ -57,10 +57,9 @@ final class All implements Builder
             );
         }
 
-        return new Node\Stmt\Expression(
-            expr: new Node\Expr\Assign(
-                var: new Node\Expr\Variable('lookup'),
-                expr:  new Node\Expr\MethodCall(
+        return
+            new Node\Stmt\Foreach_(
+                expr: new Node\Expr\MethodCall(
                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
                             var: new Node\Expr\Variable('this'),
@@ -86,9 +85,25 @@ final class All implements Builder
                             ) : null
                         ],
                     ),
-                )
-            )
-        );
+                ),
+                valueVar: new Node\Expr\Variable('item'),
+                subNodes: [
+                    'stmts' => [
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\Yield_(
+                                value: new Node\Expr\New_(
+                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                                    args: [
+                                        new Node\Arg(
+                                            new Node\Expr\Variable('item')
+                                        )
+                                    ],
+                                ),
+                            ),
+                        )
+                    ]
+                ]
+            );
     }
 
     private function compileSearch(): array

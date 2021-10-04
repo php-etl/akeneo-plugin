@@ -26,6 +26,6 @@ final class ListPerPageTest extends BuilderTestCase
 
         $capacity->withEndpoint(new Node\Identifier('foo'));
 
-        $this->assertInstanceOf(Node\Stmt\Expression::class, $capacity->getNode());
+        $this->assertInstanceOf(Node\Stmt\Foreach_::class, $capacity->getNode());
     }
 }

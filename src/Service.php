@@ -2,7 +2,7 @@
 
 namespace Kiboko\Plugin\Akeneo;
 
-use Kiboko\Contract\Configurator\RepositoryInterface;
+use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo\Factory;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Contract\Configurator\ConfigurationExceptionInterface;
@@ -12,6 +12,19 @@ use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
+#[Configurator\Pipeline(
+    name: "akeneo",
+    dependencies: [
+        'akeneo/api-php-client-ee',
+        'laminas/laminas-diactoros',
+        'php-http/guzzle7-adapter',
+    ],
+    steps: [
+        "extractor" => "extractor",
+        "transformer" => "lookup",
+        "loader" => "loader",
+    ],
+)]
 final class Service implements FactoryInterface
 {
     private Processor $processor;
@@ -56,7 +69,7 @@ final class Service implements FactoryInterface
     /**
      * @throws ConfigurationExceptionInterface
      */
-    public function compile(array $config): RepositoryInterface
+    public function compile(array $config): Factory\Repository\Extractor|Factory\Repository\Lookup|Factory\Repository\Loader
     {
         if (array_key_exists('expression_language', $config)
             && is_array($config['expression_language'])

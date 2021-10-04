@@ -17,13 +17,10 @@
         "nikic/php-parser": "^4.10",
         "symfony/config": "^5.2",
         "symfony/expression-language": "^5.2",
-        "php-http/curl-client": "2.x-dev",
-        "guzzlehttp/psr7": "2.0.x-dev",
-        "php-http/message": "^1.11",
-        "php-etl/configurator-contracts": "^0.3.0",
-        "php-etl/fast-map-plugin": "^0.4.0",
+        "php-etl/configurator-contracts": "^0.4.0",
+        "php-etl/fast-map-plugin": "^0.5.0",
         "php-etl/packaging-contracts": "^0.1.0",
-        "php-etl/satellite-toolbox": "^0.1.0"
+        "php-etl/satellite-toolbox": "^0.2.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
@@ -37,7 +34,10 @@
         "php-etl/pipeline-contracts": "^0.1.0",
         "php-etl/bucket-contracts": "^0.1.0",
         "akeneo/api-php-client-ee": "^4.0",
-        "php-etl/bucket": "^0.2.0"
+        "php-etl/bucket": "^0.2.0",
+        "guzzlehttp/psr7": "^2.0",
+        "php-http/message": "^1.11",
+        "php-http/curl-client": "^2.0"
     },
     "autoload": {
         "psr-4": {
