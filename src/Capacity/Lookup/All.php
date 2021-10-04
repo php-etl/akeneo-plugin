@@ -6,6 +6,7 @@ use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 
 final class All implements Akeneo\Capacity\CapacityInterface
@@ -76,11 +77,9 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (in_array($config['type'], ['attributeOption','familyVariant'])
-            && array_key_exists('code', $config)
-        ) {
-            $builder->withParameter(compileValue($this->interpreter, $config['code']));
-            $builder->withParameterName($this->getParameterNameByConfig($config['type']));
+        if (array_key_exists('code', $config) && array_key_exists('type', $config)) {
+            $builder->withParameter(compileValue($this->interpreter, $config['code']),
+                $this->getParameterNameByConfig($config['type']));
         }
 
         return $builder;
@@ -88,14 +87,14 @@ final class All implements Akeneo\Capacity\CapacityInterface
 
     private function getParameterNameByConfig(string $type): string
     {
-        $mapping = [
+        return match ($type) {
             'familyVariant' => 'familyCode',
             'attributeOption' => 'attributeCode',
             'referenceEntity' => 'referenceEntityCode',
             'referenceEntityAttribute' => 'referenceEntityCode',
-            'referenceEntityRecord' => 'referenceEntityCode'
-        ];
-
-        return $mapping[$type];
+            'referenceEntityRecord' => 'referenceEntityCode',
+            default => throw new Akeneo\InvalidParameterException(
+                sprintf('Can\'t find a valid parameter for %s api', $type)),
+        };
     }
 }

@@ -35,15 +35,9 @@ final class All implements Builder
         return $this;
     }
 
-    public function withParameter(Node\Expr $code): self
+    public function withParameter(Node\Expr $code,string $parameterName): self
     {
         $this->parameter = $code;
-
-        return $this;
-    }
-
-    public function withParameterName(string $parameterName)
-    {
         $this->parameterName = $parameterName;
 
         return $this;
