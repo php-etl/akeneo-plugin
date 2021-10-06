@@ -2,6 +2,7 @@
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
+use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
@@ -55,10 +56,19 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
     {
         $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
+            if ($filter["operator"] === 'EMPTY' && array_key_exists('value', $filter)) {
+                throw new InvalidConfigurationException('You should not provide a value for the EMPTY operator');
+            }
+            if ($filter["operator"] !== 'EMPTY' && !array_key_exists('value', $filter)) {
+                throw new InvalidConfigurationException(
+                    sprintf('You should provide a value for the %s operator', $filter['operator'])
+                );
+            }
+
             $builder->addFilter(
                 field: compileValue($this->interpreter, $filter["field"]),
                 operator: compileValue($this->interpreter, $filter["operator"]),
-                value: compileValue($this->interpreter, $filter["value"]),
+                value: array_key_exists('value', $filter) ? compileValue($this->interpreter, $filter["value"]) : null,
                 scope: array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter["scope"]) : null,
                 locale: array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter["locale"]) : null
             );

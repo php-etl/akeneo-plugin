@@ -3,7 +3,6 @@
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Symfony\Component\Config;
-use Symfony\Component\ExpressionLanguage\Expression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
@@ -21,7 +20,6 @@ final class Search implements Config\Definition\ConfigurationInterface
                     ->scalarNode('operator')->cannotBeEmpty()->isRequired()->end()
                     ->variableNode('value')
                         ->cannotBeEmpty()
-                        ->isRequired()
                         ->validate()
                             ->ifTrue(isExpression())
                             ->then(asExpression())
