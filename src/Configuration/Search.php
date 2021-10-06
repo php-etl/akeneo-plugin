@@ -21,7 +21,6 @@ final class Search implements Config\Definition\ConfigurationInterface
                     ->scalarNode('operator')->cannotBeEmpty()->isRequired()->end()
                     ->variableNode('value')
                         ->cannotBeEmpty()
-                        ->isRequired()
                         ->validate()
                             ->ifTrue(isExpression())
                             ->then(asExpression())

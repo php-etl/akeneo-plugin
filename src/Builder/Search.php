@@ -27,7 +27,7 @@ final class Search implements Builder
                 value: $operator,
             ),
             new Node\Arg(
-                value: $value,
+                value: $value  ?? new Node\Expr\ConstFetch(new Node\Name('null')),
             ),
         ];
 
