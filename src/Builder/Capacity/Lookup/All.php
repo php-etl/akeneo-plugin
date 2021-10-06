@@ -11,7 +11,7 @@ final class All implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
     private null|Node\Expr $parameter;
-    private ?string $parameterName;
+    private null|string $parameterName;
 
     public function __construct()
     {
@@ -73,7 +73,7 @@ final class All implements Builder
                                 ),
                                 name: new Node\Identifier('queryParameters'),
                             ),
-                            $this->parameter !== null ? new Node\Arg(
+                            ($this->parameter !== null && $this->parameterName !== null) ? new Node\Arg(
                                 value: $this->parameter,
                                 name: new Node\Identifier($this->parameterName),
                             ) : null

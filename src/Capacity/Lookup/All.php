@@ -3,11 +3,13 @@
 namespace Kiboko\Plugin\Akeneo\Capacity\Lookup;
 
 use Kiboko\Plugin\Akeneo;
+use Kiboko\Plugin\Akeneo\MissingParameterException;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class All implements Akeneo\Capacity\CapacityInterface
 {
@@ -77,8 +79,19 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (array_key_exists('code', $config) && array_key_exists('type', $config)) {
-            $builder->withParameter(compileValue($this->interpreter, $config['code']),
+        if (in_array($config['type'], [
+                'familyVariant',
+                'attributeOption',
+                'referenceEntity',
+                'referenceEntityAttribute',
+                'referenceEntityRecord'
+            ]) && !array_key_exists('code', $config)) {
+            throw new MissingParameterException(
+                message: sprintf('You should provide the code option for the api %s', $config['type'])
+            );
+        }
+        if (array_key_exists('code', $config)) {
+            $builder->withParameter(compileValueWhenExpression($this->interpreter, $config['code']),
                 $this->getParameterNameByConfig($config['type']));
         }
 
@@ -94,7 +107,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
             'referenceEntityAttribute' => 'referenceEntityCode',
             'referenceEntityRecord' => 'referenceEntityCode',
             default => throw new Akeneo\InvalidParameterException(
-                sprintf('Can\'t find a valid parameter for %s api', $type)),
+                sprintf('You should not provide the code option for this api : %s api', $type)),
         };
     }
 }

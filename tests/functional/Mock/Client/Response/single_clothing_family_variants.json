@@ -1,0 +1,44 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/api/rest/v1/families/clothing/variants?page=1&limit=10&with_count=false"
+    },
+    "first": {
+      "href": "http://localhost:8080/api/rest/v1/families/clothing/variants?page=1&limit=10&with_count=false"
+    }
+  },
+  "current_page": 1,
+  "_embedded": {
+    "items": [
+      {
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/rest/v1/families/clothing/variants/clothing_color"
+          }
+        },
+        "code": "clothing_color",
+        "labels": {
+          "de_DE": "Kleidung nach Farbe",
+          "en_US": "Clothing by color",
+          "fr_FR": "Vêtements par couleur"
+        },
+        "variant_attribute_sets": [
+          {
+            "level": 1,
+            "axes": [
+              "color"
+            ],
+            "attributes": [
+              "sku",
+              "variation_name",
+              "variation_image",
+              "composition",
+              "color",
+              "ean"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

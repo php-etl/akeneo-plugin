@@ -31,13 +31,14 @@
         "laminas/laminas-diactoros": "^2.6",
         "adlawson/vfs": "dev-develop",
         "mybuilder/phpunit-accelerator": "*",
-        "php-etl/pipeline-contracts": "^0.1.0",
         "php-etl/bucket-contracts": "^0.1.0",
         "akeneo/api-php-client-ee": "^4.0",
         "php-etl/bucket": "^0.2.0",
         "guzzlehttp/psr7": "^2.0",
         "php-http/message": "^1.11",
-        "php-http/curl-client": "^2.0"
+        "php-http/curl-client": "^2.0",
+        "php-etl/pipeline-contracts": "^0.3.0",
+        "php-etl/phpunit-extension": "*"
     },
     "autoload": {
         "psr-4": {
