@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d433074aa4f8a9d4f67f51900dace66",
+    "content-hash": "0c6a23571fd00fe682f28740a43d2e93",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -346,12 +346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/fast-map-plugin.git",
-                "reference": "2cdcdfa65773857226344e423101e1c1a75097cd"
+                "reference": "abdffe1a5bf305f897fd5b78af1cb96f8b1afdab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/fast-map-plugin/zipball/2cdcdfa65773857226344e423101e1c1a75097cd",
-                "reference": "2cdcdfa65773857226344e423101e1c1a75097cd",
+                "url": "https://api.github.com/repos/php-etl/fast-map-plugin/zipball/abdffe1a5bf305f897fd5b78af1cb96f8b1afdab",
+                "reference": "abdffe1a5bf305f897fd5b78af1cb96f8b1afdab",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +379,7 @@
             "type": "satellite-plugin",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.5.x-dev"
+                    "dev-master": "0.6.x-dev"
                 },
                 "satellite": {
                     "class": "Kiboko\\Plugin\\FastMap\\Service"
@@ -405,7 +405,7 @@
                 "issues": "https://github.com/php-etl/fast-map-plugin/issues",
                 "source": "https://github.com/php-etl/fast-map-plugin/tree/master"
             },
-            "time": "2021-10-01T17:34:55+00:00"
+            "time": "2021-10-05T14:05:12+00:00"
         },
         {
             "name": "php-etl/mapping-contracts",
@@ -5876,7 +5876,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "php-etl/satellite-toolbox": 20,
         "php-http/mock-client": 20,
         "adlawson/vfs": 20
     },
@@ -5887,5 +5886,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.0.0"
 }
