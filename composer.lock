@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c6a23571fd00fe682f28740a43d2e93",
+    "content-hash": "2e75a7dd6ae2bc2ecc2d58b0517f87db",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -3168,26 +3168,26 @@
         },
         {
             "name": "php-etl/pipeline-contracts",
-            "version": "v0.1.x-dev",
+            "version": "v0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/pipeline-contracts.git",
-                "reference": "1d5ce72ecbea43e4d591223c3b015273af431a79"
+                "reference": "c89002bcc303194bbc9cf3efbff6da62c519ea70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/pipeline-contracts/zipball/1d5ce72ecbea43e4d591223c3b015273af431a79",
-                "reference": "1d5ce72ecbea43e4d591223c3b015273af431a79",
+                "url": "https://api.github.com/repos/php-etl/pipeline-contracts/zipball/c89002bcc303194bbc9cf3efbff6da62c519ea70",
+                "reference": "c89002bcc303194bbc9cf3efbff6da62c519ea70",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.0",
-                "php-etl/bucket-contracts": "^0.1"
+                "php-etl/bucket-contracts": "^0.1.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.x-dev"
+                    "dev-master": "0.3.x-dev"
                 }
             },
             "autoload": {
@@ -3212,9 +3212,9 @@
             "description": "This library describes contracts for the Extract-Transform-Load pattern.",
             "support": {
                 "issues": "https://github.com/php-etl/pipeline-contracts/issues",
-                "source": "https://github.com/php-etl/pipeline-contracts/tree/master"
+                "source": "https://github.com/php-etl/pipeline-contracts/tree/v0.3.3"
             },
-            "time": "2021-04-23T21:15:31+00:00"
+            "time": "2021-09-28T06:57:28+00:00"
         },
         {
             "name": "php-http/client-common",

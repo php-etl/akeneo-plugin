@@ -31,7 +31,7 @@
         "laminas/laminas-diactoros": "^2.6",
         "adlawson/vfs": "dev-develop",
         "mybuilder/phpunit-accelerator": "*",
-        "php-etl/pipeline-contracts": "^0.1.0",
+        "php-etl/pipeline-contracts": "^0.3.0",
         "php-etl/bucket-contracts": "^0.1.0",
         "akeneo/api-php-client-ee": "^4.0",
         "php-etl/bucket": "^0.2.0",
