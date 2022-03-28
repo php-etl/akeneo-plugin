@@ -4,10 +4,6 @@ namespace Kiboko\Plugin\Akeneo;
 
 use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo\Factory;
-use Kiboko\Contract\Configurator\InvalidConfigurationException;
-use Kiboko\Contract\Configurator\ConfigurationExceptionInterface;
-use Kiboko\Contract\Configurator\FactoryInterface;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -25,10 +21,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
         "loader" => "loader",
     ],
 )]
-final class Service implements FactoryInterface
+final class Service implements Configurator\PipelinePluginInterface
 {
     private Processor $processor;
-    private ConfigurationInterface $configuration;
+    private Configurator\PluginConfigurationInterface $configuration;
     private ExpressionLanguage $interpreter;
 
     public function __construct(?ExpressionLanguage $interpreter = null)
@@ -38,20 +34,25 @@ final class Service implements FactoryInterface
         $this->interpreter = $interpreter ?? new ExpressionLanguage();
     }
 
-    public function configuration(): ConfigurationInterface
+    public function interpreter(): ExpressionLanguage
+    {
+        return $this->interpreter;
+    }
+
+    public function configuration(): Configurator\PluginConfigurationInterface
     {
         return $this->configuration;
     }
 
     /**
-     * @throws ConfigurationExceptionInterface
+     * @throws Configurator\ConfigurationExceptionInterface
      */
     public function normalize(array $config): array
     {
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
+            throw new COnfigurator\InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 
@@ -67,7 +68,7 @@ final class Service implements FactoryInterface
     }
 
     /**
-     * @throws ConfigurationExceptionInterface
+     * @throws Configurator\ConfigurationExceptionInterface
      */
     public function compile(array $config): Factory\Repository\Extractor|Factory\Repository\Lookup|Factory\Repository\Loader
     {
@@ -132,18 +133,17 @@ final class Service implements FactoryInterface
 
                 return $lookup;
             } else {
-                throw new InvalidConfigurationException(
+                throw new Configurator\InvalidConfigurationException(
                     'Could not determine if the factory should build an extractor or a loader.'
                 );
             }
         } catch (MissingAuthenticationMethodException $exception) {
-            throw new InvalidConfigurationException(
+            throw new Configurator\InvalidConfigurationException(
                 'Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.',
-                0,
-                $exception,
+                previous: $exception,
             );
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new InvalidConfigurationException($exception->getMessage(), 0, $exception);
+            throw new Configurator\InvalidConfigurationException($exception->getMessage(), previous: $exception);
         }
     }
 }

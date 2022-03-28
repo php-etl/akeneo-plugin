@@ -2,9 +2,10 @@
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
+use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config;
 
-final class Loader implements Config\Definition\ConfigurationInterface
+final class Loader implements PluginConfigurationInterface
 {
     private static array $endpoints = [
         // Core Endpoints

@@ -1,7 +1,7 @@
 {
     "name": "php-etl/akeneo-plugin",
     "description": "Adapters for the Akeneo API client",
-    "type": "satellite-plugin",
+    "type": "gyroscops-plugin",
     "license": "MIT",
     "authors": [
         {
@@ -53,8 +53,8 @@
         "branch-alias": {
             "dev-master": "0.4.x-dev"
         },
-        "satellite": {
-            "class": "Kiboko\\Plugin\\Akeneo\\Service"
+        "gyroscops": {
+            "plugins": ["Kiboko\\Plugin\\Akeneo\\Service"]
         }
     },
     "config": {

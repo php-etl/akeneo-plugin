@@ -18,9 +18,12 @@ final class Lookup implements Configurator\FactoryInterface
     private ConfigurationInterface $configuration;
     /** @var iterable<Akeneo\Capacity\CapacityInterface> */
     private iterable $capacities;
+    private ExpressionLanguage $interpreter;
 
-    public function __construct(private ExpressionLanguage $interpreter)
-    {
+    public function __construct(
+        ?ExpressionLanguage $interpreter = null,
+    ) {
+        $this->interpreter = $interpreter ?? new ExpressionLanguage();
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Lookup();
         $this->capacities = [

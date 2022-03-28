@@ -2,12 +2,13 @@
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
+use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
-final class Lookup implements Config\Definition\ConfigurationInterface
+final class Lookup implements PluginConfigurationInterface
 {
     private static array $endpoints = [
         // Core Endpoints

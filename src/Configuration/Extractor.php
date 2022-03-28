@@ -2,11 +2,12 @@
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
+use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
-final class Extractor implements Config\Definition\ConfigurationInterface
+final class Extractor implements PluginConfigurationInterface
 {
     private static array $endpoints = [
         // Core Endpoints

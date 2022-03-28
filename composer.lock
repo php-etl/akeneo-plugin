@@ -376,7 +376,7 @@
                 "phpunit/phpunit": "^9.0"
             },
             "default-branch": true,
-            "type": "satellite-plugin",
+            "type": "gyroscops-plugin",
             "extra": {
                 "branch-alias": {
                     "dev-master": "0.6.x-dev"
