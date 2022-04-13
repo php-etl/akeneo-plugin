@@ -10,16 +10,25 @@ final class Get implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $identifier;
+    private null|Node\Expr $code;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->identifier = null;
+        $this->code = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
+
+        return $this;
+    }
+
+    public function withCode(Node\Expr $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }
@@ -53,6 +62,10 @@ final class Get implements Builder
                     name: new Node\Identifier('get'),
                     args: array_filter(
                         [
+                            new Node\Arg(
+                                value: $this->code,
+                                name: new Node\Identifier('attributeCode'),
+                            ),
                             new Node\Arg(
                                 value: $this->identifier,
                                 name: new Node\Identifier('code'),
