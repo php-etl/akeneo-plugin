@@ -72,20 +72,22 @@ final class Service implements Configurator\PipelinePluginInterface
      */
     public function compile(array $config): Factory\Repository\Extractor|Factory\Repository\Lookup|Factory\Repository\Loader
     {
+        $interpreter = clone $this->interpreter;
+
         if (array_key_exists('expression_language', $config)
             && is_array($config['expression_language'])
             && count($config['expression_language'])
         ) {
             foreach ($config['expression_language'] as $provider) {
-                $this->interpreter->registerProvider(new $provider);
+                $interpreter->registerProvider(new $provider);
             }
         }
 
-        $clientFactory = new Factory\Client($this->interpreter);
+        $clientFactory = new Factory\Client($interpreter);
 
         try {
             if (array_key_exists('extractor', $config)) {
-                $extractorFactory = new Factory\Extractor($this->interpreter);
+                $extractorFactory = new Factory\Extractor($interpreter);
 
                 $extractor = $extractorFactory->compile($config['extractor']);
                 $extractorBuilder = $extractor->getBuilder();
@@ -101,7 +103,7 @@ final class Service implements Configurator\PipelinePluginInterface
 
                 return $extractor;
             } elseif (array_key_exists('loader', $config)) {
-                $loaderFactory = new Factory\Loader($this->interpreter);
+                $loaderFactory = new Factory\Loader($interpreter);
 
                 $loader = $loaderFactory->compile($config['loader']);
                 $loaderBuilder = $loader->getBuilder();
@@ -117,7 +119,7 @@ final class Service implements Configurator\PipelinePluginInterface
 
                 return $loader;
             } elseif (array_key_exists('lookup', $config)) {
-                $lookupFactory = new Factory\Lookup($this->interpreter);
+                $lookupFactory = new Factory\Lookup($interpreter);
 
                 $lookup = $lookupFactory->compile($config['lookup']);
                 $lookupBuilder = $lookup->getBuilder();
