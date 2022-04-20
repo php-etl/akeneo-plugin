@@ -17,7 +17,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
     ],
     steps: [
         "extractor" => "extractor",
-        "transformer" => "lookup",
+        "lookup" => "transformer",
         "loader" => "loader",
     ],
 )]
