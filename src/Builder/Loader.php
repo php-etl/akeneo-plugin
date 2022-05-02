@@ -103,7 +103,7 @@ final class Loader implements StepBuilderInterface
                             subNodes: [
                                 'flags' => Node\Stmt\Class_::MODIFIER_PUBLIC,
                                 'params' => [],
-                                'returnType' => new Node\Name\FullyQualified(name: 'Iterator'),
+                                'returnType' => new Node\Name\FullyQualified(name: 'Generator'),
                                 'stmts' => [
                                     new Node\Stmt\TryCatch(
                                         stmts: [

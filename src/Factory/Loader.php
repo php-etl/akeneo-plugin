@@ -24,7 +24,7 @@ final class Loader implements Configurator\FactoryInterface
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Loader();
         $this->capacities = [
-            new Akeneo\Capacity\Upsert(),
+            new Akeneo\Capacity\Upsert($this->interpreter),
         ];
     }
 

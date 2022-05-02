@@ -4,6 +4,8 @@ namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config;
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Loader implements PluginConfigurationInterface
 {
@@ -199,6 +201,12 @@ final class Loader implements PluginConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('method')->end()
+                ->scalarNode('code')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
             ->end();
 
         return $builder;
