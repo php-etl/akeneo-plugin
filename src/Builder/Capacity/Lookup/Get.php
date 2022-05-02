@@ -62,14 +62,12 @@ final class Get implements Builder
                     name: new Node\Identifier('get'),
                     args: array_filter(
                         [
-                            new Node\Arg(
-                                value: $this->identifier,
-                                name: new Node\Identifier('code'),
-                            ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
-                            ) : null
+                            ) : null,
+                            new Node\Arg(
+                                value: $this->identifier,
+                            ),
                         ],
                     ),
                 )
