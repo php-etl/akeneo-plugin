@@ -11,6 +11,7 @@ final class Get implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $identifier;
     private null|Node\Expr $code;
+    private string $type;
 
     public function __construct()
     {
@@ -26,9 +27,10 @@ final class Get implements Builder
         return $this;
     }
 
-    public function withCode(Node\Expr $code): self
+    public function withCode(Node\Expr $code, string $type): self
     {
         $this->code = $code;
+        $this->type = $type;
 
         return $this;
     }
@@ -62,12 +64,14 @@ final class Get implements Builder
                     name: new Node\Identifier('get'),
                     args: array_filter(
                         [
-                            $this->code !== null ? new Node\Arg(
-                                value: $this->code,
-                            ) : null,
                             new Node\Arg(
                                 value: $this->identifier,
+                                name: $this->type === 'referenceEntityRecord' ? new Node\Identifier('referenceEntityCode') : new Node\Identifier('code'),
                             ),
+                            $this->code !== null ? new Node\Arg(
+                                value: $this->code,
+                                name: $this->type === 'referenceEntityRecord' ? new Node\Identifier('recordCode') : new Node\Identifier('attributeCode'),
+                            ) : null
                         ],
                     ),
                 )

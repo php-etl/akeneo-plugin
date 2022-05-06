@@ -60,7 +60,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         $builder->withIdentifier(compileValueWhenExpression($this->interpreter, $config['identifier']));
 
         if (array_key_exists('code', $config)) {
-            $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
+            $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']), $config['type']);
         }
 
         return $builder;
