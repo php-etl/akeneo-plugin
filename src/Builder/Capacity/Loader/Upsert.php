@@ -60,10 +60,7 @@ final class Upsert implements Builder
         }
 
         return new Node\Stmt\While_(
-            cond: new Node\Expr\Assign(
-                var: new Node\Expr\Variable(name: 'line'),
-                expr: new Node\Expr\Yield_(),
-            ),
+            cond: new Node\Expr\Variable(name: 'line'),
             stmts: [
                 new Node\Stmt\TryCatch(
                     stmts: [
