@@ -190,6 +190,15 @@ final class Loader implements PluginConfigurationInterface
                     return $item;
                 })
             ->end()
+            ->validate()
+                ->always(function (array $item) {
+                    if ($item["method"] === 'upsert' && empty($item["code"])) {
+                        throw new \InvalidArgumentException('Your configuration should contain the "code" field if the "upsert" method is present.');
+                    }
+
+                    return $item;
+                })
+            ->end()
             ->children()
                 ->scalarNode('type')
                     ->isRequired()
