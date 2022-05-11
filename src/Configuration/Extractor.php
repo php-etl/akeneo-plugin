@@ -127,6 +127,10 @@ final class Extractor implements PluginConfigurationInterface
             'all',
             'get',
         ],
+        'assetManager' => [
+            'all',
+            'get',
+        ],
     ];
 
     public function getConfigTreeBuilder()
@@ -161,6 +165,19 @@ final class Extractor implements PluginConfigurationInterface
                 ->ifTrue(fn ($data) => array_key_exists('identifier', $data) && array_key_exists('method', $data) && !in_array($data['method'], ['get']))
                 ->thenInvalid('The identifier option should only be used with the "get" method.')
             ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => array_key_exists('assetFamilyCode', $data) && array_key_exists('method', $data) && $data['type'] !== 'assetManager')
+                ->thenInvalid('The assetFamilyCode option should only be used with the "assetManager" endpoint.')
+            ->end()
+            ->validate()
+                ->always(function (array $item) {
+                    if ($item["type"] === 'assetManager' && empty($item["assetFamilyCode"])) {
+                        throw new \InvalidArgumentException('Your configuration should contain the "assetFamilyCode" field if the "assetManager" type is set.');
+                    }
+
+                    return $item;
+                })
+            ->end()
             ->children()
                 ->scalarNode('type')
                     ->isRequired()
@@ -190,6 +207,7 @@ final class Extractor implements PluginConfigurationInterface
                         ->then(asExpression())
                     ->end()
                 ->end()
+                ->scalarNode('assetFamilyCode')->end()
                 ->append($filters->getConfigTreeBuilder())
             ->end();
 

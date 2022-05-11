@@ -39,6 +39,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
@@ -80,8 +81,14 @@ final class All implements Akeneo\Capacity\CapacityInterface
 
     public function getBuilder(array $config): Builder
     {
-        $builder = (new Akeneo\Builder\Capacity\Extractor\All())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
+        if ($config['type'] === 'assetManager') {
+            $builder = (new Akeneo\Builder\Capacity\Extractor\AssetManagerApi\All())
+                ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+                ->withAssetFamilyCode($config['assetFamilyCode']);
+        } else {
+            $builder = (new Akeneo\Builder\Capacity\Extractor\All())
+                ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
+        }
 
         if (isset($config['search']) && is_array($config['search'])) {
             $builder->withSearch($this->compileFilters(...$config['search']));
