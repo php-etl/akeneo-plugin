@@ -11,13 +11,19 @@ final class Get implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $identifier;
     private null|Node\Expr $code;
-    private string $type;
+    private null|string $type;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->identifier = null;
         $this->code = null;
+        $this->type = null;
+    }
+
+    public function withType(string $type): self
+    {
+        $this->type = $type;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -27,10 +33,9 @@ final class Get implements Builder
         return $this;
     }
 
-    public function withCode(Node\Expr $code, string $type): self
+    public function withCode(Node\Expr $code): self
     {
         $this->code = $code;
-        $this->type = $type;
 
         return $this;
     }
@@ -66,16 +71,24 @@ final class Get implements Builder
                         [
                             new Node\Arg(
                                 value: $this->identifier,
-                                name: $this->type === 'referenceEntityRecord' ? new Node\Identifier('referenceEntityCode') : new Node\Identifier('code'),
+                                name: $this->compileNamedArgument($this->type)
                             ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: $this->type === 'referenceEntityRecord' ? new Node\Identifier('recordCode') : new Node\Identifier('attributeCode'),
+                                name: $this->compileNamedArgument($this->type),
                             ) : null
                         ],
                     ),
                 )
             )
         );
+    }
+
+    private function compileNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'referenceEntityRecord' => new Node\Identifier('recordCode'),
+            default => new Node\Identifier('attributeCode')
+        };
     }
 }
