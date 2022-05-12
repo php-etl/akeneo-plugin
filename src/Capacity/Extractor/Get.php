@@ -8,6 +8,7 @@ use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Get implements Akeneo\Capacity\CapacityInterface
 {
@@ -38,6 +39,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
@@ -73,8 +75,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         $builder = (new Akeneo\Builder\Capacity\Extractor\Get())
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
         
-        $builder->withIdentifier(compileValue($this->interpreter, $config['identifier']));
- 
+        $builder->withIdentifier(compileValueWhenExpression($this->interpreter, $config['identifier']));
 
         return $builder;
     }

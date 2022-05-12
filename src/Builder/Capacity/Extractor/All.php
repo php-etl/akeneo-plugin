@@ -14,6 +14,7 @@ final class All implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
     private null|Node\Expr $code;
+    private null|string $type;
 
     public function __construct()
     {
@@ -39,6 +40,13 @@ final class All implements Builder
     public function withCode(?Node\Expr $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function withType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -75,7 +83,7 @@ final class All implements Builder
                             ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
+                                name: $this->compileCodeNamedArgument($this->type),
                             ) : null
                         ],
                     ),
@@ -112,5 +120,13 @@ final class All implements Builder
                 new Node\Scalar\String_('search'),
             ),
         ];
+    }
+
+    private function compileCodeNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'assetManager' => new Node\Identifier('assetFamilyCode'),
+            default => new Node\Identifier('attributeCode')
+        };
     }
 }

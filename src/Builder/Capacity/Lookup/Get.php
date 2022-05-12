@@ -21,11 +21,6 @@ final class Get implements Builder
         $this->type = null;
     }
 
-    public function withType(string $type): self
-    {
-        $this->type = $type;
-    }
-
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
@@ -43,6 +38,13 @@ final class Get implements Builder
     public function withIdentifier(Node\Expr $identifier): self
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function withType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -71,11 +73,11 @@ final class Get implements Builder
                         [
                             new Node\Arg(
                                 value: $this->identifier,
-                                name: $this->compileNamedArgument($this->type)
+                                name: $this->compileIdentifierNamedArgument($this->type),
                             ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: $this->compileNamedArgument($this->type),
+                                name: $this->compileCodeNamedArgument($this->type),
                             ) : null
                         ],
                     ),
@@ -84,11 +86,20 @@ final class Get implements Builder
         );
     }
 
-    private function compileNamedArgument(string $type): Node\Identifier
+    private function compileCodeNamedArgument(string $type): Node\Identifier
     {
         return match ($type) {
+            'assetManager' => new Node\Identifier('assetFamilyCode'),
             'referenceEntityRecord' => new Node\Identifier('recordCode'),
             default => new Node\Identifier('attributeCode')
+        };
+    }
+
+    private function compileIdentifierNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'assetManager' => new Node\Identifier('assetCode'),
+            default => new Node\Identifier('code')
         };
     }
 }

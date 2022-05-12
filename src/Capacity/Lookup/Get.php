@@ -38,6 +38,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
