@@ -89,6 +89,7 @@ final class Get implements Builder
     private function compileCodeNamedArgument(string $type): Node\Identifier
     {
         return match ($type) {
+            'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
             'assetManager' => new Node\Identifier('assetFamilyCode'),
             'referenceEntityRecord' => new Node\Identifier('recordCode'),
             default => new Node\Identifier('attributeCode')
@@ -98,6 +99,7 @@ final class Get implements Builder
     private function compileIdentifierNamedArgument(string $type): Node\Identifier
     {
         return match ($type) {
+            'referenceEntityRecord' => new Node\Identifier('recordCode'),
             'assetManager' => new Node\Identifier('assetCode'),
             default => new Node\Identifier('code')
         };
