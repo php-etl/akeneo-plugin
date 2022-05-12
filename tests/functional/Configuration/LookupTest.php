@@ -126,7 +126,7 @@ final class LookupTest extends TestCase
         );
 
         $this->expectExceptionMessage(
-            'Invalid configuration for path "lookup.type": The value should be one of [product, category, attribute, attributeOption, attributeGroup, family, productMediaFile, locale, channel, currency, measureFamily, associationType, familyVariant, productModel, publishedProduct, productModelDraft, productDraft, asset, assetCategory, assetTag, referenceEntityRecord, referenceEntityAttribute, referenceEntityAttributeOption, referenceEntity], got "invalidType"',
+            'Invalid configuration for path "lookup.type": The value should be one of [product, category, attribute, attributeOption, attributeGroup, family, productMediaFile, locale, channel, currency, measureFamily, associationType, familyVariant, productModel, publishedProduct, productModelDraft, productDraft, asset, assetCategory, assetTag, referenceEntityRecord, referenceEntityAttribute, referenceEntityAttributeOption, referenceEntity, assetManager, assetMediaFiles], got "invalidType"',
         );
 
         $this->processor->processConfiguration($client, [
