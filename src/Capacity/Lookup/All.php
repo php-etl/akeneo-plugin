@@ -8,6 +8,7 @@ use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class All implements Akeneo\Capacity\CapacityInterface
 {
@@ -38,6 +39,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
@@ -86,10 +88,8 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (in_array($config['type'], ['attributeOption'])
-            && array_key_exists('code', $config)
-        ) {
-            $builder->withCode(compileValue($this->interpreter, $config['code']));
+        if (in_array($config['type'], ['attributeOption', 'assetManager']) && array_key_exists('code', $config)) {
+            $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 
         return $builder;

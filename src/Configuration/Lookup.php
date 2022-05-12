@@ -130,6 +130,13 @@ final class Lookup implements PluginConfigurationInterface
             'all',
             'get',
         ],
+        'assetManager' => [
+            'all',
+            'get',
+        ],
+        'assetMediaFiles' => [
+            'download',
+        ]
     ];
 
     public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
@@ -153,12 +160,12 @@ final class Lookup implements PluginConfigurationInterface
                 })
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
-                ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption', 'assetManager']))
+                ->thenInvalid('The code option should only be used with the "attributeOption" and "assetManager" endpoints.')
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile']))
-                ->thenInvalid('The file option should only be used with the "productMediaFile" endpoint.')
+                ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles']))
+                ->thenInvalid('The file option should only be used with the "productMediaFile" and "assetMediaFiles" endpoints.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && array_key_exists('identifier', $data) && array_key_exists('method', $data) && !in_array($data['method'], ['get']))
@@ -235,12 +242,12 @@ final class Lookup implements PluginConfigurationInterface
                     })
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
-                    ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+                    ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption', 'assetManager']))
+                    ->thenInvalid('The code option should only be used with the "attributeOption" and "assetManager" endpoints.')
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile']))
-                    ->thenInvalid('The file option should only be used with the "productMediaFile" endpoint.')
+                    ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles']))
+                    ->thenInvalid('The file option should only be used with the "productMediaFile" and "assetMediaFiles" endpoints.')
                 ->end()
                 ->validate()
                     ->ifTrue(fn ($data) => array_key_exists('identifier', $data) && array_key_exists('method', $data) && !in_array($data['method'], ['get']))

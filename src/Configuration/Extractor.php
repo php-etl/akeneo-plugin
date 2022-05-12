@@ -154,8 +154,8 @@ final class Extractor implements PluginConfigurationInterface
                 })
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption']))
-                ->thenInvalid('The code option should only be used with the "attributeOption" endpoint.')
+                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption', 'assetManager']))
+                ->thenInvalid('The code option should only be used with the "attributeOption", and "assetManager" endpoints.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile']))
@@ -164,19 +164,6 @@ final class Extractor implements PluginConfigurationInterface
             ->validate()
                 ->ifTrue(fn ($data) => array_key_exists('identifier', $data) && array_key_exists('method', $data) && !in_array($data['method'], ['get']))
                 ->thenInvalid('The identifier option should only be used with the "get" method.')
-            ->end()
-            ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('assetFamilyCode', $data) && array_key_exists('method', $data) && $data['type'] !== 'assetManager')
-                ->thenInvalid('The assetFamilyCode option should only be used with the "assetManager" endpoint.')
-            ->end()
-            ->validate()
-                ->always(function (array $item) {
-                    if ($item["type"] === 'assetManager' && empty($item["assetFamilyCode"])) {
-                        throw new \InvalidArgumentException('Your configuration should contain the "assetFamilyCode" field if the "assetManager" type is set.');
-                    }
-
-                    return $item;
-                })
             ->end()
             ->children()
                 ->scalarNode('type')
@@ -207,7 +194,6 @@ final class Extractor implements PluginConfigurationInterface
                         ->then(asExpression())
                     ->end()
                 ->end()
-                ->scalarNode('assetFamilyCode')->end()
                 ->append($filters->getConfigTreeBuilder())
             ->end();
 
