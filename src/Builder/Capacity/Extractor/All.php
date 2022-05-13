@@ -64,15 +64,15 @@ final class All implements Builder
         return
              new Node\Stmt\Foreach_(
                  expr: new Node\Expr\MethodCall(
-                    var: new Node\Expr\MethodCall(
+                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
                             var: new Node\Expr\Variable('this'),
                             name: new Node\Identifier('client')
                         ),
                         name: $this->endpoint
                     ),
-                    name: new Node\Identifier('all'),
-                    args: array_filter(
+                     name: new Node\Identifier('all'),
+                     args: array_filter(
                         [
                             new Node\Arg(
                                 value: new Node\Expr\Array_(
@@ -89,7 +89,7 @@ final class All implements Builder
                             ) : null
                         ],
                     ),
-                ),
+                 ),
                  valueVar: new Node\Expr\Variable('item'),
                  subNodes: [
                      'stmts' => [
