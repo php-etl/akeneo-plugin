@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
@@ -92,7 +94,7 @@ final class ConditionalLookup implements StepBuilderInterface
                     expr:  new Node\Expr\Assign(
                         var:  new Node\Expr\Variable('bucket'),
                         expr: new Node\Expr\New_(
-                          new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
+                            new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
                         )
                     )
                 ),

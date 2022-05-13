@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
@@ -126,7 +128,7 @@ final class Lookup implements StepBuilderInterface
                                             var: new Node\Expr\Variable('input'),
                                             expr: new Node\Expr\Yield_(
                                                 value: new Node\Expr\Variable('bucket'),
-                                                        ),
+                                            ),
                                         ),
                                         stmts: [
                                             new Node\Stmt\Expression(

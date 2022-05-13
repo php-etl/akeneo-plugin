@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Loader;
 
@@ -43,7 +45,8 @@ final class Upsert implements Akeneo\Capacity\CapacityInterface
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
-    {}
+    {
+    }
 
     public function applies(array $config): bool
     {

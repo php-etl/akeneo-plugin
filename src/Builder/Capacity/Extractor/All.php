@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Extractor;
 
@@ -61,7 +63,7 @@ final class All implements Builder
 
         return
              new Node\Stmt\Foreach_(
-                expr: new Node\Expr\MethodCall(
+                 expr: new Node\Expr\MethodCall(
                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
                             var: new Node\Expr\Variable('this'),
@@ -88,7 +90,7 @@ final class All implements Builder
                         ],
                     ),
                 ),
-                valueVar: new Node\Expr\Variable('item'),
+                 valueVar: new Node\Expr\Variable('item'),
                  subNodes: [
                      'stmts' => [
                          new Node\Stmt\Expression(
@@ -105,7 +107,7 @@ final class All implements Builder
                          )
                     ]
                  ]
-            );
+             );
     }
 
     private function compileSearch(): array

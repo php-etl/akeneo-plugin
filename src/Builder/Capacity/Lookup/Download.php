@@ -1,7 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Lookup;
-
 
 use Kiboko\Component\SatelliteToolbox\Builder\IsolatedValueAppendingBuilder;
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
@@ -144,7 +145,7 @@ final class Download implements Builder
                                                 new Node\Expr\Variable('input'),
                                             )
                                         ],
-                                   )
+                                    )
                                 )
                             ],
                         ),
