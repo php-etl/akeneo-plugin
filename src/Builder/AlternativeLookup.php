@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
@@ -8,15 +10,11 @@ use PhpParser\Node;
 
 final class AlternativeLookup implements Builder
 {
-    private bool $withEnterpriseSupport;
-    private ?Node\Expr $client;
     private ?Builder $capacity;
     private ?Builder $merge;
 
     public function __construct()
     {
-        $this->withEnterpriseSupport = false;
-        $this->client = null;
         $this->capacity = null;
         $this->merge = null;
     }

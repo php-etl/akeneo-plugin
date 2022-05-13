@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
@@ -54,27 +56,11 @@ final class Get implements Akeneo\Capacity\CapacityInterface
             && $config['method'] === 'get';
     }
 
-    private function compileFilters(array ...$filters): Node\Expr
-    {
-        $builder = new Akeneo\Builder\Search();
-        foreach ($filters as $filter) {
-            $builder->addFilter(
-                field: compileValue($this->interpreter, $filter["field"]),
-                operator: compileValue($this->interpreter, $filter["operator"]),
-                value: compileValue($this->interpreter, $filter["value"]),
-                scope: array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter["scope"]) : null,
-                locale: array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter["locale"]) : null
-            );
-        }
-
-        return $builder->getNode();
-    }
-
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\Get())
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
-        
+
         $builder->withIdentifier(compileValueWhenExpression($this->interpreter, $config['identifier']));
 
         return $builder;
