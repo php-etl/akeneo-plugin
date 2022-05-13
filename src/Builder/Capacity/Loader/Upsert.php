@@ -60,7 +60,7 @@ final class Upsert implements Builder
         }
 
         return new Node\Stmt\While_(
-            cond: new Node\Expr\Variable(name: 'line'),
+            cond: New Node\Expr\ConstFetch(new Node\Name('true')),
             stmts: [
                 new Node\Stmt\TryCatch(
                     stmts: [
