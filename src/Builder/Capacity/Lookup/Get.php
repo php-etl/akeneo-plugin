@@ -91,7 +91,6 @@ final class Get implements Builder
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
             'assetManager' => new Node\Identifier('assetFamilyCode'),
-            'referenceEntityRecord' => new Node\Identifier('recordCode'),
             default => new Node\Identifier('attributeCode')
         };
     }
