@@ -3,9 +3,9 @@
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Contract\Configurator\StepBuilderInterface;
+use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Loader implements StepBuilderInterface
 {
