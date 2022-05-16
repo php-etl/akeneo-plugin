@@ -155,7 +155,7 @@ final class Extractor implements PluginConfigurationInterface
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption', 'assetManager']))
-                ->thenInvalid('The code option should only be used with the "attributeOption", and "assetManager" endpoints.')
+                ->thenInvalid('The code option should only be used with the "attributeOption" and "assetManager" endpoints.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile']))
