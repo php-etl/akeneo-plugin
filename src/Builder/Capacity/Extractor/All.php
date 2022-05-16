@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Extractor;
 
@@ -14,6 +16,7 @@ final class All implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $search;
     private null|Node\Expr $code;
+    private null|string $type;
 
     public function __construct()
     {
@@ -43,6 +46,13 @@ final class All implements Builder
         return $this;
     }
 
+    public function withType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function getNode(): Node
     {
         if ($this->endpoint === null) {
@@ -53,16 +63,16 @@ final class All implements Builder
 
         return
              new Node\Stmt\Foreach_(
-                expr: new Node\Expr\MethodCall(
-                    var: new Node\Expr\MethodCall(
+                 expr: new Node\Expr\MethodCall(
+                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
                             var: new Node\Expr\Variable('this'),
                             name: new Node\Identifier('client')
                         ),
                         name: $this->endpoint
                     ),
-                    name: new Node\Identifier('all'),
-                    args: array_filter(
+                     name: new Node\Identifier('all'),
+                     args: array_filter(
                         [
                             new Node\Arg(
                                 value: new Node\Expr\Array_(
@@ -75,12 +85,12 @@ final class All implements Builder
                             ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
+                                name: $this->compileCodeNamedArgument($this->type),
                             ) : null
                         ],
                     ),
-                ),
-                valueVar: new Node\Expr\Variable('item'),
+                 ),
+                 valueVar: new Node\Expr\Variable('item'),
                  subNodes: [
                      'stmts' => [
                          new Node\Stmt\Expression(
@@ -97,7 +107,7 @@ final class All implements Builder
                          )
                     ]
                  ]
-            );
+             );
     }
 
     private function compileSearch(): array
@@ -112,5 +122,13 @@ final class All implements Builder
                 new Node\Scalar\String_('search'),
             ),
         ];
+    }
+
+    private function compileCodeNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'assetManager' => new Node\Identifier('assetFamilyCode'),
+            default => new Node\Identifier('attributeCode')
+        };
     }
 }

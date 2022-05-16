@@ -38,6 +38,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
@@ -46,16 +47,14 @@ final class Get implements Akeneo\Capacity\CapacityInterface
 
     public function applies(array $config): bool
     {
-        return isset($config['type'])
-            && in_array($config['type'], self::$endpoints)
-            && isset($config['method'])
-            && $config['method'] === 'get';
+        return isset($config['type'], $config['method']) && in_array($config['type'], self::$endpoints) && $config['method'] === 'get';
     }
 
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\Get())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
+            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+            ->withType($config['type']);
 
         $builder->withIdentifier(compileValueWhenExpression($this->interpreter, $config['identifier']));
 

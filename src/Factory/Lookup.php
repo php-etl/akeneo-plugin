@@ -94,33 +94,15 @@ final class Lookup implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Lookup
     {
-        if (!array_key_exists('conditional', $config)) {
-            $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
-            $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
-            $repository = new Repository\Lookup($builder);
-
-            try {
-                $alternativeBuilder->withCapacity(
-                    $this->findCapacity($config)->getBuilder($config)
-                );
-            } catch (NoApplicableCapacityException $exception) {
-                throw new Configurator\InvalidConfigurationException(
-                    message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
-                    previous: $exception,
-                );
-            }
-
-            $this->merge($alternativeBuilder, $config);
-        } else {
-            $builder = new Akeneo\Builder\ConditionalLookup();
-            $repository = new Repository\Lookup($builder);
-
-            foreach ($config['conditional'] as $alternative) {
+        try {
+            if (!array_key_exists('conditional', $config)) {
                 $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
+                $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
+                $repository = new Repository\Lookup($builder);
 
                 try {
                     $alternativeBuilder->withCapacity(
-                        $this->findCapacity($alternative)->getBuilder($alternative)
+                        $this->findCapacity($config)->getBuilder($config)
                     );
                 } catch (NoApplicableCapacityException $exception) {
                     throw new Configurator\InvalidConfigurationException(
@@ -129,16 +111,34 @@ final class Lookup implements Configurator\FactoryInterface
                     );
                 }
 
-                $builder->addAlternative(
-                    compileValueWhenExpression($this->interpreter, $alternative['condition']),
-                    $alternativeBuilder
-                );
+                $this->merge($alternativeBuilder, $config);
+            } else {
+                $builder = new Akeneo\Builder\ConditionalLookup();
+                $repository = new Repository\Lookup($builder);
 
-                $this->merge($alternativeBuilder, $alternative);
+                foreach ($config['conditional'] as $alternative) {
+                    $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
+
+                    try {
+                        $alternativeBuilder->withCapacity(
+                            $this->findCapacity($alternative)->getBuilder($alternative)
+                        );
+                    } catch (NoApplicableCapacityException $exception) {
+                        throw new Configurator\InvalidConfigurationException(
+                            message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
+                            previous: $exception,
+                        );
+                    }
+
+                    $builder->addAlternative(
+                        compileValueWhenExpression($this->interpreter, $alternative['condition']),
+                        $alternativeBuilder
+                    );
+
+                    $this->merge($alternativeBuilder, $alternative);
+                }
             }
-        }
 
-        try {
             return $repository;
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException(

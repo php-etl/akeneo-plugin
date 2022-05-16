@@ -9,6 +9,7 @@ use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class All implements Akeneo\Capacity\CapacityInterface
 {
@@ -39,6 +40,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
@@ -81,16 +83,15 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\All())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
+                ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+                ->withType($config['type']);
 
         if (isset($config['search']) && is_array($config['search'])) {
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (in_array($config['type'], ['attributeOption'])
-            && array_key_exists('code', $config)
-        ) {
-            $builder->withCode(compileValue($this->interpreter, $config['code']));
+        if (in_array($config['type'], ['attributeOption', 'assetManager']) && array_key_exists('code', $config)) {
+            $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 
         return $builder;

@@ -11,12 +11,14 @@ final class Get implements Builder
     private null|Node\Expr|Node\Identifier $endpoint;
     private null|Node\Expr $identifier;
     private null|Node\Expr $code;
+    private null|string $type;
 
     public function __construct()
     {
         $this->endpoint = null;
         $this->identifier = null;
         $this->code = null;
+        $this->type = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -36,6 +38,13 @@ final class Get implements Builder
     public function withIdentifier(Node\Expr $identifier): self
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function withType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -64,16 +73,34 @@ final class Get implements Builder
                         [
                             new Node\Arg(
                                 value: $this->identifier,
-                                name: new Node\Identifier('code'),
+                                name: $this->compileIdentifierNamedArgument($this->type),
                             ),
                             $this->code !== null ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
+                                name: $this->compileCodeNamedArgument($this->type),
                             ) : null
                         ],
                     ),
                 )
             )
         );
+    }
+
+    private function compileCodeNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
+            'assetManager' => new Node\Identifier('assetFamilyCode'),
+            default => new Node\Identifier('attributeCode')
+        };
+    }
+
+    private function compileIdentifierNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'referenceEntityRecord' => new Node\Identifier('recordCode'),
+            'assetManager' => new Node\Identifier('assetCode'),
+            default => new Node\Identifier('code')
+        };
     }
 }

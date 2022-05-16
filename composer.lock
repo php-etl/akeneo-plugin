@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e75a7dd6ae2bc2ecc2d58b0517f87db",
+    "content-hash": "508c90e5db7e91f3519aefeaeae97846",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -159,16 +159,16 @@
         },
         {
             "name": "php-etl/configurator-contracts",
-            "version": "dev-master",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/configurator-contracts.git",
-                "reference": "55c2a4bcd0b41846ac3afd8a788e83f0cb2fc45d"
+                "reference": "c98c11de81f004c6c96351d108b36de574d8c60d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/55c2a4bcd0b41846ac3afd8a788e83f0cb2fc45d",
-                "reference": "55c2a4bcd0b41846ac3afd8a788e83f0cb2fc45d",
+                "url": "https://api.github.com/repos/php-etl/configurator-contracts/zipball/c98c11de81f004c6c96351d108b36de574d8c60d",
+                "reference": "c98c11de81f004c6c96351d108b36de574d8c60d",
                 "shasum": ""
             },
             "require": {
@@ -177,7 +177,6 @@
                 "php-etl/packaging-contracts": "^0.1.0",
                 "symfony/config": "^5.2"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -206,9 +205,9 @@
             "description": "This library describes contracts for defining configuration formats and building optimized code from it",
             "support": {
                 "issues": "https://github.com/php-etl/configurator-contracts/issues",
-                "source": "https://github.com/php-etl/configurator-contracts/tree/master"
+                "source": "https://github.com/php-etl/configurator-contracts/tree/v0.4.1"
             },
-            "time": "2021-09-21T21:26:42+00:00"
+            "time": "2022-03-28T21:03:54+00:00"
         },
         {
             "name": "php-etl/fast-map",
@@ -5886,5 +5885,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -16,6 +16,7 @@ final class Download implements Akeneo\Capacity\CapacityInterface
         'productMediaFile',
         // Enterprise Endpoints
         'asset',
+        'assetMediaFiles',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
@@ -8,8 +10,6 @@ use PhpParser\Node;
 final class ConditionalLookup implements StepBuilderInterface
 {
     private ?Node\Expr $logger;
-    private ?Node\Expr $rejection;
-    private ?Node\Expr $state;
     /** @var iterable<array{0: Node\Expr, 1: AlternativeLookup}> */
     private iterable $alternatives;
     private bool $withEnterpriseSupport;
@@ -18,18 +18,9 @@ final class ConditionalLookup implements StepBuilderInterface
     public function __construct()
     {
         $this->logger = null;
-        $this->rejection = null;
-        $this->state = null;
         $this->alternatives = [];
         $this->withEnterpriseSupport = false;
         $this->client = null;
-    }
-
-    public function withEnterpriseSupport(bool $withEnterpriseSupport): self
-    {
-        $this->withEnterpriseSupport = $withEnterpriseSupport;
-
-        return $this;
     }
 
     public function withClient(Node\Expr $client): self
@@ -48,15 +39,11 @@ final class ConditionalLookup implements StepBuilderInterface
 
     public function withRejection(Node\Expr $rejection): self
     {
-        $this->rejection = $rejection;
-
         return $this;
     }
 
     public function withState(Node\Expr $state): self
     {
-        $this->state = $state;
-
         return $this;
     }
 
@@ -92,7 +79,7 @@ final class ConditionalLookup implements StepBuilderInterface
                     expr:  new Node\Expr\Assign(
                         var:  new Node\Expr\Variable('bucket'),
                         expr: new Node\Expr\New_(
-                          new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
+                            new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
                         )
                     )
                 ),
