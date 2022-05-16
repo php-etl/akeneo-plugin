@@ -10,16 +10,12 @@ use PhpParser\Node;
 final class Lookup implements StepBuilderInterface
 {
     private ?Node\Expr $logger;
-    private ?Node\Expr $rejection;
-    private ?Node\Expr $state;
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
 
     public function __construct(private AlternativeLookup $alternative)
     {
         $this->logger = null;
-        $this->rejection = null;
-        $this->state = null;
         $this->withEnterpriseSupport = false;
         $this->client = null;
     }
@@ -47,15 +43,11 @@ final class Lookup implements StepBuilderInterface
 
     public function withRejection(Node\Expr $rejection): self
     {
-        $this->rejection = $rejection;
-
         return $this;
     }
 
     public function withState(Node\Expr $state): self
     {
-        $this->state = $state;
-
         return $this;
     }
 
