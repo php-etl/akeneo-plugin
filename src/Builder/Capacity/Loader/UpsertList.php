@@ -25,9 +25,9 @@ final class UpsertList implements Builder
         return $this;
     }
 
-    public function withData(Node\Expr $lines): self
+    public function withData(Node\Expr $data): self
     {
-        $this->data = $lines;
+        $this->data = $data;
 
         return $this;
     }
@@ -69,13 +69,13 @@ final class UpsertList implements Builder
                         ),
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\Assign(
-                                var: new Node\Expr\Variable('lines'),
+                                var: new Node\Expr\Variable('line'),
                                 expr: new Node\Expr\Yield_(
                                     value: new Node\Expr\New_(
                                         class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
                                         args: [
                                             new Node\Arg(
-                                                value: new Node\Expr\Variable('lines'),
+                                                value: new Node\Expr\Variable('line'),
                                             ),
                                         ],
                                     ),
@@ -114,7 +114,7 @@ final class UpsertList implements Builder
                                                             key: new Node\Scalar\String_('exception'),
                                                         ),
                                                         new Node\Expr\ArrayItem(
-                                                            value: new Node\Expr\Variable('lines'),
+                                                            value: new Node\Expr\Variable('line'),
                                                             key: new Node\Scalar\String_('items'),
                                                         ),
                                                     ],
@@ -128,7 +128,7 @@ final class UpsertList implements Builder
                                 ),
                                 new Node\Stmt\Expression(
                                     new Node\Expr\Assign(
-                                        var: new Node\Expr\Variable('lines'),
+                                        var: new Node\Expr\Variable('line'),
                                         expr: new Node\Expr\Yield_(
                                             value: new Node\Expr\New_(
                                                 class: new Node\Name\FullyQualified(
@@ -139,7 +139,7 @@ final class UpsertList implements Builder
                                                         value: new Node\Expr\Variable('exception'),
                                                     ),
                                                     new Node\Arg(
-                                                        value: new Node\Expr\Variable('lines'),
+                                                        value: new Node\Expr\Variable('line'),
                                                     ),
                                                 ],
                                             ),

@@ -107,14 +107,9 @@ final class Loader implements StepBuilderInterface
                                 'stmts' => [
                                     new Node\Stmt\TryCatch(
                                         stmts: [
-                                            $this->capacity instanceof Akeneo\Builder\Capacity\Loader\Upsert ? new Node\Stmt\Expression(
+                                            new Node\Stmt\Expression(
                                                 new Node\Expr\Assign(
                                                     var: new Node\Expr\Variable(name: 'line'),
-                                                    expr: new Node\Expr\Yield_(),
-                                                ),
-                                            ) : new Node\Stmt\Expression(
-                                                new Node\Expr\Assign(
-                                                    var: new Node\Expr\Variable(name: 'lines'),
                                                     expr: new Node\Expr\Yield_(),
                                                 ),
                                             ),
