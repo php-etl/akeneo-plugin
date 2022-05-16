@@ -3,9 +3,9 @@
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Contract\Configurator\StepBuilderInterface;
+use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Loader implements StepBuilderInterface
 {
@@ -107,9 +107,14 @@ final class Loader implements StepBuilderInterface
                                 'stmts' => [
                                     new Node\Stmt\TryCatch(
                                         stmts: [
-                                            new Node\Stmt\Expression(
+                                            $this->capacity instanceof Akeneo\Builder\Capacity\Loader\Upsert ? new Node\Stmt\Expression(
                                                 new Node\Expr\Assign(
                                                     var: new Node\Expr\Variable(name: 'line'),
+                                                    expr: new Node\Expr\Yield_(),
+                                                ),
+                                            ) : new Node\Stmt\Expression(
+                                                new Node\Expr\Assign(
+                                                    var: new Node\Expr\Variable(name: 'lines'),
                                                     expr: new Node\Expr\Yield_(),
                                                 ),
                                             ),
