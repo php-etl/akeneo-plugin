@@ -5,6 +5,7 @@ namespace functional\Kiboko\Plugin\Akeneo\Configuration;
 use Kiboko\Plugin\Akeneo\Configuration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 final class ExtractorTest extends TestCase
 {
@@ -53,6 +54,20 @@ final class ExtractorTest extends TestCase
                 'search' => [],
             ],
         ];
+        yield [
+            'config' => [
+                'type' => 'productMediaFile',
+                'method' => 'all',
+                'file' => '@="foo"',
+                'search' => [],
+            ],
+            'expected' => [
+                'type' => 'productMediaFile',
+                'method' => 'all',
+                'file' => new Expression('"foo"'),
+                'search' => [],
+            ],
+        ];
     }
 
     /** @dataProvider validDataProvider */
@@ -60,10 +75,10 @@ final class ExtractorTest extends TestCase
     {
         $client = new Configuration\Extractor();
 
-        $this->assertSame($expected, $this->processor->processConfiguration($client, [$config]));
+        $this->assertEquals($expected, $this->processor->processConfiguration($client, [$config]));
     }
 
-    public function testInvalidConfig()
+    public function testInvalidMethodTypeConfig()
     {
         $client = new Configuration\Extractor();
 
@@ -78,6 +93,46 @@ final class ExtractorTest extends TestCase
             [
                 'type' => 'product',
                 'method' => 'invalidValue'
+            ]
+        ]);
+    }
+
+    public function testUnexpectedProductMediaFileFieldConfig()
+    {
+        $client = new Configuration\Extractor();
+
+        $this->expectException(
+            Config\Definition\Exception\InvalidConfigurationException::class,
+        );
+        $this->expectExceptionMessage(
+            'Invalid configuration for path "extractor": The file option should only be used with the "productMediaFile" endpoint.',
+        );
+
+        $this->processor->processConfiguration($client, [
+            [
+                'type' => 'product',
+                'method' => 'all',
+                'file' => 'foo'
+            ]
+        ]);
+    }
+
+    public function testUnexpectedIdentifierFieldConfig()
+    {
+        $client = new Configuration\Extractor();
+
+        $this->expectException(
+            Config\Definition\Exception\InvalidConfigurationException::class,
+        );
+        $this->expectExceptionMessage(
+            'Invalid configuration for path "extractor": The identifier option should only be used with the "get" method.',
+        );
+
+        $this->processor->processConfiguration($client, [
+            [
+                'type' => 'product',
+                'method' => 'all',
+                'identifier' => 'foo'
             ]
         ]);
     }

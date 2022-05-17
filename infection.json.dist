@@ -6,14 +6,11 @@
     },
     "timeout": 10,
     "logs": {
-        "text": "infection.log",
-        "summary": "summary.log",
-        "json": "infection-log.json",
-        "perMutator": "per-mutator.md",
-        "github": true,
-        "badge": {
-            "branch": "master"
-        }
+        "text": "infection/infection.log",
+        "html": "infection/infection.html",
+        "summary": "infection/summary.log",
+        "json": "infection/infection-log.json",
+        "perMutator": "infection/per-mutator.md"
     },
     "phpUnit": {
         "configDir": "."
@@ -22,5 +19,7 @@
         "@default": true
     },
     "testFramework":"phpunit",
-    "testFrameworkOptions": "-vvv"
+    "initialTestsPhpOptions": "-d zend_extension=xdebug -d xdebug.mode=coverage",
+    "minMsi": 20,
+    "minCoveredMsi": 70
 }

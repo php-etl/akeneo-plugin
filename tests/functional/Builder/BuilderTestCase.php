@@ -2,27 +2,27 @@
 
 namespace functional\Kiboko\Plugin\Akeneo\Builder;
 
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamWrapper;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter;
 use PhpParser\Builder as DefaultBuilder;
 use PHPUnit\Framework\TestCase;
-use Vfs\FileSystem;
-use Vfs\Node\File;
 
 abstract class BuilderTestCase extends TestCase
 {
-    private ?FileSystem $fs = null;
+    private ?vfsStreamDirectory $fs = null;
 
     protected function setUp(): void
     {
-        $this->fs = FileSystem::factory('vfs://');
-        $this->fs->mount();
+        $this->fs = vfsStream::setup();
     }
 
     protected function tearDown(): void
     {
-        $this->fs->unmount();
         $this->fs = null;
+        vfsStreamWrapper::unregister();
     }
 
     protected function assertNodeIsInstanceOf(string $expected, DefaultBuilder $builder, string $message = '')
@@ -31,12 +31,11 @@ abstract class BuilderTestCase extends TestCase
 
         try {
             $filename = sha1(random_bytes(128)) .'.php';
-
-            $this->fs->get('/')->add($filename, new File($printer->prettyPrintFile([
+            file_put_contents($this->fs->url() . '/' . $filename, $printer->prettyPrintFile([
                 new Node\Stmt\Return_($builder->getNode()),
-            ])));
+            ]));
 
-            $actual = include 'vfs://'.$filename;
+            $actual = include $this->fs->url().'/'.$filename;
         } catch (\ParseError $exception) {
             echo $printer->prettyPrintFile([$builder->getNode()]);
             $this->fail($exception->getMessage());
@@ -51,12 +50,11 @@ abstract class BuilderTestCase extends TestCase
 
         try {
             $filename = sha1(random_bytes(128)) .'.php';
-
-            $this->fs->get('/')->add($filename, new File($printer->prettyPrintFile([
+            file_put_contents($this->fs->url() . '/' . $filename, $printer->prettyPrintFile([
                 new Node\Stmt\Return_($builder->getNode()),
-            ])));
+            ]));
 
-            $actual = include 'vfs://'.$filename;
+            $actual = include $this->fs->url().'/'.$filename;
         } catch (\ParseError $exception) {
             echo $printer->prettyPrintFile([$builder->getNode()]);
             $this->fail($exception->getMessage());

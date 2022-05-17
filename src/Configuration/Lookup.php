@@ -141,9 +141,9 @@ final class Lookup implements PluginConfigurationInterface
 
     public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
-        $builder = new Config\Definition\Builder\TreeBuilder('lookup');
-
         $filters = new Search();
+
+        $builder = new Config\Definition\Builder\TreeBuilder('lookup');
 
         /** @phpstan-ignore-next-line */
         $builder->getRootNode()
@@ -242,15 +242,21 @@ final class Lookup implements PluginConfigurationInterface
                     })
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager']))
+                    ->ifTrue(fn ($data) =>
+                        array_key_exists('code', $data)
+                        && array_key_exists('type', $data)
+                        && !in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager'], true))
                     ->thenInvalid('The code option should only be used with the "attributeOption", "referenceEntityRecord" and "assetManager" endpoints.')
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles']))
+                    ->ifTrue(fn ($data) =>
+                        array_key_exists('file', $data)
+                        && array_key_exists('type', $data)
+                        && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles'], true))
                     ->thenInvalid('The file option should only be used with the "productMediaFile" and "assetMediaFiles" endpoints.')
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) => array_key_exists('identifier', $data) && array_key_exists('method', $data) && !in_array($data['method'], ['get']))
+                    ->ifTrue(fn ($data) => array_key_exists('identifier', $data) && array_key_exists('method', $data) && $data['method'] !== 'get')
                     ->thenInvalid('The identifier option should only be used with the "get" method.')
                 ->end()
                 ->children()

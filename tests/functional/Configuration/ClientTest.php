@@ -124,4 +124,54 @@ final class ClientTest extends TestCase
             ]
         );
     }
+
+    public function testMissingPasswordInAuthenticationMethod()
+    {
+        $client = new Configuration\Client();
+
+        $this->expectException(
+            Config\Definition\Exception\InvalidConfigurationException::class,
+        );
+        $this->expectExceptionMessage(
+            'The configuration option "password" should be defined if you use the username authentication method for Akeneo API.',
+        );
+
+        $this->processor->processConfiguration(
+            $client,
+            [
+                [
+                    'context' => [],
+                    'api_url' => 'http://api.example.com',
+                    'client_id' => 'LOREMIPSUM',
+                    'secret' => 'SECRET',
+                    'username' => 'JOHNDOE',
+                ]
+            ]
+        );
+    }
+
+    public function testMissingRefreshTokenInAuthenticationMethod()
+    {
+        $client = new Configuration\Client();
+
+        $this->expectException(
+            Config\Definition\Exception\InvalidConfigurationException::class,
+        );
+        $this->expectExceptionMessage(
+            'The configuration option "refreshToken" should be defined if you use the token authentication method for Akeneo API.',
+        );
+
+        $this->processor->processConfiguration(
+            $client,
+            [
+                [
+                    'context' => [],
+                    'api_url' => 'http://api.example.com',
+                    'client_id' => 'LOREMIPSUM',
+                    'secret' => 'SECRET',
+                    'token' => 'TOKEN',
+                ]
+            ]
+        );
+    }
 }

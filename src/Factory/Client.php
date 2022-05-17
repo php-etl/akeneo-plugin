@@ -35,7 +35,7 @@ final class Client implements Configurator\FactoryInterface
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new Configurator\InvalidConfigurationException($exception->getMessage(), 0, $exception);
+            throw new Configurator\InvalidConfigurationException($exception->getMessage(), previous: $exception);
         }
     }
 
@@ -45,7 +45,9 @@ final class Client implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
+        } catch (Configurator\InvalidConfigurationException) {
+            return false;
+        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
             return false;
         }
     }
