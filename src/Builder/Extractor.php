@@ -5,21 +5,19 @@ namespace Kiboko\Plugin\Akeneo\Builder;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Extractor implements StepBuilderInterface
 {
     private ?Node\Expr $logger;
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
-    private ?Builder $capacity;
 
-    public function __construct()
-    {
+    public function __construct(
+        private Builder $capacity,
+    ) {
         $this->logger = null;
         $this->withEnterpriseSupport = false;
         $this->client = null;
-        $this->capacity = null;
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self

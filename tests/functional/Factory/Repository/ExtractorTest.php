@@ -6,6 +6,8 @@ use Kiboko\Contract\Configurator\RepositoryInterface;
 use Kiboko\Contract\Packaging\FileInterface;
 use Kiboko\Plugin\Akeneo\Builder;
 use Kiboko\Plugin\Akeneo\Factory\Repository;
+use PhpParser\Builder as Capacity;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 
 final class ExtractorTest extends TestCase
@@ -26,7 +28,11 @@ final class ExtractorTest extends TestCase
 
     public function testMergeWithPackages(): void
     {
-        $builder = new Builder\Extractor();
+        $capacity = $this->getMockBuilder(Capacity::class)->getMock();
+
+        $capacity->method('getNode')->willReturn(new Node\Stmt\Nop());
+
+        $builder = new Builder\Extractor($capacity);
 
         $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
 
@@ -44,7 +50,11 @@ final class ExtractorTest extends TestCase
 
     public function testMergeWithFiles(): void
     {
-        $builder = new Builder\Extractor();
+        $capacity = $this->getMockBuilder(Capacity::class)->getMock();
+
+        $capacity->method('getNode')->willReturn(new Node\Stmt\Nop());
+
+        $builder = new Builder\Extractor($capacity);
 
         $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
 

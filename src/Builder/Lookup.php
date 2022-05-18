@@ -13,8 +13,9 @@ final class Lookup implements StepBuilderInterface
     private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
 
-    public function __construct(private AlternativeLookup $alternative)
-    {
+    public function __construct(
+        private AlternativeLookup $alternative,
+    ) {
         $this->logger = null;
         $this->withEnterpriseSupport = false;
         $this->client = null;

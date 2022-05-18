@@ -75,10 +75,8 @@ final class Extractor implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Extractor
     {
-        $builder = new Akeneo\Builder\Extractor();
-
         try {
-            $builder->withCapacity(
+            $builder = new Akeneo\Builder\Extractor(
                 $this->findCapacity($config)->getBuilder($config)
             );
         } catch (NoApplicableCapacityException $exception) {

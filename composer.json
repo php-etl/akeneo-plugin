@@ -38,7 +38,9 @@
         "php-http/message": "^1.11",
         "php-http/curl-client": "^2.0",
         "mikey179/vfsstream": "^1.6",
-        "infection/infection": "^0.26.10"
+        "infection/infection": "^0.26.10",
+        "php-etl/phpunit-extension": "^0.4",
+        "fakerphp/faker": "^1.19"
     },
     "autoload": {
         "psr-4": {
