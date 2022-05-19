@@ -62,13 +62,6 @@ final class Lookup implements StepBuilderInterface
                 ),
             ),
             $lookup->getNode(),
-            new Node\Stmt\Expression(
-                expr: new Node\Expr\MethodCall(
-                    var: new Node\Expr\Variable('bucket'),
-                    name: new Node\Identifier('accept'),
-                    args: [new Node\Arg(new Node\Expr\Variable('output'))]
-                )
-            )
         ];
     }
 
