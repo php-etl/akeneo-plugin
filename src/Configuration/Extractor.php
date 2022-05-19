@@ -133,7 +133,7 @@ final class Extractor implements PluginConfigurationInterface
             'all',
             'get',
         ],
-        'assetMediaFiles' => [
+        'assetMediaFile' => [
             'download',
         ]
     ];
@@ -169,7 +169,7 @@ final class Extractor implements PluginConfigurationInterface
                 ->ifTrue(fn ($data) =>
                     array_key_exists('file', $data)
                     && array_key_exists('type', $data)
-                    && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles'], true))
+                    && !in_array($data['type'], ['productMediaFile', 'assetMediaFile'], true))
                 ->thenInvalid('The file option should only be used with the "productMediaFile" endpoint.')
             ->end()
             ->validate()
