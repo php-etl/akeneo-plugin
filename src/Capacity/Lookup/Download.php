@@ -1,13 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Lookup;
 
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 
 final class Download implements Akeneo\Capacity\CapacityInterface
 {
@@ -26,20 +28,19 @@ final class Download implements Akeneo\Capacity\CapacityInterface
     public function applies(array $config): bool
     {
         return isset($config['type'])
-            && in_array($config['type'], self::$endpoints)
+            && \in_array($config['type'], self::$endpoints)
             && isset($config['method'])
-            && $config['method'] === 'download';
+            && 'download' === $config['method'];
     }
-    
+
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\Download())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))));
+            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+        ;
 
-        if (!array_key_exists('file', $config)) {
-            throw new Configurator\InvalidConfigurationException(
-                'The configuration option "file" should be defined.'
-            );
+        if (!\array_key_exists('file', $config)) {
+            throw new Configurator\InvalidConfigurationException('The configuration option "file" should be defined.');
         }
         $builder->withFile(compileValue($this->interpreter, $config['file']));
 

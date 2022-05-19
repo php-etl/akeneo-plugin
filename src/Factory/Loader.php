@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Factory;
 
-use Kiboko\Plugin\Akeneo;
 use Kiboko\Contract\Configurator;
+use Kiboko\Plugin\Akeneo;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
@@ -13,7 +15,7 @@ final class Loader implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
-    /** @var iterable<Akeneo\Capacity\CapacityInterface>  */
+    /** @var iterable<Akeneo\Capacity\CapacityInterface> */
     private iterable $capacities;
     private ExpressionLanguage $interpreter;
 
@@ -67,9 +69,7 @@ final class Loader implements Configurator\FactoryInterface
             }
         }
 
-        throw new NoApplicableCapacityException(
-            message: 'No capacity was able to handle the configuration.'
-        );
+        throw new NoApplicableCapacityException(message: 'No capacity was able to handle the configuration.');
     }
 
     public function compile(array $config): Repository\Loader
@@ -81,23 +81,17 @@ final class Loader implements Configurator\FactoryInterface
                 $this->findCapacity($config)->getBuilder($config)
             );
         } catch (NoApplicableCapacityException $exception) {
-            throw new Configurator\InvalidConfigurationException(
-                message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
-                previous: $exception,
-            );
+            throw new Configurator\InvalidConfigurationException(message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.', previous: $exception);
         }
 
-        if (array_key_exists('enterprise', $config)) {
+        if (\array_key_exists('enterprise', $config)) {
             $builder->withEnterpriseSupport($config['enterprise']);
         }
 
         try {
             return new Repository\Loader($builder);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new Configurator\InvalidConfigurationException(
-                message: $exception->getMessage(),
-                previous: $exception
-            );
+            throw new Configurator\InvalidConfigurationException(message: $exception->getMessage(), previous: $exception);
         }
     }
 }

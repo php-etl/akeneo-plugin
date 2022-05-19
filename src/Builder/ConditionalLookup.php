@@ -76,8 +76,8 @@ final class ConditionalLookup implements StepBuilderInterface
             ),
             stmts: array_filter([
                 new Node\Stmt\Expression(
-                    expr:  new Node\Expr\Assign(
-                        var:  new Node\Expr\Variable('bucket'),
+                    expr: new Node\Expr\Assign(
+                        var: new Node\Expr\Variable('bucket'),
                         expr: new Node\Expr\New_(
                             new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
                         )
@@ -86,7 +86,7 @@ final class ConditionalLookup implements StepBuilderInterface
                 new Node\Stmt\Expression(
                     new Node\Expr\Assign(
                         var: new Node\Expr\Variable('output'),
-                        expr:new Node\Expr\Variable('input'),
+                        expr: new Node\Expr\Variable('input'),
                     ),
                 ),
                 new Node\Stmt\If_(
@@ -96,29 +96,28 @@ final class ConditionalLookup implements StepBuilderInterface
                             ...$this->compileAlternative($alternative),
                         ],
                         'elseifs' => array_map(
-                            fn (Node\Expr $condition, AlternativeLookup $lookup)
-                                => new Node\Stmt\ElseIf_(
+                            fn (Node\Expr $condition, AlternativeLookup $lookup) => new Node\Stmt\ElseIf_(
                                     cond: $condition,
                                     stmts: $this->compileAlternative($lookup)
                                 ),
                             array_column($alternatives, 0),
                             array_column($alternatives, 1)
                         ),
-                        'else' => new Node\Stmt\Else_(
-                            stmts: [
-                                new Node\Stmt\Expression(
-                                    expr: new Node\Expr\MethodCall(
+                                                'else' => new Node\Stmt\Else_(
+                                                    stmts: [
+                                                        new Node\Stmt\Expression(
+                        expr: new Node\Expr\MethodCall(
                                         var: new Node\Expr\Variable('bucket'),
                                         name: new Node\Name('accept'),
                                         args: [
-                                            new Node\Arg(
+                                                                new Node\Arg(
                                                 value: new Node\Expr\Variable('output')
                                             )
                                         ]
-                                    )
-                                ),
-                            ],
-                        ),
+                                                            )
+                                                        ),
+                                                    ],
+                                                ),
                     ],
                 ),
             ])
@@ -160,7 +159,6 @@ final class ConditionalLookup implements StepBuilderInterface
                             subNodes: [
                                 'flags' => Node\Stmt\Class_::MODIFIER_PUBLIC,
                                 'params' => [
-
                                 ],
                                 'returnType' => new Node\Name\FullyQualified(\Generator::class),
                                 'stmts' => [

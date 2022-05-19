@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
@@ -27,7 +29,7 @@ final class Search implements Builder
                 value: $operator,
             ),
             new Node\Arg(
-                value: $value  ?? new Node\Expr\ConstFetch(new Node\Name('null')),
+                value: $value ?? new Node\Expr\ConstFetch(new Node\Name('null')),
             ),
         ];
 
@@ -45,11 +47,11 @@ final class Search implements Builder
             );
         }
 
-        if (count($options) > 0) {
+        if (\count($options) > 0) {
             $arguments[] = new Node\Expr\Array_(
                 items: $options,
                 attributes: [
-                    'kind' => Node\Expr\Array_::KIND_SHORT
+                    'kind' => Node\Expr\Array_::KIND_SHORT,
                 ]
             );
         }

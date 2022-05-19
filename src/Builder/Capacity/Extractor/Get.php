@@ -35,10 +35,8 @@ final class Get implements Builder
 
     public function getNode(): Node
     {
-        if ($this->endpoint === null) {
-            throw new MissingEndpointException(
-                message: 'Please check your capacity builder, you should have selected an endpoint.'
-            );
+        if (null === $this->endpoint) {
+            throw new MissingEndpointException(message: 'Please check your capacity builder, you should have selected an endpoint.');
         }
 
         return new Node\Stmt\Expression(
@@ -61,7 +59,7 @@ final class Get implements Builder
                                         new Node\Arg(
                                             value: $this->identifier,
                                             name: new Node\Identifier('code'),
-                                        )
+                                        ),
                                     ],
                                 ),
                             ),
