@@ -117,14 +117,14 @@ final class Lookup implements StepBuilderInterface
                                         ),
                                         stmts: [
                                             new Node\Stmt\Expression(
-                                                expr:  new Node\Expr\Assign(
-                                                    var:  new Node\Expr\Variable('bucket'),
+                                                expr: new Node\Expr\Assign(
+                                                    var: new Node\Expr\Variable('bucket'),
                                                     expr: new Node\Expr\New_(
                                                         new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
                                                     )
                                                 )
                                             ),
-                                            ...$this->compileAlternative($this->alternative)
+                                            ...$this->compileAlternative($this->alternative),
                                         ]
                                     ),
                                 ]),

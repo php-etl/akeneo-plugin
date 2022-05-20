@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class Extractor implements StepBuilderInterface
 {
@@ -104,7 +105,7 @@ final class Extractor implements StepBuilderInterface
                                         catches: [
                                             new Node\Stmt\Catch_(
                                                 types: [
-                                                    new Node\Name\FullyQualified('Throwable')
+                                                    new Node\Name\FullyQualified('Throwable'),
                                                 ],
                                                 var: new Node\Expr\Variable('exception'),
                                                 stmts: [

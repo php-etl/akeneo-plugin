@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Kiboko\Plugin\Akeneo\Builder;
 
 use Kiboko\Component\SatelliteToolbox\Builder\IsolatedFuncCallAppendingBuilder;
-use Kiboko\Component\SatelliteToolbox\Builder\IsolatedValueAppendingBuilder;
 use PhpParser\Builder;
 use PhpParser\Node;
 
@@ -48,10 +47,10 @@ final class AlternativeLookup implements Builder
                         args: [
                             new Node\Arg(
                                 value: new Node\Expr\Variable('output')
-                            )
+                            ),
                         ]
                     )
-                )
+                ),
             ]),
             new Node\Expr\Variable('bucket')
         ))->getNode();

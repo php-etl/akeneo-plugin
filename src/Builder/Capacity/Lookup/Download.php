@@ -36,10 +36,8 @@ final class Download implements Builder
 
     public function getNode(): Node
     {
-        if ($this->endpoint === null) {
-            throw new MissingEndpointException(
-                message: 'Please check your capacity builder, you should have selected an endpoint.'
-            );
+        if (null === $this->endpoint) {
+            throw new MissingEndpointException(message: 'Please check your capacity builder, you should have selected an endpoint.');
         }
 
         return (new IsolatedValueAppendingBuilder(
@@ -51,9 +49,9 @@ final class Download implements Builder
                         name: new Node\Name('is_null'),
                         args: array_filter(
                             [
-                                $this->file !== null ? new Node\Arg(
+                                null !== $this->file ? new Node\Arg(
                                     value: $this->file,
-                                ) : null
+                                ) : null,
                             ],
                         ),
                     ),
@@ -63,7 +61,7 @@ final class Download implements Builder
                                 expr: new Node\Expr\ConstFetch(
                                     name: new Node\Name(name: 'null'),
                                 ),
-                            )
+                            ),
                         ],
                     ],
                 ),
@@ -85,10 +83,10 @@ final class Download implements Builder
                                             name: new Node\Identifier('download'),
                                             args: array_filter(
                                                 [
-                                                    $this->file !== null ? new Node\Arg(
+                                                    null !== $this->file ? new Node\Arg(
                                                         value: $this->file,
                                                         name: new Node\Identifier('code'),
-                                                    ) : null
+                                                    ) : null,
                                                 ],
                                             ),
                                         ),
@@ -97,7 +95,7 @@ final class Download implements Builder
                                     name: new Node\Identifier('getContents'),
                                 ),
                             ),
-                        )
+                        ),
                     ],
                     catches: [
                         new Node\Stmt\Catch_(
@@ -143,10 +141,10 @@ final class Download implements Builder
                                         args: [
                                             new Node\Arg(
                                                 new Node\Expr\Variable('input'),
-                                            )
+                                            ),
                                         ],
                                     )
-                                )
+                                ),
                             ],
                         ),
                     ],

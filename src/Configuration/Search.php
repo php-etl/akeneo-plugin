@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use Symfony\Component\Config;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
+use Symfony\Component\Config;
 
 final class Search implements Config\Definition\ConfigurationInterface
 {
@@ -12,34 +14,35 @@ final class Search implements Config\Definition\ConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('search');
 
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         return $builder->getRootNode()
             ->arrayPrototype()
-                ->children()
-                    ->scalarNode('field')->cannotBeEmpty()->isRequired()->end()
-                    ->scalarNode('operator')->cannotBeEmpty()->isRequired()->end()
-                    ->variableNode('value')
-                        ->cannotBeEmpty()
-                        ->validate()
-                            ->ifTrue(isExpression())
-                            ->then(asExpression())
-                        ->end()
-                    ->end()
-                    ->scalarNode('scope')
-                        ->cannotBeEmpty()
-                        ->validate()
-                            ->ifTrue(isExpression())
-                            ->then(asExpression())
-                        ->end()
-                    ->end()
-                    ->scalarNode('locale')
-                        ->cannotBeEmpty()
-                        ->validate()
-                            ->ifTrue(isExpression())
-                            ->then(asExpression())
-                        ->end()
-                    ->end()
-                ->end()
-            ->end();
+            ->children()
+            ->scalarNode('field')->cannotBeEmpty()->isRequired()->end()
+            ->scalarNode('operator')->cannotBeEmpty()->isRequired()->end()
+            ->variableNode('value')
+            ->cannotBeEmpty()
+            ->validate()
+            ->ifTrue(isExpression())
+            ->then(asExpression())
+            ->end()
+            ->end()
+            ->scalarNode('scope')
+            ->cannotBeEmpty()
+            ->validate()
+            ->ifTrue(isExpression())
+            ->then(asExpression())
+            ->end()
+            ->end()
+            ->scalarNode('locale')
+            ->cannotBeEmpty()
+            ->validate()
+            ->ifTrue(isExpression())
+            ->then(asExpression())
+            ->end()
+            ->end()
+            ->end()
+            ->end()
+        ;
     }
 }

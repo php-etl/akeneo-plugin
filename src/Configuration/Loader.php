@@ -1,11 +1,13 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use Kiboko\Contract\Configurator\PluginConfigurationInterface;
-use Symfony\Component\Config;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
+use Kiboko\Contract\Configurator\PluginConfigurationInterface;
+use Symfony\Component\Config;
 
 final class Loader implements PluginConfigurationInterface
 {
@@ -176,47 +178,46 @@ final class Loader implements PluginConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('loader');
 
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-                ->ifArray()
-                ->then(function (array $item) {
-                    if (!in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(
-                            sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), \json_encode($item['method']))
-                        );
-                    }
+            ->ifArray()
+            ->then(function (array $item) {
+                if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                }
 
-                    return $item;
-                })
+                return $item;
+            })
             ->end()
             ->validate()
-                ->always(function (array $item) {
-                    if ($item["method"] === 'upsert' && empty($item["code"])) {
-                        throw new \InvalidArgumentException('Your configuration should contain the "code" field if the "upsert" method is present.');
-                    }
+            ->always(function (array $item) {
+                if ('upsert' === $item['method'] && empty($item['code'])) {
+                    throw new \InvalidArgumentException('Your configuration should contain the "code" field if the "upsert" method is present.');
+                }
 
-                    return $item;
-                })
+                return $item;
+            })
             ->end()
             ->children()
-                ->scalarNode('type')
-                    ->isRequired()
-                    ->validate()
-                        ->ifNotInArray(array_keys(self::$endpoints))
-                        ->thenInvalid(
+            ->scalarNode('type')
+            ->isRequired()
+            ->validate()
+            ->ifNotInArray(array_keys(self::$endpoints))
+            ->thenInvalid(
                             sprintf('the value should be one of [%s]', implode(', ', array_keys(self::$endpoints)))
                         )
-                    ->end()
-                ->end()
-                ->scalarNode('method')->end()
-                ->scalarNode('code')
-                    ->validate()
-                        ->ifTrue(isExpression())
-                        ->then(asExpression())
-                    ->end()
-                ->end()
-            ->end();
+            ->end()
+            ->end()
+            ->scalarNode('method')->end()
+            ->scalarNode('code')
+            ->validate()
+            ->ifTrue(isExpression())
+            ->then(asExpression())
+            ->end()
+            ->end()
+            ->end()
+        ;
 
         return $builder;
     }

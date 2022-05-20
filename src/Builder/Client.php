@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
@@ -96,7 +98,7 @@ final class Client implements Builder
             ],
         );
 
-        if ($this->httpClient !== null) {
+        if (null !== $this->httpClient) {
             $instance = new Node\Expr\MethodCall(
                 $instance,
                 'setHttpClient',
@@ -106,7 +108,7 @@ final class Client implements Builder
             );
         }
 
-        if ($this->httpRequestFactory !== null) {
+        if (null !== $this->httpRequestFactory) {
             $instance = new Node\Expr\MethodCall(
                 $instance,
                 'setRequestFactory',
@@ -116,7 +118,7 @@ final class Client implements Builder
             );
         }
 
-        if ($this->httpStreamFactory !== null) {
+        if (null !== $this->httpStreamFactory) {
             $instance = new Node\Expr\MethodCall(
                 $instance,
                 'setStreamFactory',
@@ -126,7 +128,7 @@ final class Client implements Builder
             );
         }
 
-        if ($this->fileSystem !== null) {
+        if (null !== $this->fileSystem) {
             $instance = new Node\Expr\MethodCall(
                 $instance,
                 'setFileSystem',
@@ -145,11 +147,11 @@ final class Client implements Builder
 
     private function getFactoryMethod(): string
     {
-        if ($this->password !== null) {
+        if (null !== $this->password) {
             return 'buildAuthenticatedByPassword';
         }
 
-        if ($this->refreshToken !== null) {
+        if (null !== $this->refreshToken) {
             return 'buildAuthenticatedByToken';
         }
 
@@ -158,7 +160,7 @@ final class Client implements Builder
 
     private function getFactoryArguments(): array
     {
-        if ($this->password !== null) {
+        if (null !== $this->password) {
             return [
                 $this->clientId,
                 $this->secret,
@@ -167,7 +169,7 @@ final class Client implements Builder
             ];
         }
 
-        if ($this->refreshToken !== null) {
+        if (null !== $this->refreshToken) {
             return [
                 $this->clientId,
                 $this->secret,
