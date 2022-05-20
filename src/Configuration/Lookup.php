@@ -152,12 +152,12 @@ final class Lookup implements PluginConfigurationInterface
             ->validate()
             ->ifTrue(fn ($data) => !\array_key_exists('conditional', $data) && \is_array($data))
             ->then(function (array $item) {
-                    if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
-                    }
+                if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                    throw new \InvalidArgumentException(sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                }
 
-                    return $item;
-                })
+                return $item;
+            })
             ->end()
             ->validate()
             ->ifTrue(fn ($data) => \array_key_exists('code', $data) && \array_key_exists('type', $data) && !\in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager']))
@@ -174,10 +174,10 @@ final class Lookup implements PluginConfigurationInterface
             ->validate()
             ->ifTrue(fn ($data) => \array_key_exists('conditional', $data) && \is_array($data['conditional']) && \count($data['conditional']) <= 0)
             ->then(function ($data) {
-                    unset($data['conditional']);
+                unset($data['conditional']);
 
-                    return $data;
-                })
+                return $data;
+            })
             ->end()
             ->children()
             ->scalarNode('type')
@@ -234,12 +234,12 @@ final class Lookup implements PluginConfigurationInterface
             ->validate()
             ->ifArray()
             ->then(function (array $item) {
-                        if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                            throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
-                        }
+                if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                }
 
-                        return $item;
-                    })
+                return $item;
+            })
             ->end()
             ->validate()
             ->ifTrue(fn ($data) => \array_key_exists('code', $data)

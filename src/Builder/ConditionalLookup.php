@@ -103,21 +103,21 @@ final class ConditionalLookup implements StepBuilderInterface
                             array_column($alternatives, 0),
                             array_column($alternatives, 1)
                         ),
-                                                'else' => new Node\Stmt\Else_(
-                                                    stmts: [
-                                                        new Node\Stmt\Expression(
+                        'else' => new Node\Stmt\Else_(
+                            stmts: [
+                                new Node\Stmt\Expression(
                         expr: new Node\Expr\MethodCall(
                                         var: new Node\Expr\Variable('bucket'),
                                         name: new Node\Name('accept'),
                                         args: [
-                                                                new Node\Arg(
+                                            new Node\Arg(
                                                 value: new Node\Expr\Variable('output')
-                                            )
+                                            ),
                                         ]
-                                                            )
-                                                        ),
-                                                    ],
-                                                ),
+                                    )
+                                ),
+                            ],
+                        ),
                     ],
                 ),
             ])

@@ -151,12 +151,12 @@ final class Extractor implements PluginConfigurationInterface
             ->validate()
             ->ifArray()
             ->then(function (array $item) {
-                    if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
-                    }
+                if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                }
 
-                    return $item;
-                })
+                return $item;
+            })
             ->end()
             ->validate()
             ->ifTrue(fn ($data) => \array_key_exists('code', $data)
