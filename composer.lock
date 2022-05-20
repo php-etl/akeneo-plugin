@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7bd0cb002badc254c623a5cc3aaaf66e",
+    "content-hash": "617a147e6c72abce277ce5c4a543146a",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -623,16 +623,16 @@
         },
         {
             "name": "php-etl/satellite-toolbox",
-            "version": "dev-master",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-etl/satellite-toolbox.git",
-                "reference": "306204b5d57beb0c0435ad072f76d8b24ee86a76"
+                "reference": "0009fd2be16d07b860b45b46b4ab99329b597417"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/306204b5d57beb0c0435ad072f76d8b24ee86a76",
-                "reference": "306204b5d57beb0c0435ad072f76d8b24ee86a76",
+                "url": "https://api.github.com/repos/php-etl/satellite-toolbox/zipball/0009fd2be16d07b860b45b46b4ab99329b597417",
+                "reference": "0009fd2be16d07b860b45b46b4ab99329b597417",
                 "shasum": ""
             },
             "require": {
@@ -653,17 +653,17 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-main": "0.2.x-dev"
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Kiboko\\Component\\SatelliteToolbox\\": "src/"
-                },
                 "files": [
                     "src/ast.php",
                     "src/configuration.php"
-                ]
+                ],
+                "psr-4": {
+                    "Kiboko\\Component\\SatelliteToolbox\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -682,9 +682,9 @@
             "description": "This library aims at building and running lambda PHP functions",
             "support": {
                 "issues": "https://github.com/php-etl/satellite-toolbox/issues",
-                "source": "https://github.com/php-etl/satellite-toolbox/tree/master"
+                "source": "https://github.com/php-etl/satellite-toolbox/tree/main"
             },
-            "time": "2021-09-21T21:51:45+00:00"
+            "time": "2022-05-18T15:53:16+00:00"
         },
         {
             "name": "phpactor/docblock",
@@ -7055,9 +7055,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
