@@ -183,21 +183,21 @@ final class Loader implements PluginConfigurationInterface
             ->validate()
             ->ifArray()
             ->then(function (array $item) {
-                    if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
-                    }
+                if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                }
 
-                    return $item;
-                })
+                return $item;
+            })
             ->end()
             ->validate()
             ->always(function (array $item) {
-                    if ('upsert' === $item['method'] && empty($item['code'])) {
-                        throw new \InvalidArgumentException('Your configuration should contain the "code" field if the "upsert" method is present.');
-                    }
+                if ('upsert' === $item['method'] && empty($item['code'])) {
+                    throw new \InvalidArgumentException('Your configuration should contain the "code" field if the "upsert" method is present.');
+                }
 
-                    return $item;
-                })
+                return $item;
+            })
             ->end()
             ->children()
             ->scalarNode('type')
