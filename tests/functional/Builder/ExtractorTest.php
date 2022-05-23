@@ -47,8 +47,12 @@ final class ExtractorTest extends TestCase
 
         $httpClient
             ->expectResponse(
-                new Mock\RequestMatcher\RequestMatcherBuilder('/product', methods: ['GET']),
-                new Mock\ResponseBuilder(status: 200)
+                new Mock\RequestMatcher\RequestMatcherBuilder('/api/oauth/v1/token', methods: ['POST']),
+                new Mock\ResponseBuilder(__DIR__ . '/fake-token.php')
+            )
+            ->expectResponse(
+                new Mock\RequestMatcher\RequestMatcherBuilder('/products', methods: ['GET']),
+                new Mock\ResponseBuilder(__DIR__ . '/products.all.php')
             );
 
         $client = new Mock\ApiClientMockBuilder(withEnterpriseSupport: false);
@@ -68,9 +72,104 @@ final class ExtractorTest extends TestCase
 
         $this->assertBuildsExtractorExtractsLike(
             [
-                [],
-                [],
-                [],
+                [
+                    '_links' => [
+                        'self' => [
+                            'href' => 'http://test.com/api/rest/v1/products/123qwerty'
+                        ]
+                    ],
+                    'identifier' => '123qwerty',
+                    'enabled' => true,
+                    'family' => 'all_in_the_family',
+                    'categories' => ['pizza'],
+                    'groups' => [],
+                    'parent' => '321azerty',
+                    'values' => [
+                        'color' => [
+                            [
+                                "locale" => null,
+                                "scope" => null,
+                                "data" => "#fff"
+                            ]
+                        ],
+                        'brand' => [
+                            [
+                                "locale" => null,
+                                "scope" => null,
+                                "data" => ["8"]
+                            ]
+                        ],
+                        'weight' => [
+                            [
+                                "locale" => null,
+                                "scope" => null,
+                                "data" => "0.5300"
+                            ]
+                        ]
+                    ],
+                    'created' => '2021-06-18T03:30:11+00:00',
+                    'updated' => '2022-05-16T08:37:11+00:00',
+                    'associations' => [
+                        'UPSELL' => [
+                            'products' => [],
+                            'product_models' => [],
+                            'groups' => []
+                        ]
+                    ],
+                    'quantified_associations' => [],
+                    'metadata' => [
+                        'workflow_status' => 'working_copy'
+                    ]
+                ],
+                [
+                    '_links' => [
+                        'self' => [
+                            'href' => 'http://test.com/api/rest/v1/products/0987uiop'
+                        ]
+                    ],
+                    'identifier' => '0987uiop',
+                    'enabled' => true,
+                    'family' => 'family_feud',
+                    'categories' => ['pizza'],
+                    'groups' => [],
+                    'parent' => '0987azerty',
+                    'values' => [
+                        'color' => [
+                            [
+                                "locale" => null,
+                                "scope" => null,
+                                "data" => "#f00"
+                            ]
+                        ],
+                        'brand' => [
+                            [
+                                "locale" => null,
+                                "scope" => null,
+                                "data" => ["3"]
+                            ]
+                        ],
+                        'weight' => [
+                            [
+                                "locale" => null,
+                                "scope" => null,
+                                "data" => "0.1000"
+                            ]
+                        ]
+                    ],
+                    'created' => '2021-06-18T03:30:11+00:00',
+                    'updated' => '2022-05-16T08:37:11+00:00',
+                    'associations' => [
+                        'UPSELL' => [
+                            'products' => [],
+                            'product_models' => [],
+                            'groups' => []
+                        ]
+                    ],
+                    'quantified_associations' => [],
+                    'metadata' => [
+                        'workflow_status' => 'working_copy'
+                    ]
+                ]
             ],
             $builder,
         );

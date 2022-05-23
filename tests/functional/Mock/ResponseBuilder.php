@@ -9,27 +9,12 @@ use PhpParser\Node;
 final class ResponseBuilder implements Builder
 {
     public function __construct(
-        private int $status,
+        private string $path,
     ) {
-    }
-
-    public static function fromFile(string $path, int $status): self
-    {
-        $instance = new self($status);
-        $instance->a();
-        return $instance;
     }
 
     public function getNode(): Node
     {
-        return new Node\Expr\New_(
-            class: new Node\Name(Response::class),
-            args: [
-                new Node\Arg(
-                    value: new Node\Scalar\LNumber($this->status),
-                    name: new Node\Identifier('status'),
-                ),
-            ]
-        );
+        return new Node\Expr\Include_(new Node\Scalar\String_($this->path), Node\Expr\Include_::TYPE_INCLUDE);
     }
 }

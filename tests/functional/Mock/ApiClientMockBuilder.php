@@ -49,7 +49,7 @@ final class ApiClientMockBuilder implements Builder
     {
         $this->node = new Node\Expr\MethodCall(
             var: $this->node,
-            name: new Node\Identifier('withRequestFactory'),
+            name: new Node\Identifier('setRequestFactory'),
             args: [
                 new Node\Arg(
                     $requestFactory->getNode(),
@@ -64,7 +64,7 @@ final class ApiClientMockBuilder implements Builder
     {
         $this->node = new Node\Expr\MethodCall(
             var: $this->node,
-            name: new Node\Identifier('withStreamFactory'),
+            name: new Node\Identifier('setStreamFactory'),
             args: [
                 new Node\Arg(
                     $streamFactory->getNode(),
@@ -79,7 +79,7 @@ final class ApiClientMockBuilder implements Builder
     {
         $this->node = new Node\Expr\MethodCall(
             var: $this->node,
-            name: new Node\Identifier('withFileSystem'),
+            name: new Node\Identifier('setFileSystem'),
             args: [
                 new Node\Arg(
                     $fileSystem->getNode(),
