@@ -20,6 +20,6 @@
     },
     "testFramework":"phpunit",
     "initialTestsPhpOptions": "-d zend_extension=xdebug -d xdebug.mode=coverage",
-    "minMsi": 20,
+    "minMsi": 30,
     "minCoveredMsi": 70
 }

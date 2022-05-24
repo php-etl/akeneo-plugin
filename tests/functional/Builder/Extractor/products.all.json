@@ -26,7 +26,7 @@
                     "pizza"
                 ],
                 "groups": [],
-                "parent": "321azerty",
+                "parent": "987qwerty",
                 "values": {
                     "color": [
                         {
@@ -69,10 +69,10 @@
             {
                 "_links": {
                     "self": {
-                        "href": "http://test.com/api/rest/v1/products/0987uiop"
+                        "href": "http://test.com/api/rest/v1/products/123uiop"
                     }
                 },
-                "identifier": "0987uiop",
+                "identifier": "123uiop",
                 "enabled": true,
                 "family": "family_feud",
                 "categories": [
