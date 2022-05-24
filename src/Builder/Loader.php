@@ -51,13 +51,6 @@ final class Loader implements StepBuilderInterface
         return $this;
     }
 
-    public function withCapacity(Builder $capacity): self
-    {
-        $this->capacity = $capacity;
-
-        return $this;
-    }
-
     public function getNode(): Node
     {
         return new Node\Expr\New_(

@@ -69,20 +69,86 @@ final class Upsert implements Builder
                 new Node\Stmt\TryCatch(
                     stmts: [
                         new Node\Stmt\Expression(
-                            expr: new Node\Expr\MethodCall(
-                                new Node\Expr\MethodCall(
-                                    var: new Node\Expr\PropertyFetch(
-                                        var: new Node\Expr\Variable('this'),
-                                        name: new Node\Identifier('client'),
+                            expr: new Node\Expr\Assign(
+                                var: new Node\Expr\Variable('status'),
+                                expr: new Node\Expr\MethodCall(
+                                    new Node\Expr\MethodCall(
+                                        var: new Node\Expr\PropertyFetch(
+                                            var: new Node\Expr\Variable('this'),
+                                            name: new Node\Identifier('client'),
+                                        ),
+                                        name: $this->endpoint,
                                     ),
-                                    name: $this->endpoint,
+                                    new Node\Identifier('upsert'),
+                                    [
+                                        new Node\Arg(value: $this->code),
+                                        new Node\Arg(value: $this->data),
+                                    ],
                                 ),
-                                new Node\Identifier('upsert'),
-                                [
-                                    new Node\Arg(value: $this->code),
-                                    new Node\Arg(value: $this->data),
-                                ],
                             ),
+                        ),
+                        new Node\Stmt\If_(
+                            cond: new Node\Expr\BinaryOp\NotIdentical(
+                                new Node\Expr\Variable('status'),
+                                new Node\Scalar\LNumber(201),
+                            ),
+                            subNodes: [
+                                'stmts' => [
+                                    new Node\Stmt\Expression(
+                                        expr: new Node\Expr\MethodCall(
+                                            var: new Node\Expr\PropertyFetch(
+                                                var: new Node\Expr\Variable('this'),
+                                                name: 'logger',
+                                            ),
+                                            name: new Node\Identifier('error'),
+                                            args: [
+                                                new Node\Arg(
+                                                    value: new Node\Expr\FuncCall(
+                                                        name: new Node\Name\FullyQualified('sprintf'),
+                                                        args: [
+                                                            new Node\Arg(
+                                                                value: new Node\Scalar\String_('An item was not accepted by the Akeneo API, please check your rejections for product %s.')
+                                                            ),
+                                                            new Node\Arg(
+                                                                value: $this->code
+                                                            )
+                                                        ]
+                                                    ),
+                                                ),
+                                                new Node\Arg(
+                                                    value: new Node\Expr\Array_(
+                                                        items: [
+                                                            new Node\Expr\ArrayItem(
+                                                                value: new Node\Expr\Variable('line'),
+                                                                key: new Node\Scalar\String_('item'),
+                                                            ),
+                                                        ],
+                                                        attributes: [
+                                                            'kind' => Node\Expr\Array_::KIND_SHORT,
+                                                        ],
+                                                    ),
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                    new Node\Stmt\Expression(
+                                        expr: new Node\Expr\Assign(
+                                            var: new Node\Expr\Variable('line'),
+                                            expr: new Node\Expr\Yield_(
+                                                value: new Node\Expr\New_(
+                                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\RejectionResultBucket'),
+                                                    args: [
+                                                        new Node\Arg(
+                                                            value: new Node\Expr\Variable('line'),
+                                                        ),
+                                                    ],
+                                                ),
+                                            ),
+                                        )
+                                    ),
+                                    new Node\Stmt\Continue_(),
+                                ],
+                            ],
                         ),
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\Assign(

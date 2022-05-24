@@ -18,13 +18,6 @@ final class AlternativeLookup implements Builder
         $this->merge = null;
     }
 
-    public function withCapacity(Builder $capacity): self
-    {
-        $this->capacity = $capacity;
-
-        return $this;
-    }
-
     public function withMerge(Builder $merge): self
     {
         $this->merge = $merge;
