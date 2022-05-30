@@ -56,7 +56,6 @@ final class ClientTest extends BuilderTestCase
         $client->withHttpClient($this->getClientNode());
 
         $this->assertNodeIsInstanceOf(AkeneoPimClientInterface::class, $client);
-        $this->assertNodeIsNotInstanceOf(AkeneoPimEnterpriseClientInterface::class, $client);
     }
 
     public function testWithTokenForEnterprise(): void
@@ -74,9 +73,6 @@ final class ClientTest extends BuilderTestCase
 
         $client->withHttpClient($this->getClientNode());
 
-        $client->withEnterpriseSupport(true);
-
         $this->assertNodeIsInstanceOf(AkeneoPimClientInterface::class, $client);
-        $this->assertNodeIsInstanceOf(AkeneoPimEnterpriseClientInterface::class, $client);
     }
 }

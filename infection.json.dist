@@ -12,8 +12,7 @@
         "json": "infection/infection-log.json",
         "perMutator": "infection/per-mutator.md",
         "stryker": {
-            "badge": "/^(main$|feature\/)/",
-            "report": "/^(main$|feature\/)/"
+            "badge": "/^(main$|feature\\/)/"
         }
     },
     "phpUnit": {

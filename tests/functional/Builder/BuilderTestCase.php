@@ -24,7 +24,6 @@ abstract class BuilderTestCase extends TestCase
     protected function tearDown(): void
     {
         $this->fs = null;
-        vfsStreamWrapper::unregister();
     }
 
     protected function getBuilderCompilePath(): string

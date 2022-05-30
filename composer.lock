@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "debe00c78e2a208318f098333d7eb705",
+    "content-hash": "02ddede0105f487d3945eaf2814963a2",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -2380,20 +2380,20 @@
         },
         {
             "name": "akeneo/api-php-client",
-            "version": "v5.0.0",
+            "version": "v9.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/akeneo/api-php-client.git",
-                "reference": "4d676bb1372243dc943a335f5df381665bdc0a4a"
+                "reference": "f7e510c69ba0f3e3db2387118e0248b5d800b2c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akeneo/api-php-client/zipball/4d676bb1372243dc943a335f5df381665bdc0a4a",
-                "reference": "4d676bb1372243dc943a335f5df381665bdc0a4a",
+                "url": "https://api.github.com/repos/akeneo/api-php-client/zipball/f7e510c69ba0f3e3db2387118e0248b5d800b2c8",
+                "reference": "f7e510c69ba0f3e3db2387118e0248b5d800b2c8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1",
+                "php": ">=7.4",
                 "php-http/discovery": "^1.6",
                 "php-http/httplug": "^2.0",
                 "php-http/multipart-stream-builder": "^1.0",
@@ -2404,10 +2404,10 @@
             },
             "require-dev": {
                 "donatj/mock-webserver": "^2.0",
-                "friendsofphp/php-cs-fixer": "^2.14",
+                "friendsofphp/php-cs-fixer": "^3.5",
                 "http-interop/http-factory-guzzle": "^1.0",
                 "php-http/guzzle6-adapter": "^2.0",
-                "phpspec/phpspec": "^5.0",
+                "phpspec/phpspec": "^7.1",
                 "phpunit/phpunit": "^7.0",
                 "symfony/yaml": "^4.2"
             },
@@ -2433,59 +2433,9 @@
             "description": "Akeneo PIM client for the API",
             "support": {
                 "issues": "https://github.com/akeneo/api-php-client/issues",
-                "source": "https://github.com/akeneo/api-php-client/tree/master"
+                "source": "https://github.com/akeneo/api-php-client/tree/v9.0.1"
             },
-            "time": "2019-09-09T15:46:29+00:00"
-        },
-        {
-            "name": "akeneo/api-php-client-ee",
-            "version": "v5.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/akeneo/api-php-client-ee.git",
-                "reference": "39bc35795fde4ee492f3b10c926e83244d97fbb7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/akeneo/api-php-client-ee/zipball/39bc35795fde4ee492f3b10c926e83244d97fbb7",
-                "reference": "39bc35795fde4ee492f3b10c926e83244d97fbb7",
-                "shasum": ""
-            },
-            "require": {
-                "akeneo/api-php-client": "^5.0"
-            },
-            "require-dev": {
-                "donatj/mock-webserver": "^2.0",
-                "friendsofphp/php-cs-fixer": "^2.14",
-                "http-interop/http-factory-guzzle": "^1.0",
-                "php-http/guzzle6-adapter": "^2.0",
-                "phpspec/phpspec": "^5.0",
-                "phpunit/phpunit": "^7.0",
-                "symfony/yaml": "^4.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Akeneo\\PimEnterprise\\ApiClient\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Akeneo",
-                    "homepage": "http://www.akeneo.com"
-                }
-            ],
-            "description": "Akeneo PIM ENTERPRISE client for the API",
-            "support": {
-                "issues": "https://github.com/akeneo/api-php-client-ee/issues",
-                "source": "https://github.com/akeneo/api-php-client-ee/tree/master"
-            },
-            "abandoned": "akeneo/api-php-client",
-            "time": "2019-10-11T15:06:55+00:00"
+            "time": "2022-05-30T07:36:48+00:00"
         },
         {
             "name": "clue/stream-filter",
@@ -7285,5 +7235,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

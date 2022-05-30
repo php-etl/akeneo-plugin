@@ -28,7 +28,7 @@ final class LoaderTest extends BuilderTestCase
             )
         ;
 
-        $client = new Mock\ApiClientMockBuilder(withEnterpriseSupport: false);
+        $client = new Mock\ApiClientMockBuilder();
         $client
             ->withHttpClient($httpClient)
             ->withRequestFactory(new Mock\RequestFactoryBuilder())
@@ -75,7 +75,7 @@ final class LoaderTest extends BuilderTestCase
             )
         ;
 
-        $client = new Mock\ApiClientMockBuilder(withEnterpriseSupport: false);
+        $client = new Mock\ApiClientMockBuilder();
         $client
             ->withHttpClient($httpClient)
             ->withRequestFactory(new Mock\RequestFactoryBuilder())
