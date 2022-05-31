@@ -24,4 +24,41 @@ final class LoaderTest extends TestCase
         $client = new Loader(new ExpressionLanguage());
         $this->assertFalse($client->validate([]));
     }
+
+    public function testMissingType(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
+
+        $client = new Loader(new ExpressionLanguage());
+        $this->assertFalse($client->validate(['wrong']));
+        $client->compile(['wrong']);
+    }
+
+    public function testTypeNotFound(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
+
+        $client = new Loader(new ExpressionLanguage());
+        $client->compile([
+            'type' => 'wrong',
+            'method' => 'upsert',
+        ]);
+    }
+
+    public function testCapacityNotFound(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
+
+        $client = new Loader(new ExpressionLanguage());
+        $client->compile([
+            'type' => 'product',
+            'method' => 'wrong',
+        ]);
+    }
 }

@@ -16,7 +16,6 @@ final class ConditionalLookupTest extends BuilderTestCase
 
     public function testLookupProduct()
     {
-        $this->markTestSkipped();
         $httpClient = new Mock\HttpClientBuilder(new Mock\ResponseFactoryBuilder());
 
         $httpClient
@@ -43,8 +42,12 @@ final class ConditionalLookupTest extends BuilderTestCase
             ->withEndpoint(new Node\Identifier('getProductApi'))
             ->withIdentifier(new Node\Expr\ArrayDimFetch(new Node\Expr\Variable('output'), new Node\Scalar\String_('code')));
 
-        $builder = new ConditionalLookup(new AlternativeLookup($capacity));
+        $builder = new ConditionalLookup();
         $builder->withClient($client->getNode());
+        $builder->addAlternative(
+            condition: new Node\Expr\Isset_([new Node\Expr\Variable('output')]),
+            lookup: new AlternativeLookup($capacity)
+        );
 
         $this->assertBuildsTransformerTransformsLike(
             [

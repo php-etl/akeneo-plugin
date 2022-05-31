@@ -5,9 +5,9 @@ namespace functional\Builder\Extractor;
 use functional\Kiboko\Plugin\Akeneo\Builder\BuilderTestCase;
 use functional\Kiboko\Plugin\Akeneo\Mock;
 use Kiboko\Component\PHPUnitExtension\Assert\ExtractorBuilderAssertTrait;
-use Kiboko\Plugin\Akeneo\Builder\Capacity;
 use Kiboko\Plugin\Akeneo\Builder\Extractor;
-use PhpParser\Node;
+use Kiboko\Plugin\Akeneo\Capacity;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ExtractorTest extends BuilderTestCase
 {
@@ -37,9 +37,9 @@ final class ExtractorTest extends BuilderTestCase
             ->withAuthenticatedByPassword()
         ;
 
-        $capacity = new Capacity\Extractor\All();
-        $capacity->withEndpoint(new Node\Identifier('getProductApi'));
-        $capacity->withType('product');
+        $capacity = (new Capacity\Extractor\All(new ExpressionLanguage()))->getBuilder([
+            'type' => 'product',
+        ]);
 
         $builder = new Extractor($capacity);
         $builder->withClient($client->getNode());
@@ -173,9 +173,10 @@ final class ExtractorTest extends BuilderTestCase
             ->withAuthenticatedByPassword()
         ;
 
-        $capacity = new Capacity\Extractor\Get();
-        $capacity->withEndpoint(new Node\Identifier('getProductApi'));
-        $capacity->withIdentifier(new Node\Scalar\String_('123qwerty'));
+        $capacity = (new Capacity\Extractor\Get(new ExpressionLanguage()))->getBuilder([
+            'type' => 'product',
+            'identifier' => '123qwerty'
+        ]);
 
         $builder = new Extractor($capacity);
         $builder->withClient($client->getNode());
@@ -253,9 +254,10 @@ final class ExtractorTest extends BuilderTestCase
             ->withAuthenticatedByPassword()
         ;
 
-        $capacity = new Capacity\Extractor\All();
-        $capacity->withEndpoint(new Node\Identifier('getProductApi'));
-        $capacity->withSearch(new Node\Scalar\String_('123'));
+        $capacity = (new Capacity\Extractor\All(new ExpressionLanguage()))->getBuilder([
+            'type' => 'product',
+            'search' => '123',
+        ]);
 
         $builder = new Extractor($capacity);
         $builder->withClient($client->getNode());

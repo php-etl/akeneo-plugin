@@ -5,9 +5,9 @@ namespace functional\Builder\Loader;
 use functional\Kiboko\Plugin\Akeneo\Builder\BuilderTestCase;
 use functional\Kiboko\Plugin\Akeneo\Mock;
 use Kiboko\Component\PHPUnitExtension\Assert\LoaderBuilderAssertTrait;
-use Kiboko\Plugin\Akeneo\Builder\Capacity;
 use Kiboko\Plugin\Akeneo\Builder\Loader;
-use PhpParser\Node;
+use Kiboko\Plugin\Akeneo\Capacity;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class LoaderTest extends BuilderTestCase
 {
@@ -36,11 +36,11 @@ final class LoaderTest extends BuilderTestCase
             ->withFileSystem(new Mock\FileSystemBuilder())
             ->withAuthenticatedByPassword();
 
-        $capacity = new Capacity\Loader\Upsert();
-        $capacity
-            ->withEndpoint(new Node\Identifier('getProductApi'))
-            ->withCode(new Node\Expr\ArrayDimFetch(new Node\Expr\Variable('line'), new Node\Scalar\String_('code')))
-            ->withData(new Node\Expr\Variable('line'));
+        $capacity = (new Capacity\Loader\Upsert(new ExpressionLanguage()))->getBuilder([
+            'type' => 'product',
+            'method' => 'all',
+            'code' => 'line[code]'
+        ]);
 
         $builder = new Loader($capacity);
         $builder->withClient($client->getNode());
@@ -83,10 +83,10 @@ final class LoaderTest extends BuilderTestCase
             ->withFileSystem(new Mock\FileSystemBuilder())
             ->withAuthenticatedByPassword();
 
-        $capacity = new Capacity\Loader\UpsertList();
-        $capacity
-            ->withEndpoint(new Node\Identifier('getProductApi'))
-            ->withData(new Node\Expr\Variable('line'));
+        $capacity = (new Capacity\Loader\UpsertList())->getBuilder([
+            'type' => 'product',
+            'code' => 'line'
+        ]);
 
         $builder = new Loader($capacity);
         $builder->withClient($client->getNode());
