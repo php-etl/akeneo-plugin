@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Lookup;
 
@@ -51,16 +53,14 @@ final class Get implements Builder
 
     public function getNode(): Node
     {
-        if ($this->endpoint === null) {
-            throw new MissingEndpointException(
-                message: 'Please check your capacity builder, you should have selected an endpoint.'
-            );
+        if (null === $this->endpoint) {
+            throw new MissingEndpointException(message: 'Please check your capacity builder, you should have selected an endpoint.');
         }
 
         return new Node\Stmt\Expression(
             expr: new Node\Expr\Assign(
                 var: new Node\Expr\Variable('lookup'),
-                expr:  new Node\Expr\MethodCall(
+                expr: new Node\Expr\MethodCall(
                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
                             var: new Node\Expr\Variable('this'),
@@ -75,10 +75,10 @@ final class Get implements Builder
                                 value: $this->identifier,
                                 name: $this->compileIdentifierNamedArgument($this->type),
                             ),
-                            $this->code !== null ? new Node\Arg(
+                            null !== $this->code ? new Node\Arg(
                                 value: $this->code,
                                 name: $this->compileCodeNamedArgument($this->type),
-                            ) : null
+                            ) : null,
                         ],
                     ),
                 )

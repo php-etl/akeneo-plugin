@@ -1,12 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config;
-use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Lookup implements PluginConfigurationInterface
 {
@@ -111,13 +113,13 @@ final class Lookup implements PluginConfigurationInterface
             'all',
             'get',
         ],
-//        'assetReferenceFile' => [], // no support
-//        'assetVariationFile' => [], // no support
+        //        'assetReferenceFile' => [], // no support
+        //        'assetVariationFile' => [], // no support
         'referenceEntityRecord' => [
             'all',
             'get',
         ],
-//        'referenceEntityMediaFile' => [], // no support
+        //        'referenceEntityMediaFile' => [], // no support
         'referenceEntityAttribute' => [
             'all',
             'get',
@@ -136,7 +138,7 @@ final class Lookup implements PluginConfigurationInterface
         ],
         'assetMediaFiles' => [
             'download',
-        ]
+        ],
     ];
 
     public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
@@ -145,36 +147,35 @@ final class Lookup implements PluginConfigurationInterface
 
         $builder = new Config\Definition\Builder\TreeBuilder('lookup');
 
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-                ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && is_array($data))
+                ->ifTrue(fn ($data) => !\array_key_exists('conditional', $data) && \is_array($data))
                 ->then(function (array $item) {
-                    if (!in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(
-                            sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), \json_encode($item['method']))
-                        );
+                    if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                        throw new \InvalidArgumentException(sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
                     }
 
                     return $item;
                 })
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('code', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager']))
+                ->ifTrue(fn ($data) => \array_key_exists('code', $data) && \array_key_exists('type', $data) && !\in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager']))
                 ->thenInvalid('The code option should only be used with the "attributeOption", "referenceEntityRecord" and "assetManager" endpoints.')
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('file', $data) && array_key_exists('type', $data) && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles']))
+                ->ifTrue(fn ($data) => \array_key_exists('file', $data) && \array_key_exists('type', $data) && !\in_array($data['type'], ['productMediaFile', 'assetMediaFiles']))
                 ->thenInvalid('The file option should only be used with the "productMediaFile" and "assetMediaFiles" endpoints.')
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => !array_key_exists('conditional', $data) && array_key_exists('identifier', $data) && array_key_exists('method', $data) && !in_array($data['method'], ['get']))
+                ->ifTrue(fn ($data) => !\array_key_exists('conditional', $data) && \array_key_exists('identifier', $data) && \array_key_exists('method', $data) && !\in_array($data['method'], ['get']))
                 ->thenInvalid('The identifier option should only be used with the "get" method.')
             ->end()
             ->validate()
-                ->ifTrue(fn ($data) => array_key_exists('conditional', $data) && is_array($data['conditional']) && count($data['conditional']) <= 0)
+                ->ifTrue(fn ($data) => \array_key_exists('conditional', $data) && \is_array($data['conditional']) && \count($data['conditional']) <= 0)
                 ->then(function ($data) {
                     unset($data['conditional']);
+
                     return $data;
                 })
             ->end()
@@ -209,7 +210,8 @@ final class Lookup implements PluginConfigurationInterface
                 ->append((new FastMap\Configuration('merge'))->getConfigTreeBuilder()->getRootNode())
                 ->append($filters->getConfigTreeBuilder())
                 ->append($this->getConditionalTreeBuilder()->getRootNode())
-            ->end();
+            ->end()
+        ;
 
         return $builder;
     }
@@ -220,43 +222,39 @@ final class Lookup implements PluginConfigurationInterface
 
         $filters = new Search();
 
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->cannotBeEmpty()
             ->requiresAtLeastOneElement()
             ->validate()
-                ->ifTrue(fn ($data) => count($data) <= 0)
+                ->ifTrue(fn ($data) => \count($data) <= 0)
                 ->thenUnset()
             ->end()
             ->arrayPrototype()
                 ->validate()
                     ->ifArray()
                     ->then(function (array $item) {
-                        if (!in_array($item['method'], self::$endpoints[$item['type']])) {
-                            throw new \InvalidArgumentException(
-                                sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), \json_encode($item['method']))
-                            );
+                        if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                            throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
                         }
 
                         return $item;
                     })
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) =>
-                        array_key_exists('code', $data)
-                        && array_key_exists('type', $data)
-                        && !in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager'], true))
+                    ->ifTrue(fn ($data) => \array_key_exists('code', $data)
+                        && \array_key_exists('type', $data)
+                        && !\in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager'], true))
                     ->thenInvalid('The code option should only be used with the "attributeOption", "referenceEntityRecord" and "assetManager" endpoints.')
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) =>
-                        array_key_exists('file', $data)
-                        && array_key_exists('type', $data)
-                        && !in_array($data['type'], ['productMediaFile', 'assetMediaFiles'], true))
+                    ->ifTrue(fn ($data) => \array_key_exists('file', $data)
+                        && \array_key_exists('type', $data)
+                        && !\in_array($data['type'], ['productMediaFile', 'assetMediaFiles'], true))
                     ->thenInvalid('The file option should only be used with the "productMediaFile" and "assetMediaFiles" endpoints.')
                 ->end()
                 ->validate()
-                    ->ifTrue(fn ($data) => array_key_exists('identifier', $data) && array_key_exists('method', $data) && $data['method'] !== 'get')
+                    ->ifTrue(fn ($data) => \array_key_exists('identifier', $data) && \array_key_exists('method', $data) && 'get' !== $data['method'])
                     ->thenInvalid('The identifier option should only be used with the "get" method.')
                 ->end()
                 ->children()
@@ -297,7 +295,8 @@ final class Lookup implements PluginConfigurationInterface
                     ->append((new FastMap\Configuration('merge'))->getConfigTreeBuilder()->getRootNode())
                     ->append($filters->getConfigTreeBuilder())
                 ->end()
-            ->end();
+            ->end()
+        ;
 
         return $builder;
     }

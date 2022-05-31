@@ -23,7 +23,6 @@ Configuration format
 
 ```yaml
 akeneo:
-  enterprise: false
   extractor:
     type: productModel
     method: all
@@ -47,7 +46,6 @@ akeneo:
 
 ```yaml
 akeneo:
-  enterprise: true
   loader:
     type: productModel
     method: upsert

@@ -14,7 +14,6 @@ final class ServiceTest extends TestCase
         /** Get */
         yield [
             'expected' => [
-                'enterprise' => true,
                 'expression_language' => [],
                 'extractor' => [
                     'type' => 'product',
@@ -33,7 +32,6 @@ final class ServiceTest extends TestCase
             'expected_class' => 'Kiboko\\Plugin\\Akeneo\\Factory\\Repository\\Extractor',
             'actual' => [
                 [
-                    'enterprise' => true,
                     'extractor' => [
                         'type' => 'product',
                         'method' => 'get',
@@ -53,7 +51,6 @@ final class ServiceTest extends TestCase
         /** Upsert */
         yield [
             'expected' => [
-                'enterprise' => false,
                 'expression_language' => [],
                 'loader' => [
                     'type' => 'product',
@@ -71,7 +68,6 @@ final class ServiceTest extends TestCase
             'expected_class' => 'Kiboko\\Plugin\\Akeneo\\Factory\\Repository\\Loader',
             'actual' => [
                 [
-                    'enterprise' => false,
                     'expression_language' => [],
                     'loader' => [
                         'type' => 'product',
@@ -121,7 +117,6 @@ final class ServiceTest extends TestCase
 
         $service = new Akeneo\Service();
         $service->compile([
-            'enterprise' => false,
             'loader' => [
                 'type' => 'product',
                 'method' => 'upsert',

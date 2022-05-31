@@ -1,15 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo;
 
 use Kiboko\Contract\Configurator;
-use Kiboko\Plugin\Akeneo\Factory;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 #[Configurator\Pipeline(
-    name: "akeneo",
+    name: 'akeneo',
     dependencies: [
         'akeneo/api-php-client-ee',
         'laminas/laminas-diactoros',
@@ -74,19 +75,19 @@ final class Service implements Configurator\PipelinePluginInterface
     {
         $interpreter = clone $this->interpreter;
 
-        if (array_key_exists('expression_language', $config)
-            && is_array($config['expression_language'])
-            && count($config['expression_language'])
+        if (\array_key_exists('expression_language', $config)
+            && \is_array($config['expression_language'])
+            && \count($config['expression_language'])
         ) {
             foreach ($config['expression_language'] as $provider) {
-                $interpreter->registerProvider(new $provider);
+                $interpreter->registerProvider(new $provider());
             }
         }
 
         $clientFactory = new Factory\Client($interpreter);
 
         try {
-            if (array_key_exists('extractor', $config)) {
+            if (\array_key_exists('extractor', $config)) {
                 $extractorFactory = new Factory\Extractor($interpreter);
 
                 $extractor = $extractorFactory->compile($config['extractor']);
@@ -95,13 +96,16 @@ final class Service implements Configurator\PipelinePluginInterface
                 $client = $clientFactory->compile($config['client']);
 
                 $extractorBuilder
-                    ->withClient($client->getBuilder()->getNode());
+                    ->withClient($client->getBuilder()->getNode())
+                ;
 
                 $extractor
-                    ->merge($client);
+                    ->merge($client)
+                ;
 
                 return $extractor;
-            } elseif (array_key_exists('loader', $config)) {
+            }
+            if (\array_key_exists('loader', $config)) {
                 $loaderFactory = new Factory\Loader($interpreter);
 
                 $loader = $loaderFactory->compile($config['loader']);
@@ -110,13 +114,16 @@ final class Service implements Configurator\PipelinePluginInterface
                 $client = $clientFactory->compile($config['client']);
 
                 $loaderBuilder
-                    ->withClient($client->getBuilder()->getNode());
+                    ->withClient($client->getBuilder()->getNode())
+                ;
 
                 $loader
-                    ->merge($client);
+                    ->merge($client)
+                ;
 
                 return $loader;
-            } elseif (array_key_exists('lookup', $config)) {
+            }
+            if (\array_key_exists('lookup', $config)) {
                 $lookupFactory = new Factory\Lookup($interpreter);
 
                 $lookup = $lookupFactory->compile($config['lookup']);
@@ -125,22 +132,18 @@ final class Service implements Configurator\PipelinePluginInterface
                 $client = $clientFactory->compile($config['client']);
 
                 $lookupBuilder
-                    ->withClient($client->getBuilder()->getNode());
+                    ->withClient($client->getBuilder()->getNode())
+                ;
 
                 $lookup
-                    ->merge($client);
+                    ->merge($client)
+                ;
 
                 return $lookup;
-            } else {
-                throw new Configurator\InvalidConfigurationException(
-                    'Could not determine if the factory should build an extractor or a loader.'
-                );
             }
+            throw new Configurator\InvalidConfigurationException('Could not determine if the factory should build an extractor or a loader.');
         } catch (MissingAuthenticationMethodException $exception) {
-            throw new Configurator\InvalidConfigurationException(
-                'Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.',
-                previous: $exception,
-            );
+            throw new Configurator\InvalidConfigurationException('Your Akeneo API configuration is missing an authentication method, you should either define "username" or "token" options.', previous: $exception);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
             throw new Configurator\InvalidConfigurationException($exception->getMessage(), previous: $exception);
         }

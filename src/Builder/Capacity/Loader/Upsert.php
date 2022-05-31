@@ -45,20 +45,14 @@ final class Upsert implements Builder
 
     public function getNode(): Node
     {
-        if ($this->endpoint === null) {
-            throw new MissingEndpointException(
-                message: 'Please check your capacity builder, you should have selected an endpoint.'
-            );
+        if (null === $this->endpoint) {
+            throw new MissingEndpointException(message: 'Please check your capacity builder, you should have selected an endpoint.');
         }
-        if ($this->code === null) {
-            throw new MissingParameterException(
-                message: 'Please check your capacity builder, you should have provided a code.'
-            );
+        if (null === $this->code) {
+            throw new MissingParameterException(message: 'Please check your capacity builder, you should have provided a code.');
         }
-        if ($this->data === null) {
-            throw new MissingParameterException(
-                message: 'Please check your capacity builder, you should have provided some data.'
-            );
+        if (null === $this->data) {
+            throw new MissingParameterException(message: 'Please check your capacity builder, you should have provided some data.');
         }
 
         return new Node\Stmt\While_(
@@ -111,7 +105,7 @@ final class Upsert implements Builder
                                                             ),
                                                             new Node\Arg(
                                                                 value: $this->code
-                                                            )
+                                                            ),
                                                         ]
                                                     ),
                                                 ),

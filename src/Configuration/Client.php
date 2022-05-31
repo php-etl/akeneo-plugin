@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use Symfony\Component\Config;
-use Symfony\Component\ExpressionLanguage\Expression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
+use Symfony\Component\Config;
 
 final class Client implements Config\Definition\ConfigurationInterface
 {
@@ -13,28 +14,23 @@ final class Client implements Config\Definition\ConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('client');
 
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
                 ->ifArray()
                 ->then(function (array $value) {
                     if (isset($value['username']) && !isset($value['password'])) {
-                        throw new Config\Definition\Exception\InvalidConfigurationException(
-                            'The configuration option "password" should be defined if you use the username authentication method for Akeneo API.'
-                        );
+                        throw new Config\Definition\Exception\InvalidConfigurationException('The configuration option "password" should be defined if you use the username authentication method for Akeneo API.');
                     }
                     if (isset($value['token']) && !isset($value['refresh_token'])) {
-                        throw new Config\Definition\Exception\InvalidConfigurationException(
-                            'The configuration option "refreshToken" should be defined if you use the token authentication method for Akeneo API.'
-                        );
+                        throw new Config\Definition\Exception\InvalidConfigurationException('The configuration option "refreshToken" should be defined if you use the token authentication method for Akeneo API.');
                     }
-                    if (isset($value['username']) && isset($value['token']) ||
-                        !isset($value['username']) && !isset($value['token'])
+                    if (isset($value['username'], $value['token'])
+                        || !isset($value['username']) && !isset($value['token'])
                     ) {
-                        throw new Config\Definition\Exception\InvalidConfigurationException(
-                            'You must choose between "username" and "token" as authentication method for Akeneo API, both are mutually exclusive.'
-                        );
+                        throw new Config\Definition\Exception\InvalidConfigurationException('You must choose between "username" and "token" as authentication method for Akeneo API, both are mutually exclusive.');
                     }
+
                     return $value;
                 })
             ->end()
@@ -123,7 +119,8 @@ final class Client implements Config\Definition\ConfigurationInterface
                         ->then(asExpression())
                     ->end()
                 ->end()
-            ->end();
+            ->end()
+        ;
 
         return $builder;
     }

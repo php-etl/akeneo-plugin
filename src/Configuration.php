@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo;
 
@@ -16,16 +18,13 @@ final class Configuration implements PluginConfigurationInterface
 
         $builder = new TreeBuilder('akeneo');
 
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-                ->ifTrue(function (array $value) {
-                    return array_key_exists('extractor', $value) && array_key_exists('loader', $value);
-                })
+                ->ifTrue(fn (array $value) => \array_key_exists('extractor', $value) && \array_key_exists('loader', $value))
                 ->thenInvalid('Your configuration should either contain the "extractor" or the "loader" key, not both.')
             ->end()
             ->children()
-                ->booleanNode('enterprise')->defaultFalse()->end()
                 ->arrayNode('expression_language')
                     ->scalarPrototype()->end()
                 ->end()

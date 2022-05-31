@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Loader;
 
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Upsert implements Akeneo\Capacity\CapacityInterface
 {
@@ -51,9 +51,9 @@ final class Upsert implements Akeneo\Capacity\CapacityInterface
     public function applies(array $config): bool
     {
         return isset($config['type'])
-            && in_array($config['type'], self::$endpoints)
+            && \in_array($config['type'], self::$endpoints)
             && isset($config['method'])
-            && $config['method'] === 'upsert';
+            && 'upsert' === $config['method'];
     }
 
     public function getBuilder(array $config): Builder
@@ -61,6 +61,7 @@ final class Upsert implements Akeneo\Capacity\CapacityInterface
         return (new Akeneo\Builder\Capacity\Loader\Upsert())
             ->withEndpoint(endpoint: new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
             ->withCode(code: compileValueWhenExpression($this->interpreter, $config['code'], 'line'))
-            ->withData(line: new Node\Expr\Variable('line'));
+            ->withData(line: new Node\Expr\Variable('line'))
+        ;
     }
 }

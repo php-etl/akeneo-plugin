@@ -1,16 +1,18 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Factory;
 
 use Kiboko\Component\FastMapConfig;
-use Kiboko\Plugin\Akeneo;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 use Kiboko\Contract\Configurator;
+use Kiboko\Plugin\Akeneo;
 use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Lookup implements Configurator\FactoryInterface
 {
@@ -72,15 +74,13 @@ final class Lookup implements Configurator\FactoryInterface
             }
         }
 
-        throw new NoApplicableCapacityException(
-            message: 'No capacity was able to handle the configuration.'
-        );
+        throw new NoApplicableCapacityException(message: 'No capacity was able to handle the configuration.');
     }
 
-    private function merge(Akeneo\Builder\AlternativeLookup $alternativeBuilder, array $config)
+    private function merge(Akeneo\Builder\AlternativeLookup $alternativeBuilder, array $config): void
     {
-        if (array_key_exists('merge', $config)) {
-            if (array_key_exists('map', $config['merge'])) {
+        if (\array_key_exists('merge', $config)) {
+            if (\array_key_exists('map', $config['merge'])) {
                 $mapper = new FastMapConfig\ArrayAppendBuilder(
                     interpreter: $this->interpreter,
                 );
@@ -97,16 +97,13 @@ final class Lookup implements Configurator\FactoryInterface
     public function compile(array $config): Repository\Lookup
     {
         try {
-            if (!array_key_exists('conditional', $config)) {
+            if (!\array_key_exists('conditional', $config)) {
                 try {
                     $alternativeBuilder = new Akeneo\Builder\AlternativeLookup($this->findCapacity($config)->getBuilder($config));
                     $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
                     $repository = new Repository\Lookup($builder);
                 } catch (NoApplicableCapacityException $exception) {
-                    throw new Configurator\InvalidConfigurationException(
-                        message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
-                        previous: $exception,
-                    );
+                    throw new Configurator\InvalidConfigurationException(message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.', previous: $exception);
                 }
 
                 $this->merge($alternativeBuilder, $config);
@@ -115,16 +112,12 @@ final class Lookup implements Configurator\FactoryInterface
                 $repository = new Repository\Lookup($builder);
 
                 foreach ($config['conditional'] as $alternative) {
-
                     try {
                         $alternativeBuilder = new Akeneo\Builder\AlternativeLookup(
                             $this->findCapacity($alternative)->getBuilder($alternative)
                         );
                     } catch (NoApplicableCapacityException $exception) {
-                        throw new Configurator\InvalidConfigurationException(
-                            message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.',
-                            previous: $exception,
-                        );
+                        throw new Configurator\InvalidConfigurationException(message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.', previous: $exception);
                     }
 
                     $builder->addAlternative(
@@ -138,10 +131,7 @@ final class Lookup implements Configurator\FactoryInterface
 
             return $repository;
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new Configurator\InvalidConfigurationException(
-                message: $exception->getMessage(),
-                previous: $exception
-            );
+            throw new Configurator\InvalidConfigurationException(message: $exception->getMessage(), previous: $exception);
         }
     }
 }
