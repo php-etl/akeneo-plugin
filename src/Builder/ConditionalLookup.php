@@ -12,14 +12,12 @@ final class ConditionalLookup implements StepBuilderInterface
     private ?Node\Expr $logger;
     /** @var iterable<array{0: Node\Expr, 1: AlternativeLookup}> */
     private iterable $alternatives;
-    private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
 
     public function __construct()
     {
         $this->logger = null;
         $this->alternatives = [];
-        $this->withEnterpriseSupport = false;
         $this->client = null;
     }
 
@@ -143,9 +141,7 @@ final class ConditionalLookup implements StepBuilderInterface
                                 'params' => [
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
-                                        type: !$this->withEnterpriseSupport ?
-                                        new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                        new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
+                                        type:  new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface'),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(

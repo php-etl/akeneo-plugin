@@ -10,22 +10,13 @@ use PhpParser\Node;
 final class Lookup implements StepBuilderInterface
 {
     private ?Node\Expr $logger;
-    private bool $withEnterpriseSupport;
     private ?Node\Expr $client;
 
     public function __construct(
         private AlternativeLookup $alternative,
     ) {
         $this->logger = null;
-        $this->withEnterpriseSupport = false;
         $this->client = null;
-    }
-
-    public function withEnterpriseSupport(bool $withEnterpriseSupport): self
-    {
-        $this->withEnterpriseSupport = $withEnterpriseSupport;
-
-        return $this;
     }
 
     public function withClient(Node\Expr $client): self
@@ -90,9 +81,7 @@ final class Lookup implements StepBuilderInterface
                                 'params' => [
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
-                                        type: !$this->withEnterpriseSupport ?
-                                            new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                            new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
+                                        type: new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface'),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(

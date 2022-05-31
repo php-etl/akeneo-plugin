@@ -93,7 +93,6 @@ final class Service implements Configurator\PipelinePluginInterface
                 $extractorBuilder = $extractor->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
-                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $extractorBuilder
                     ->withClient($client->getBuilder()->getNode());
@@ -109,7 +108,6 @@ final class Service implements Configurator\PipelinePluginInterface
                 $loaderBuilder = $loader->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
-                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $loaderBuilder
                     ->withClient($client->getBuilder()->getNode());
@@ -125,7 +123,6 @@ final class Service implements Configurator\PipelinePluginInterface
                 $lookupBuilder = $lookup->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
-                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $lookupBuilder
                     ->withClient($client->getBuilder()->getNode());

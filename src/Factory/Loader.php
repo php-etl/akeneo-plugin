@@ -85,10 +85,6 @@ final class Loader implements Configurator\FactoryInterface
             );
         }
 
-        if (array_key_exists('enterprise', $config)) {
-            $builder->withEnterpriseSupport($config['enterprise']);
-        }
-
         try {
             return new Repository\Loader($builder);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
