@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace functional\Capacity\Extractor;
+namespace functional\Capacity\Lookup;
 
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Kiboko\Plugin\Akeneo\Capacity;
 
-final class AllTest extends TestCase
+final class ListPerPageTest extends TestCase
 {
     public function wrongConfigs(): \Generator
     {
@@ -42,35 +42,10 @@ final class AllTest extends TestCase
     {
         yield [
             'config' => [
-                'type' => 'attributeOption',
-                'code' => 'something',
-            ],
-        ];
-        yield [
-            'config' => [
-                'type' => 'attributeOption',
-            ],
-        ];
-
-        yield [
-            'config' => [
                 'type' => 'product',
                 'search' => [
                     [
                         'operator' => 'EMPTY',
-                        'field' => 'foo',
-                    ]
-                ]
-            ]
-        ];
-
-        yield [
-            'config' => [
-                'type' => 'product',
-                'search' => [
-                    [
-                        'operator' => '=',
-                        'value' => 'bar',
                         'field' => 'foo',
                     ]
                 ]
@@ -84,7 +59,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage($expected_message);
 
-        (new Capacity\Extractor\All(new ExpressionLanguage()))->getBuilder($config);
+        (new Capacity\Lookup\ListPerPage(new ExpressionLanguage()))->getBuilder($config);
     }
 
     /** @dataProvider goodConfigs */
@@ -92,7 +67,7 @@ final class AllTest extends TestCase
     {
         $this->assertInstanceOf(
             'PhpParser\Builder',
-            (new Capacity\Extractor\All(new ExpressionLanguage()))->getBuilder($config)
+            (new Capacity\Lookup\ListPerPage(new ExpressionLanguage()))->getBuilder($config)
         );
     }
 }

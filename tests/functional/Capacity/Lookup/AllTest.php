@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace functional\Capacity\Extractor;
+namespace functional\Capacity\Lookup;
 
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use PHPUnit\Framework\TestCase;
@@ -42,18 +42,6 @@ final class AllTest extends TestCase
     {
         yield [
             'config' => [
-                'type' => 'attributeOption',
-                'code' => 'something',
-            ],
-        ];
-        yield [
-            'config' => [
-                'type' => 'attributeOption',
-            ],
-        ];
-
-        yield [
-            'config' => [
                 'type' => 'product',
                 'search' => [
                     [
@@ -84,7 +72,7 @@ final class AllTest extends TestCase
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage($expected_message);
 
-        (new Capacity\Extractor\All(new ExpressionLanguage()))->getBuilder($config);
+        (new Capacity\Lookup\All(new ExpressionLanguage()))->getBuilder($config);
     }
 
     /** @dataProvider goodConfigs */
@@ -92,7 +80,7 @@ final class AllTest extends TestCase
     {
         $this->assertInstanceOf(
             'PhpParser\Builder',
-            (new Capacity\Extractor\All(new ExpressionLanguage()))->getBuilder($config)
+            (new Capacity\Lookup\All(new ExpressionLanguage()))->getBuilder($config)
         );
     }
 }

@@ -20,13 +20,4 @@ final class AllTest extends BuilderTestCase
 
         $capacity->getNode();
     }
-
-    public function testWithEndpoint()
-    {
-        $capacity = new All();
-
-        $capacity->withEndpoint(new Node\Identifier('foo'));
-
-        $this->assertInstanceOf(Node\Stmt\Foreach_::class, $capacity->getNode());
-    }
 }

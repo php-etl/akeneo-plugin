@@ -9,19 +9,26 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ClientTest extends TestCase
 {
-    public function testNormalizeEmptyConfiguration()
+    public function testMissingCapacity()
     {
-        $this->expectException(
-            InvalidConfigurationException::class,
-        );
+        $this->expectException(InvalidConfigurationException::class);
 
         $client = new Client(new ExpressionLanguage());
+        $this->assertFalse($client->validate([]));
         $client->normalize([]);
     }
 
-    public function testValidateEmptyConfiguration()
+    public function testValidateConfiguration()
     {
         $client = new Client(new ExpressionLanguage());
-        $this->assertFalse($client->validate([]));
+        $this->assertTrue($client->validate([
+            'client' => [
+                'api_url' => '123',
+                'client_id' => '123',
+                'secret' => '123',
+                'username' => '123',
+                'password' => '123',
+            ]
+        ]));
     }
 }

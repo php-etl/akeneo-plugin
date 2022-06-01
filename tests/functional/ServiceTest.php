@@ -106,6 +106,7 @@ final class ServiceTest extends TestCase
         $this->expectExceptionMessage('Invalid type for path "akeneo". Expected "array", but got "string"');
 
         $service = new Akeneo\Service();
+        $this->assertFalse($service->validate(['akeneo' => 'wrong']));
         $service->normalize(['akeneo' => 'wrong']);
     }
 

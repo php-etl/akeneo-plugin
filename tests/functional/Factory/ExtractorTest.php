@@ -9,56 +9,56 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ExtractorTest extends TestCase
 {
-    public function testNormalizeEmptyConfiguration()
-    {
-        $this->expectException(
-            InvalidConfigurationException::class,
-        );
-
-        $client = new Extractor(new ExpressionLanguage());
-        $client->normalize([]);
-    }
-
-    public function testValidateEmptyConfiguration()
+    public function testValidateConfiguration()
     {
         $client = new Extractor(new ExpressionLanguage());
-        $this->assertFalse($client->validate([]));
+        $this->assertTrue($client->validate([
+            [
+                'type' => 'product',
+                'method' => 'all',
+            ]
+        ]));
     }
 
-    public function testMissingType(): void
+    public function wrongConfigs(): \Generator
+    {
+        yield [
+            'config' => [
+            ]
+        ];
+        yield [
+            'config' => [
+                'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'wrong',
+                'method' => 'all',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+            ]
+        ];
+    }
+
+    /** @dataProvider wrongConfigs */
+    public function testMissingCapacity(array $config): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
 
         $client = new Extractor(new ExpressionLanguage());
-        $this->assertFalse($client->validate(['wrong']));
-        $client->compile(['wrong']);
-    }
-
-    public function testTypeNotFound(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
-
-        $client = new Extractor(new ExpressionLanguage());
-        $client->compile([
-            'type' => 'wrong',
-            'method' => 'all',
-        ]);
-    }
-
-    public function testCapacityNotFound(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
-
-        $client = new Extractor(new ExpressionLanguage());
-        $client->compile([
-            'type' => 'product',
-            'method' => 'wrong',
-        ]);
+        $this->assertFalse($client->validate($config));
+        $client->compile($config);
     }
 }

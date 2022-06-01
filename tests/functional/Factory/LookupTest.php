@@ -9,62 +9,63 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class LookupTest extends TestCase
 {
-    public function testNormalizeEmptyConfiguration()
-    {
-        $this->expectException(
-            InvalidConfigurationException::class,
-        );
-
-        $client = new Lookup(new ExpressionLanguage());
-        $client->normalize([
-            'condition' => [],
-            'type' => 'product',
-        ]);
-    }
-
-    public function testValidateEmptyConfiguration()
+    public function testValidateConfiguration()
     {
         $client = new Lookup(new ExpressionLanguage());
-        $this->assertFalse($client->validate([
-            'condition' => [],
-            'type' => 'product',
+        $this->assertTrue($client->validate([
+            [
+                'type' => 'product',
+                'method' => 'all',
+            ]
         ]));
-    }
 
-    public function testMissingType(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
-
-        $client = new Lookup(new ExpressionLanguage());
-        $this->assertFalse($client->validate(['wrong']));
-        $client->compile(['wrong']);
-    }
-
-    public function testTypeNotFound(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionCode(0);
-        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
-
-        $client = new Lookup(new ExpressionLanguage());
         $client->compile([
-            'type' => 'wrong',
+            'type' => 'product',
             'method' => 'all',
         ]);
     }
 
-    public function testCapacityNotFound(): void
+    public function wrongConfigs(): \Generator
+    {
+        yield [
+            'config' => [
+                'type' => 'product',
+                'condition' => [],
+            ]
+        ];
+        yield [
+            'config' => [
+                'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'wrong',
+                'method' => 'all',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+            ]
+        ];
+    }
+
+    /** @dataProvider wrongConfigs */
+    public function testMissingCapacity(array $config): void
     {
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionCode(0);
         $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
 
         $client = new Lookup(new ExpressionLanguage());
-        $client->compile([
-            'type' => 'product',
-            'method' => 'wrong',
-        ]);
+        $this->assertFalse($client->validate($config));
+        $client->compile($config);
     }
 }

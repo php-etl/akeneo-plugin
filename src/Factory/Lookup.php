@@ -61,8 +61,6 @@ final class Lookup implements Configurator\FactoryInterface
             return true;
         } catch (Configurator\InvalidConfigurationException) {
             return false;
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
-            return false;
         }
     }
 

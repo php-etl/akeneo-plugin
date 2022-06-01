@@ -68,6 +68,20 @@ final class ExtractorTest extends TestCase
                 'search' => [],
             ],
         ];
+        yield [
+            'config' => [
+                'method' => 'get',
+                'type' => 'attributeOption',
+                'code' => '123',
+                'search' => [],
+            ],
+            'expected' => [
+                'method' => 'get',
+                'type' => 'attributeOption',
+                'code' => '123',
+                'search' => [],
+            ],
+        ];
     }
 
     /** @dataProvider validDataProvider */
@@ -93,6 +107,26 @@ final class ExtractorTest extends TestCase
             [
                 'type' => 'product',
                 'method' => 'invalidValue'
+            ]
+        ]);
+    }
+
+    public function testUnexpectedCodeOptionConfig()
+    {
+        $client = new Configuration\Extractor();
+
+        $this->expectException(
+            Config\Definition\Exception\InvalidConfigurationException::class,
+        );
+        $this->expectExceptionMessage(
+            'The code option should only be used with the "attributeOption" and "assetManager" endpoints.',
+        );
+
+        $this->processor->processConfiguration($client, [
+            [
+                'method' => 'get',
+                'type' => 'product',
+                'code' => '123',
             ]
         ]);
     }
