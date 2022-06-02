@@ -101,23 +101,22 @@ final class ConditionalLookup implements StepBuilderInterface
                             array_column($alternatives, 0),
                             array_column($alternatives, 1)
                         ),
-                        //                        'else' => new Node\Stmt\Else_(
-                        //                            stmts: [
-                        //                                new Node\Stmt\Expression(
-                        //                                    new Node\Expr\Yield_(
-                        //                                        new Node\Expr\Variable('line')
-                        //                                    ),
-                        //                                ),
-                        //                            ],
-                        //                        ),
+                        'else' => new Node\Stmt\Else_(
+                            stmts: [
+                                new Node\Stmt\Expression(
+                        expr: new Node\Expr\MethodCall(
+                                        var: new Node\Expr\Variable('bucket'),
+                                        name: new Node\Name('accept'),
+                                        args: [
+                                            new Node\Arg(
+                                                value: new Node\Expr\Variable('output')
+                                            ),
+                                        ]
+                                    )
+                                ),
+                            ],
+                        ),
                     ],
-                ),
-                new Node\Stmt\Expression(
-                    expr: new Node\Expr\MethodCall(
-                        var: new Node\Expr\Variable('bucket'),
-                        name: new Node\Identifier('accept'),
-                        args: [new Node\Arg(new Node\Expr\Variable('output'))]
-                    )
                 ),
             ])
         );

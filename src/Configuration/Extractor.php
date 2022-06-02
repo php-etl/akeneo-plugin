@@ -135,7 +135,7 @@ final class Extractor implements PluginConfigurationInterface
             'all',
             'get',
         ],
-        'assetMediaFiles' => [
+        'assetMediaFile' => [
             'download',
         ],
     ];

@@ -136,7 +136,7 @@ final class Lookup implements PluginConfigurationInterface
             'all',
             'get',
         ],
-        'assetMediaFiles' => [
+        'assetMediaFile' => [
             'download',
         ],
     ];

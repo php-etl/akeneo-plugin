@@ -134,9 +134,6 @@ final class UpsertList implements Builder
                                                 ),
                                                 args: [
                                                     new Node\Arg(
-                                                        value: new Node\Expr\Variable('exception'),
-                                                    ),
-                                                    new Node\Arg(
                                                         value: new Node\Expr\Variable('line'),
                                                     ),
                                                 ],
