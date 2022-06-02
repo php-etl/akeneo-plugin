@@ -42,7 +42,7 @@ final class LookupTest extends BuilderTestCase
             ->withEndpoint(new Node\Identifier('getProductApi'))
             ->withIdentifier(new Node\Expr\ArrayDimFetch(new Node\Expr\Variable('output'), new Node\Scalar\String_('code')));
 
-        $builder = new Lookup((new AlternativeLookup())->withCapacity($capacity));
+        $builder = new Lookup(new AlternativeLookup($capacity));
         $builder->withClient($client->getNode());
 
         $this->assertBuildsTransformerTransformsLike(
@@ -88,7 +88,7 @@ final class LookupTest extends BuilderTestCase
             ->withEndpoint(new Node\Identifier('getProductApi'))
             ->withIdentifier(new Node\Expr\ArrayDimFetch(new Node\Expr\Variable('output'), new Node\Scalar\String_('code')));
 
-        $builder = new Lookup((new AlternativeLookup())->withCapacity($capacity));
+        $builder = new Lookup(new AlternativeLookup($capacity));
         $builder->withClient($client->getNode());
 
         $this->assertBuildsTransformerTransformsLike(

@@ -200,7 +200,7 @@ final class LookupTest extends TestCase
                 'type' => 'product',
                 'method' => 'get',
             ],
-            'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile" and "assetMediaFiles" endpoints.',
+            'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile" and "assetMediaFile" endpoints.',
             'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
         ];
 

@@ -57,13 +57,13 @@ final class LookupTest extends TestCase
         ];
         yield [
             'config' => [
-                'type' => 'assetMediaFiles',
+                'type' => 'assetMediaFile',
                 'file' => '123'
             ]
         ];
         yield [
             'config' => [
-                'type' => 'assetMediaFiles',
+                'type' => 'assetMediaFile',
                 'method' => 'wrong',
                 'file' => '123'
             ]
