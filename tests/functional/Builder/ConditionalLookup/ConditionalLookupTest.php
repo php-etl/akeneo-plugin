@@ -46,7 +46,7 @@ final class ConditionalLookupTest extends BuilderTestCase
         $builder->withClient($client->getNode());
         $builder->addAlternative(
             condition: new Node\Expr\Isset_([new Node\Expr\Variable('output')]),
-            lookup: new AlternativeLookup($capacity)
+            lookup: (new AlternativeLookup())->withCapacity($capacity)
         );
 
         $this->assertBuildsTransformerTransformsLike(

@@ -38,7 +38,7 @@ final class AllTest extends TestCase
         ];
     }
 
-    public function goodConfigs(): \Generator
+    public function validConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -75,8 +75,8 @@ final class AllTest extends TestCase
         (new Capacity\Lookup\All(new ExpressionLanguage()))->getBuilder($config);
     }
 
-    /** @dataProvider goodConfigs */
-    public function testGoodConfigs(array $config): void
+    /** @dataProvider validConfigs */
+    public function testValidConfigs(array $config): void
     {
         $this->assertInstanceOf(
             'PhpParser\Builder',

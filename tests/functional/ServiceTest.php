@@ -9,7 +9,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ServiceTest extends TestCase
 {
-    public function configProvider(): \Generator
+    public function validConfigs(): \Generator
     {
         /** Get */
         yield [
@@ -132,7 +132,7 @@ final class ServiceTest extends TestCase
         ]);
     }
 
-    /** @dataProvider configProvider */
+    /** @dataProvider validConfigs */
     public function testWithConfigurationAndProcessor(array $expected, string $expectedClass, array $actual): void
     {
         $service = new Akeneo\Service(new ExpressionLanguage());

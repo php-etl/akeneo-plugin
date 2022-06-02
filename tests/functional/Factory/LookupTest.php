@@ -55,6 +55,19 @@ final class LookupTest extends TestCase
                 'type' => 'product',
             ]
         ];
+        yield [
+            'config' => [
+                'type' => 'assetMediaFiles',
+                'file' => '123'
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'assetMediaFiles',
+                'method' => 'wrong',
+                'file' => '123'
+            ]
+        ];
     }
 
     /** @dataProvider wrongConfigs */

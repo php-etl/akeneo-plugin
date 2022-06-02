@@ -38,7 +38,7 @@ final class ListPerPageTest extends TestCase
         ];
     }
 
-    public function goodConfigs(): \Generator
+    public function validConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -62,8 +62,8 @@ final class ListPerPageTest extends TestCase
         (new Capacity\Lookup\ListPerPage(new ExpressionLanguage()))->getBuilder($config);
     }
 
-    /** @dataProvider goodConfigs */
-    public function testGoodConfigs(array $config): void
+    /** @dataProvider validConfigs */
+    public function testValidConfigs(array $config): void
     {
         $this->assertInstanceOf(
             'PhpParser\Builder',
