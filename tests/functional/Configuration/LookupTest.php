@@ -187,10 +187,10 @@ final class LookupTest extends TestCase
     {
         yield [
             'config' => [
-                'type' => 'invalidType',
-                'method' => 'all'
+                'type' => 'product',
+                'method' => 'download'
             ],
-            'excepted_message' => 'Invalid configuration for path "lookup.type": The value should be one of [product, category, attribute, attributeOption, attributeGroup, family, productMediaFile, locale, channel, currency, measureFamily, associationType, familyVariant, productModel, publishedProduct, productModelDraft, productDraft, asset, assetCategory, assetTag, referenceEntityRecord, referenceEntityAttribute, referenceEntityAttributeOption, referenceEntity, assetManager, assetMediaFile], got "invalidType"',
+            'excepted_message' => 'Invalid configuration for path "lookup": The value should be one of [listPerPage, all, get], got "download"',
             'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
         ];
 
@@ -219,15 +219,11 @@ final class LookupTest extends TestCase
 
         yield [
             'config' => [
-                'conditional' => [
-                    [
-                        'file' => '123',
-                        'type' => 'product',
-                        'method' => 'get',
-                    ],
-                ],
+                'file' => '123',
+                'type' => 'product',
+                'method' => 'get',
             ],
-            'excepted_message' => 'Invalid configuration for path "lookup.conditional.0": The file option should only be used with the "productMediaFile',
+            'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile',
             'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
         ];
 
