@@ -21,3 +21,4 @@ jobs:
         with:
           path: src/
           args: --level=5
+          php_version: 8.1

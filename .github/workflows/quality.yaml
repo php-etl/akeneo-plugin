@@ -59,3 +59,4 @@ jobs:
                 with:
                     path: src/
                     args: --level=4
+                    php_version: 8.1
