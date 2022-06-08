@@ -30,5 +30,41 @@ final class ClientTest extends TestCase
                 'password' => '123',
             ]
         ]));
+
+        $client->compile([
+            'api_url' => '123',
+            'client_id' => '123',
+            'secret' => '123',
+            'username' => '123',
+            'password' => '123',
+        ]);
+    }
+
+    public function testWithHttpClient()
+    {
+        $client = new Client(new ExpressionLanguage());
+        $this->assertTrue($client->validate([
+            'client' => [
+                'api_url' => '123',
+                'client_id' => '123',
+                'secret' => '123',
+                'username' => '123',
+                'password' => '123',
+                'context' => [
+                    'http_client' => 'truc'
+                ]
+            ]
+        ]));
+
+        $client->compile([
+            'api_url' => '123',
+            'client_id' => '123',
+            'secret' => '123',
+            'username' => '123',
+            'password' => '123',
+            'context' => [
+                'http_client' => 'foo'
+            ]
+        ]);
     }
 }

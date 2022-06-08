@@ -6,9 +6,9 @@ use functional\Kiboko\Plugin\Akeneo\Builder\BuilderTestCase;
 use functional\Kiboko\Plugin\Akeneo\Mock;
 use Kiboko\Component\PHPUnitExtension\Assert\TransformerBuilderAssertTrait;
 use Kiboko\Plugin\Akeneo\Builder\AlternativeLookup;
-use Kiboko\Plugin\Akeneo\Builder\Capacity;
 use Kiboko\Plugin\Akeneo\Builder\Lookup;
-use PhpParser\Node;
+use Kiboko\Plugin\Akeneo\Capacity;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class LookupTest extends BuilderTestCase
 {
@@ -37,10 +37,11 @@ final class LookupTest extends BuilderTestCase
             ->withFileSystem(new Mock\FileSystemBuilder())
             ->withAuthenticatedByPassword();
 
-        $capacity = new Capacity\Lookup\Get();
-        $capacity
-            ->withEndpoint(new Node\Identifier('getProductApi'))
-            ->withIdentifier(new Node\Expr\ArrayDimFetch(new Node\Expr\Variable('output'), new Node\Scalar\String_('code')));
+        $capacity = (new Capacity\Lookup\Get(new ExpressionLanguage()))->getBuilder([
+            'type' => 'product',
+            'method' => 'get',
+            'identifier' => '0987uiop',
+        ]);
 
         $builder = new Lookup(new AlternativeLookup($capacity));
         $builder->withClient($client->getNode());
@@ -48,12 +49,12 @@ final class LookupTest extends BuilderTestCase
         $this->assertBuildsTransformerTransformsLike(
             [
                 [
-                    "code" => "0987uiop"
+                    "identifier" => "0987uiop"
                 ]
             ],
             [
                 [
-                    "code" => "0987uiop"
+                    "identifier" => "0987uiop"
                 ]
             ],
             $builder,
@@ -83,10 +84,11 @@ final class LookupTest extends BuilderTestCase
             ->withFileSystem(new Mock\FileSystemBuilder())
             ->withAuthenticatedByPassword();
 
-        $capacity = new Capacity\Lookup\Get();
-        $capacity
-            ->withEndpoint(new Node\Identifier('getProductApi'))
-            ->withIdentifier(new Node\Expr\ArrayDimFetch(new Node\Expr\Variable('output'), new Node\Scalar\String_('code')));
+        $capacity = (new Capacity\Lookup\Get(new ExpressionLanguage()))->getBuilder([
+            'type' => 'product',
+            'method' => 'get',
+            'identifier' => '0987uiop'
+        ]);
 
         $builder = new Lookup(new AlternativeLookup($capacity));
         $builder->withClient($client->getNode());
@@ -94,12 +96,12 @@ final class LookupTest extends BuilderTestCase
         $this->assertBuildsTransformerTransformsLike(
             [
                 [
-                    "code" => "0987uiop"
+                    "identifier" => "0987uiop"
                 ]
             ],
             [
                 [
-                    "code" => "0987uiop"
+                    "identifier" => "0987uiop"
                 ]
             ],
             $builder,

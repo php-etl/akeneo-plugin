@@ -81,10 +81,6 @@ final class Extractor implements Configurator\FactoryInterface
             throw new Configurator\InvalidConfigurationException(message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.', previous: $exception);
         }
 
-        try {
-            return new Repository\Extractor($builder);
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new Configurator\InvalidConfigurationException(message: $exception->getMessage(), previous: $exception);
-        }
+        return new Repository\Extractor($builder);
     }
 }

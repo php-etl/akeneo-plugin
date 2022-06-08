@@ -15,7 +15,8 @@ final class LoaderTest extends TestCase
         $this->assertTrue($client->validate([
             [
                 'type' => 'product',
-                'method' => 'create',
+                'method' => 'upsert',
+                'code' => '123',
             ]
         ]));
     }
