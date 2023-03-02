@@ -90,7 +90,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (\in_array($config['type'], ['attributeOption', 'assetManager']) && \array_key_exists('code', $config)) {
+        if (\in_array($config['type'], ['attributeOption', 'assetManager', 'referenceEntityRecord']) && \array_key_exists('code', $config)) {
             $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 
