@@ -123,6 +123,7 @@ final class All implements Builder
     {
         return match ($type) {
             'assetManager' => new Node\Identifier('assetFamilyCode'),
+            'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
             default => new Node\Identifier('attributeCode')
         };
     }
