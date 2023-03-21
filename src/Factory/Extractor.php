@@ -11,18 +11,16 @@ use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-final class Extractor implements Configurator\FactoryInterface
+final readonly class Extractor implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
     /** @var iterable<Akeneo\Capacity\CapacityInterface> */
     private iterable $capacities;
-    private ExpressionLanguage $interpreter;
 
     public function __construct(
-        ?ExpressionLanguage $interpreter = null,
+        private ExpressionLanguage $interpreter = new ExpressionLanguage(),
     ) {
-        $this->interpreter = $interpreter ?? new ExpressionLanguage();
         $this->processor = new Processor();
         $this->configuration = new Akeneo\Configuration\Extractor();
         $this->capacities = [
@@ -55,9 +53,7 @@ final class Extractor implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Configurator\InvalidConfigurationException) {
-            return false;
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
+        } catch (Configurator\InvalidConfigurationException|Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
             return false;
         }
     }

@@ -12,33 +12,36 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
         "nikic/php-parser": "^4.13.2",
-        "symfony/config": "^5.2",
-        "symfony/expression-language": "^5.2",
-        "php-etl/configurator-contracts": "^0.5.0",
-        "php-etl/fast-map-plugin": "^0.7.0",
-        "php-etl/packaging-contracts": "^0.1.0",
-        "php-etl/satellite-toolbox": "^0.3.0"
+        "symfony/config": "^5.2 || ^6.0",
+        "symfony/expression-language": "^5.2 || ^6.0",
+        "php-etl/configurator-contracts": "^0.6@dev",
+        "php-etl/fast-map-plugin": "^0.8@dev",
+        "php-etl/packaging-contracts": "^0.2@dev",
+        "php-etl/satellite-toolbox": "^0.4@dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0",
         "phpunit/php-invoker": "*",
         "johnkary/phpunit-speedtrap": "*",
         "php-http/mock-client": "^1.4@dev",
-        "symfony/yaml": "^5.2",
+        "symfony/yaml": "^5.2 || ^6.0",
         "laminas/laminas-diactoros": "^2.6",
         "mybuilder/phpunit-accelerator": "*",
-        "php-etl/pipeline-contracts": "^0.3.0",
-        "php-etl/bucket-contracts": "^0.1.0",
+        "php-etl/pipeline-contracts": "^0.4@dev",
+        "php-etl/bucket-contracts": "^0.2@dev",
         "akeneo/api-php-client-ee": "^4.0",
-        "php-etl/bucket": "^0.2.0",
+        "php-etl/bucket": "^0.3@dev",
         "guzzlehttp/psr7": "^2.0",
         "php-http/message": "^1.11",
         "php-http/curl-client": "^2.0",
         "mikey179/vfsstream": "^1.6",
-        "infection/infection": "^0.26.10"
+        "phpunit/phpunit": "^9.5 || ^10.0",
+        "phpstan/phpstan": "^1.10",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "infection/infection": "^0.26.18",
+        "rector/rector": "^0.15"
     },
     "autoload": {
         "psr-4": {
@@ -52,7 +55,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.5.x-dev"
+            "dev-main": "0.6.x-dev",
+            "dev-feature/qualityflow-improvments": "0.6.x-dev"
         },
         "gyroscops": {
             "plugins": ["Kiboko\\Plugin\\Akeneo\\Service"]
@@ -61,7 +65,8 @@
     "config": {
         "bin-dir": "bin",
         "allow-plugins": {
-            "infection/extension-installer": true
+            "infection/extension-installer": true,
+            "php-http/discovery": true
         }
     }
 }

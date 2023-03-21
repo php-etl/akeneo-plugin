@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+
 final class ListPerPage implements Akeneo\Capacity\CapacityInterface
 {
-    private static $endpoints = [
+    private static array $endpoints = [
         // Core Endpoints
         'product',
         'category',
@@ -42,7 +43,7 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
         'referenceEntity',
     ];
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct(private readonly ExpressionLanguage $interpreter)
     {
     }
 
@@ -80,7 +81,7 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\ListPerPage())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
         ;
 
         if (isset($config['search']) && \is_array($config['search'])) {

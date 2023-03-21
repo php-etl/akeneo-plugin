@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
+use Symfony\Component\Config;
+
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
-use Symfony\Component\Config;
 
 final class Client implements Config\Definition\ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): \Symfony\Component\Config\Definition\Builder\TreeBuilder
     {
         $builder = new Config\Definition\Builder\TreeBuilder('client');
 
@@ -27,7 +28,7 @@ final class Client implements Config\Definition\ConfigurationInterface
                 }
                 if (isset($value['username'], $value['token'])
                         || !isset($value['username']) && !isset($value['token'])
-                    ) {
+                ) {
                     throw new Config\Definition\Exception\InvalidConfigurationException('You must choose between "username" and "token" as authentication method for Akeneo API, both are mutually exclusive.');
                 }
 

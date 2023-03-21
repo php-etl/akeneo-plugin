@@ -9,15 +9,12 @@ use PhpParser\Node;
 
 final class Lookup implements StepBuilderInterface
 {
-    private ?Node\Expr $logger;
-    private bool $withEnterpriseSupport;
-    private ?Node\Expr $client;
+    private ?Node\Expr $logger = null;
+    private bool $withEnterpriseSupport = false;
+    private ?Node\Expr $client = null;
 
-    public function __construct(private AlternativeLookup $alternative)
+    public function __construct(private readonly AlternativeLookup $alternative)
     {
-        $this->logger = null;
-        $this->withEnterpriseSupport = false;
-        $this->client = null;
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -72,7 +69,7 @@ final class Lookup implements StepBuilderInterface
                 name: null,
                 subNodes: [
                     'implements' => [
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contract\\Pipeline\\TransformerInterface'),
+                        new Node\Name\FullyQualified(name: \Kiboko\Contract\Pipeline\TransformerInterface::class),
                     ],
                     'stmts' => [
                         new Node\Stmt\ClassMethod(
@@ -83,13 +80,13 @@ final class Lookup implements StepBuilderInterface
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
                                         type: !$this->withEnterpriseSupport ?
-                                            new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                            new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
+                                            new Node\Name\FullyQualified(name: \Akeneo\Pim\ApiClient\AkeneoPimClientInterface::class) :
+                                            new Node\Name\FullyQualified(name: \Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(
                                         var: new Node\Expr\Variable('logger'),
-                                        type: new Node\Name\FullyQualified(name: 'Psr\\Log\\LoggerInterface'),
+                                        type: new Node\Name\FullyQualified(name: \Psr\Log\LoggerInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                 ],
@@ -120,7 +117,7 @@ final class Lookup implements StepBuilderInterface
                                                 expr: new Node\Expr\Assign(
                                                     var: new Node\Expr\Variable('bucket'),
                                                     expr: new Node\Expr\New_(
-                                                        new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
+                                                        new Node\Name\FullyQualified(\Kiboko\Component\Bucket\ComplexResultBucket::class)
                                                     )
                                                 )
                                             ),
@@ -135,7 +132,7 @@ final class Lookup implements StepBuilderInterface
             ),
             args: [
                 new Node\Arg(value: $this->client),
-                new Node\Arg(value: $this->logger ?? new Node\Expr\New_(new Node\Name\FullyQualified('Psr\\Log\\NullLogger'))),
+                new Node\Arg(value: $this->logger ?? new Node\Expr\New_(new Node\Name\FullyQualified(\Psr\Log\NullLogger::class))),
             ],
         );
     }

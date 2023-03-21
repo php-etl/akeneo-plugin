@@ -64,7 +64,7 @@ final class Search implements Builder
     public function getNode(): Node\Expr
     {
         $instance = new Node\Expr\New_(
-            class: new Node\Name\FullyQualified('Akeneo\\Pim\\ApiClient\\Search\\SearchBuilder')
+            class: new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\Search\SearchBuilder::class)
         );
 
         foreach ($this->filters as $filterSpec) {
