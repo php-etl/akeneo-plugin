@@ -228,7 +228,7 @@ final class Lookup implements PluginConfigurationInterface
             ->cannotBeEmpty()
             ->requiresAtLeastOneElement()
             ->validate()
-            ->ifTrue(fn ($data) => \count($data) <= 0)
+            ->ifTrue(fn ($data) => (is_countable($data) ? \count($data) : 0) <= 0)
             ->thenUnset()
             ->end()
             ->arrayPrototype()
@@ -236,7 +236,7 @@ final class Lookup implements PluginConfigurationInterface
             ->ifArray()
             ->then(function (array $item) {
                 if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], JSON_THROW_ON_ERROR)));
                 }
 
                 return $item;
