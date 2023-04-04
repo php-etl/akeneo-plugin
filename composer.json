@@ -15,18 +15,18 @@
         "php": "^8.2",
         "ext-json": "*",
         "nikic/php-parser": "^4.13.2",
-        "symfony/config": "^5.2 || ^6.0",
-        "symfony/expression-language": "^5.2 || ^6.0",
-        "php-etl/configurator-contracts": "^0.6@dev",
-        "php-etl/fast-map-plugin": "^0.8@dev",
-        "php-etl/packaging-contracts": "^0.2@dev",
-        "php-etl/satellite-toolbox": "^0.4@dev"
+        "symfony/config": "^6.0",
+        "symfony/expression-language": "^6.0",
+        "php-etl/configurator-contracts": "^0.7",
+        "php-etl/fast-map-plugin": "^0.8",
+        "php-etl/packaging-contracts": "^0.3",
+        "php-etl/satellite-toolbox": "^0.5"
     },
     "require-dev": {
         "phpunit/php-invoker": "*",
         "johnkary/phpunit-speedtrap": "*",
         "php-http/mock-client": "^1.4@dev",
-        "symfony/yaml": "^5.2 || ^6.0",
+        "symfony/yaml": "^6.0",
         "laminas/laminas-diactoros": "^2.6",
         "mybuilder/phpunit-accelerator": "*",
         "php-etl/pipeline-contracts": "^0.4@dev",
@@ -37,7 +37,7 @@
         "php-http/message": "^1.11",
         "php-http/curl-client": "^2.0",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^9.5 || ^10.0",
+        "phpunit/phpunit": "^10.0",
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.0",
         "infection/infection": "^0.26.18",
@@ -55,8 +55,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.6.x-dev",
-            "dev-feature/qualityflow-improvments": "0.6.x-dev"
+            "dev-main": "0.6.x-dev"
         },
         "gyroscops": {
             "plugins": ["Kiboko\\Plugin\\Akeneo\\Service"]
