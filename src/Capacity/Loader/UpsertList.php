@@ -10,7 +10,7 @@ use PhpParser\Node;
 
 final class UpsertList implements Akeneo\Capacity\CapacityInterface
 {
-    private static $endpoints = [
+    private static array $endpoints = [
         // Core Endpoints
         'product',
         'category',
@@ -53,7 +53,7 @@ final class UpsertList implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         return (new Akeneo\Builder\Capacity\Loader\UpsertList())
-            ->withEndpoint(endpoint: new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+            ->withEndpoint(endpoint: new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
             ->withData(data: new Node\Expr\Variable('line'))
         ;
     }

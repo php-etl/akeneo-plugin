@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config;
+
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Loader implements PluginConfigurationInterface
 {
@@ -174,7 +175,7 @@ final class Loader implements PluginConfigurationInterface
         ],
     ];
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): \Symfony\Component\Config\Definition\Builder\TreeBuilder
     {
         $builder = new Config\Definition\Builder\TreeBuilder('loader');
 
@@ -184,7 +185,7 @@ final class Loader implements PluginConfigurationInterface
             ->ifArray()
             ->then(function (array $item) {
                 if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
                 }
 
                 return $item;
@@ -205,8 +206,8 @@ final class Loader implements PluginConfigurationInterface
             ->validate()
             ->ifNotInArray(array_keys(self::$endpoints))
             ->thenInvalid(
-                            sprintf('the value should be one of [%s]', implode(', ', array_keys(self::$endpoints)))
-                        )
+                sprintf('the value should be one of [%s]', implode(', ', array_keys(self::$endpoints)))
+            )
             ->end()
             ->end()
             ->scalarNode('method')->end()

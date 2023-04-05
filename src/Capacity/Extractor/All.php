@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
+
 final class All implements Akeneo\Capacity\CapacityInterface
 {
-    private static $endpoints = [
+    private static array $endpoints = [
         // Core Endpoints
         'product',
         'category',
@@ -44,7 +45,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'assetManager',
     ];
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    public function __construct(private readonly ExpressionLanguage $interpreter)
     {
     }
 
@@ -82,7 +83,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\All())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
             ->withType($config['type'])
         ;
 

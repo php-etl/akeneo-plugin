@@ -11,7 +11,7 @@ use Kiboko\Contract\Mapping\CompilableMapperInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
 
-final class Inline implements Builder
+final readonly class Inline implements Builder
 {
     public function __construct(private ArrayBuilderInterface|ObjectBuilderInterface $mapper)
     {

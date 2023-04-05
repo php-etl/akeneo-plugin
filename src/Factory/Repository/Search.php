@@ -11,7 +11,7 @@ final class Search implements Configurator\RepositoryInterface
 {
     use RepositoryTrait;
 
-    public function __construct(private Akeneo\Builder\Search $builder)
+    public function __construct(private readonly Akeneo\Builder\Search $builder)
     {
         $this->files = [];
         $this->packages = [];

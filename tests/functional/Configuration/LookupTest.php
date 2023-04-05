@@ -16,7 +16,7 @@ final class LookupTest extends TestCase
         $this->processor = new Config\Definition\Processor();
     }
 
-    public function validDataProvider(): iterable
+    public static function validDataProvider(): iterable
     {
         yield [
             'config' => [
@@ -109,7 +109,7 @@ final class LookupTest extends TestCase
         ];
     }
 
-    /** @dataProvider validDataProvider */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validDataProvider')]
     public function testValidConfig(array $config, array $expected)
     {
         $client = new Configuration\Lookup();

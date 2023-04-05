@@ -10,13 +10,11 @@ use PhpParser\Node;
 
 final class Get implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr $identifier;
+    private null|Node\Expr|Node\Identifier $endpoint = null;
+    private null|Node\Expr $identifier = null;
 
     public function __construct()
     {
-        $this->endpoint = null;
-        $this->identifier = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -42,7 +40,7 @@ final class Get implements Builder
         return new Node\Stmt\Expression(
             expr: new Node\Expr\Yield_(
                 value: new Node\Expr\New_(
-                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                    class: new Node\Name\FullyQualified(name: \Kiboko\Component\Bucket\AcceptanceResultBucket::class),
                     args: [
                         new Node\Arg(
                             value: new Node\Expr\MethodCall(

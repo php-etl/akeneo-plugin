@@ -10,30 +10,18 @@ use PhpParser\Node;
 
 final class Client implements Builder
 {
-    private bool $withEnterpriseSupport;
-    private ?Node\Expr $username;
-    private ?Node\Expr $password;
-    private ?Node\Expr $token;
-    private ?Node\Expr $refreshToken;
-    private ?Node\Expr $httpClient;
-    private ?Node\Expr $httpRequestFactory;
-    private ?Node\Expr $httpStreamFactory;
-    private ?Node\Expr $fileSystem;
+    private bool $withEnterpriseSupport = false;
+    private ?Node\Expr $username = null;
+    private ?Node\Expr $password = null;
+    private ?Node\Expr $token = null;
+    private ?Node\Expr $refreshToken = null;
+    private ?Node\Expr $httpClient = null;
+    private ?Node\Expr $httpRequestFactory = null;
+    private ?Node\Expr $httpStreamFactory = null;
+    private ?Node\Expr $fileSystem = null;
 
-    public function __construct(
-        private Node\Expr $baseUrl,
-        private Node\Expr $clientId,
-        private Node\Expr $secret
-    ) {
-        $this->withEnterpriseSupport = false;
-        $this->username = null;
-        $this->password = null;
-        $this->token = null;
-        $this->refreshToken = null;
-        $this->httpClient = null;
-        $this->httpRequestFactory = null;
-        $this->httpStreamFactory = null;
-        $this->fileSystem = null;
+    public function __construct(private readonly Node\Expr $baseUrl, private readonly Node\Expr $clientId, private readonly Node\Expr $secret)
+    {
     }
 
     public function withEnterpriseSupport(bool $withEnterpriseSupport): self
@@ -91,8 +79,8 @@ final class Client implements Builder
     {
         $instance = new Node\Expr\New_(
             !$this->withEnterpriseSupport ?
-                new Node\Name\FullyQualified('Akeneo\\Pim\\ApiClient\\AkeneoPimClientBuilder') :
-                new Node\Name\FullyQualified('Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientBuilder'),
+                new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\AkeneoPimClientBuilder::class) :
+                new Node\Name\FullyQualified(\Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientBuilder::class),
             [
                 new Node\Arg($this->baseUrl),
             ],

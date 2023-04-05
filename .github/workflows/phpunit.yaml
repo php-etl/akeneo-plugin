@@ -1,7 +1,7 @@
-name: Infection
+name: PHPUnit
 on: push
 jobs:
-    infection:
+    phpunit:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v3
@@ -18,17 +18,13 @@ jobs:
                         ${{ runner.os }}-composer-
             -   uses: php-actions/composer@v6
                 with:
-                    args: --prefer-dist --ignore-platform-reqs
+                    args: --prefer-dist
                     php_version: '8.2'
 
-            -   name: Infection
-                run: |
-                    wget -q https://github.com/infection/infection/releases/download/0.26.18/infection.phar
-                    wget -q https://github.com/infection/infection/releases/download/0.26.18/infection.phar.asc
-                    chmod +x infection.phar
-                    ./infection.phar
+            -   name: Run tests & generate Coverage
+                run: bin/phpunit --coverage-html var/coverage
 
-            -   name: Store infection log
-                uses: actions/upload-artifact@v2
+            -   name: Store coverage files
+                uses: actions/upload-artifact@v3
                 with:
-                    path: infection.log
+                    path: var/coverage

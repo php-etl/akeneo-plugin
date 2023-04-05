@@ -9,18 +9,14 @@ use PhpParser\Node;
 
 final class ConditionalLookup implements StepBuilderInterface
 {
-    private ?Node\Expr $logger;
+    private ?Node\Expr $logger = null;
     /** @var iterable<array{0: Node\Expr, 1: AlternativeLookup}> */
-    private iterable $alternatives;
-    private bool $withEnterpriseSupport;
-    private ?Node\Expr $client;
+    private iterable $alternatives = [];
+    private bool $withEnterpriseSupport = false;
+    private ?Node\Expr $client = null;
 
     public function __construct()
     {
-        $this->logger = null;
-        $this->alternatives = [];
-        $this->withEnterpriseSupport = false;
-        $this->client = null;
     }
 
     public function withClient(Node\Expr $client): self
@@ -79,7 +75,7 @@ final class ConditionalLookup implements StepBuilderInterface
                     expr: new Node\Expr\Assign(
                         var: new Node\Expr\Variable('bucket'),
                         expr: new Node\Expr\New_(
-                            new Node\Name\FullyQualified('Kiboko\Component\Bucket\ComplexResultBucket')
+                            new Node\Name\FullyQualified(\Kiboko\Component\Bucket\ComplexResultBucket::class)
                         )
                     )
                 ),
@@ -97,16 +93,16 @@ final class ConditionalLookup implements StepBuilderInterface
                         ],
                         'elseifs' => array_map(
                             fn (Node\Expr $condition, AlternativeLookup $lookup) => new Node\Stmt\ElseIf_(
-                                    cond: $condition,
-                                    stmts: $this->compileAlternative($lookup)
-                                ),
+                                cond: $condition,
+                                stmts: $this->compileAlternative($lookup)
+                            ),
                             array_column($alternatives, 0),
                             array_column($alternatives, 1)
                         ),
                         'else' => new Node\Stmt\Else_(
                             stmts: [
                                 new Node\Stmt\Expression(
-                        expr: new Node\Expr\MethodCall(
+                                    expr: new Node\Expr\MethodCall(
                                         var: new Node\Expr\Variable('bucket'),
                                         name: new Node\Name('accept'),
                                         args: [
@@ -131,7 +127,7 @@ final class ConditionalLookup implements StepBuilderInterface
                 name: null,
                 subNodes: [
                     'implements' => [
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contract\\Pipeline\\TransformerInterface'),
+                        new Node\Name\FullyQualified(name: \Kiboko\Contract\Pipeline\TransformerInterface::class),
                     ],
                     'stmts' => [
                         new Node\Stmt\ClassMethod(
@@ -142,13 +138,13 @@ final class ConditionalLookup implements StepBuilderInterface
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
                                         type: !$this->withEnterpriseSupport ?
-                                        new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface') :
-                                        new Node\Name\FullyQualified(name: 'Akeneo\\PimEnterprise\\ApiClient\\AkeneoPimEnterpriseClientInterface'),
+                                        new Node\Name\FullyQualified(name: \Akeneo\Pim\ApiClient\AkeneoPimClientInterface::class) :
+                                        new Node\Name\FullyQualified(name: \Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(
                                         var: new Node\Expr\Variable('logger'),
-                                        type: new Node\Name\FullyQualified(name: 'Psr\\Log\\LoggerInterface'),
+                                        type: new Node\Name\FullyQualified(name: \Psr\Log\LoggerInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                 ],
@@ -177,7 +173,7 @@ final class ConditionalLookup implements StepBuilderInterface
             ),
             args: [
                 new Node\Arg(value: $this->client),
-                new Node\Arg(value: $this->logger ?? new Node\Expr\New_(new Node\Name\FullyQualified('Psr\\Log\\NullLogger'))),
+                new Node\Arg(value: $this->logger ?? new Node\Expr\New_(new Node\Name\FullyQualified(\Psr\Log\NullLogger::class))),
             ],
         );
     }

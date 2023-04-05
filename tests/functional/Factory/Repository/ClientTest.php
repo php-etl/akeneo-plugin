@@ -13,8 +13,7 @@ final class ClientTest extends TestCase
 {
     public function fileMock(string $filename): FileInterface
     {
-        $file = $this->getMockBuilder(FileInterface::class)
-            ->getMock();
+        $file = $this->createMock(FileInterface::class);
 
         $file->method('getPath')
             ->willReturn($filename);
@@ -33,7 +32,7 @@ final class ClientTest extends TestCase
             new Node\Scalar\String_(''),
         );
 
-        $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
+        $child = $this->createMock(RepositoryInterface::class);
 
         $child->method('getFiles')->willReturn([]);
         $child->method('getPackages')->willReturn(['baz/baz']);
@@ -55,7 +54,7 @@ final class ClientTest extends TestCase
             new Node\Scalar\String_(''),
         );
 
-        $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
+        $child = $this->createMock(RepositoryInterface::class);
 
         $child->method('getFiles')->willReturn([
             $this->fileMock('baz.php')

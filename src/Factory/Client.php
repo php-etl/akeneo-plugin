@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Factory;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Node;
@@ -13,7 +12,9 @@ use Symfony\Component\Config\Definition\Exception as Symfony;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-final class Client implements Configurator\FactoryInterface
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
+
+final readonly class Client implements Configurator\FactoryInterface
 {
     private Processor $processor;
     private ConfigurationInterface $configuration;
@@ -47,9 +48,7 @@ final class Client implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Configurator\InvalidConfigurationException) {
-            return false;
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
+        } catch (Configurator\InvalidConfigurationException|Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
             return false;
         }
     }
@@ -63,9 +62,9 @@ final class Client implements Configurator\FactoryInterface
         }
 
         return new Node\Expr\StaticCall(
-                new Node\Name\FullyQualified(substr($name, 0, $position)),
-                new Node\Identifier(substr($name, $position + 2)),
-            );
+            new Node\Name\FullyQualified(substr($name, 0, $position)),
+            new Node\Identifier(substr($name, $position + 2)),
+        );
     }
 
     public function compile(array $config): Repository\Client

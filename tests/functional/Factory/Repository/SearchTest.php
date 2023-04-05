@@ -12,8 +12,7 @@ final class SearchTest extends TestCase
 {
     public function fileMock(string $filename): FileInterface
     {
-        $file = $this->getMockBuilder(FileInterface::class)
-            ->getMock();
+        $file = $this->createMock(FileInterface::class);
 
         $file->method('getPath')
             ->willReturn($filename);
@@ -28,7 +27,7 @@ final class SearchTest extends TestCase
     {
         $builder = new Builder\Search();
 
-        $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
+        $child = $this->createMock(RepositoryInterface::class);
 
         $child->method('getFiles')->willReturn([]);
         $child->method('getPackages')->willReturn(['baz/baz']);
@@ -46,7 +45,7 @@ final class SearchTest extends TestCase
     {
         $builder = new Builder\Search();
 
-        $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
+        $child = $this->createMock(RepositoryInterface::class);
 
         $child->method('getFiles')->willReturn([
             $this->fileMock('baz.php')

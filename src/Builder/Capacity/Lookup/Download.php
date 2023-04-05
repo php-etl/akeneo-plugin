@@ -11,13 +11,11 @@ use PhpParser\Node;
 
 final class Download implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr $file;
+    private null|Node\Expr|Node\Identifier $endpoint = null;
+    private null|Node\Expr $file = null;
 
     public function __construct()
     {
-        $this->endpoint = null;
-        $this->file = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -100,7 +98,7 @@ final class Download implements Builder
                     catches: [
                         new Node\Stmt\Catch_(
                             types: [
-                                new Node\Name\FullyQualified('Akeneo\Pim\ApiClient\Exception\HttpException'),
+                                new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\Exception\HttpException::class),
                             ],
                             var: new Node\Expr\Variable('exception'),
                             stmts: [

@@ -11,7 +11,7 @@ final class Lookup implements Configurator\StepRepositoryInterface
 {
     use RepositoryTrait;
 
-    public function __construct(private Akeneo\Builder\Lookup|Akeneo\Builder\ConditionalLookup $builder)
+    public function __construct(private readonly Akeneo\Builder\Lookup|Akeneo\Builder\ConditionalLookup $builder)
     {
         $this->files = [];
         $this->packages = [];

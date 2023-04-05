@@ -11,7 +11,7 @@ final class Extractor implements Configurator\StepRepositoryInterface
 {
     use RepositoryTrait;
 
-    public function __construct(private Akeneo\Builder\Extractor $builder)
+    public function __construct(private readonly Akeneo\Builder\Extractor $builder)
     {
         $this->files = [];
         $this->packages = [];

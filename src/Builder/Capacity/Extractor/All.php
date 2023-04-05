@@ -10,16 +10,13 @@ use PhpParser\Node;
 
 final class All implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr $search;
-    private null|Node\Expr $code;
-    private null|string $type;
+    private null|Node\Expr|Node\Identifier $endpoint = null;
+    private null|Node\Expr $search = null;
+    private null|Node\Expr $code = null;
+    private null|string $type = null;
 
     public function __construct()
     {
-        $this->endpoint = null;
-        $this->search = null;
-        $this->code = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -60,30 +57,30 @@ final class All implements Builder
              new Node\Stmt\Foreach_(
                  expr: new Node\Expr\MethodCall(
                      var: new Node\Expr\MethodCall(
-                        var: new Node\Expr\PropertyFetch(
-                            var: new Node\Expr\Variable('this'),
-                            name: new Node\Identifier('client')
-                        ),
-                        name: $this->endpoint
-                    ),
+                         var: new Node\Expr\PropertyFetch(
+                             var: new Node\Expr\Variable('this'),
+                             name: new Node\Identifier('client')
+                         ),
+                         name: $this->endpoint
+                     ),
                      name: new Node\Identifier('all'),
                      args: array_filter(
-                        [
-                            new Node\Arg(
-                                value: new Node\Expr\Array_(
-                                    items: $this->compileSearch(),
-                                    attributes: [
-                                        'kind' => Node\Expr\Array_::KIND_SHORT,
-                                    ]
-                                ),
-                                name: new Node\Identifier('queryParameters'),
-                            ),
-                            null !== $this->code ? new Node\Arg(
-                                value: $this->code,
-                                name: $this->compileCodeNamedArgument($this->type),
-                            ) : null,
-                        ],
-                    ),
+                         [
+                             new Node\Arg(
+                                 value: new Node\Expr\Array_(
+                                     items: $this->compileSearch(),
+                                     attributes: [
+                                         'kind' => Node\Expr\Array_::KIND_SHORT,
+                                     ]
+                                 ),
+                                 name: new Node\Identifier('queryParameters'),
+                             ),
+                             null !== $this->code ? new Node\Arg(
+                                 value: $this->code,
+                                 name: $this->compileCodeNamedArgument($this->type),
+                             ) : null,
+                         ],
+                     ),
                  ),
                  valueVar: new Node\Expr\Variable('item'),
                  subNodes: [
@@ -91,7 +88,7 @@ final class All implements Builder
                          new Node\Stmt\Expression(
                              expr: new Node\Expr\Yield_(
                                  value: new Node\Expr\New_(
-                                     class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                                     class: new Node\Name\FullyQualified(name: \Kiboko\Component\Bucket\AcceptanceResultBucket::class),
                                      args: [
                                          new Node\Arg(
                                              new Node\Expr\Variable('item')
