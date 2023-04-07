@@ -143,68 +143,66 @@ final class Extractor implements PluginConfigurationInterface
 
     public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
-        $filters = new Search();
-
         $builder = new Config\Definition\Builder\TreeBuilder('extractor');
 
         /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-            ->ifArray()
-            ->then(function (array $item) {
-                if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                    throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
-                }
+                ->ifArray()
+                ->then(function (array $item) {
+                    if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
+                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
+                    }
 
-                return $item;
-            })
+                    return $item;
+                })
             ->end()
             ->validate()
-            ->ifTrue(fn ($data) => \array_key_exists('code', $data)
-                    && \array_key_exists('type', $data)
-                    && !\in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager'], true))
-            ->thenInvalid('The code option should only be used with the "attributeOption" and "assetManager" endpoints.')
+                ->ifTrue(fn ($data) => \array_key_exists('code', $data)
+                        && \array_key_exists('type', $data)
+                        && !\in_array($data['type'], ['attributeOption', 'referenceEntityRecord', 'assetManager'], true))
+                ->thenInvalid('The code option should only be used with the "attributeOption" and "assetManager" endpoints.')
             ->end()
             ->validate()
-            ->ifTrue(fn ($data) => \array_key_exists('file', $data)
-                    && \array_key_exists('type', $data)
-                    && !\in_array($data['type'], ['productMediaFile', 'assetMediaFile'], true))
-            ->thenInvalid('The file option should only be used with the "productMediaFile" endpoint.')
+                ->ifTrue(fn ($data) => \array_key_exists('file', $data)
+                        && \array_key_exists('type', $data)
+                        && !\in_array($data['type'], ['productMediaFile', 'assetMediaFile'], true))
+                ->thenInvalid('The file option should only be used with the "productMediaFile" endpoint.')
             ->end()
             ->validate()
-            ->ifTrue(fn ($data) => \array_key_exists('identifier', $data) && \array_key_exists('method', $data) && 'get' !== $data['method'])
-            ->thenInvalid('The identifier option should only be used with the "get" method.')
+                ->ifTrue(fn ($data) => \array_key_exists('identifier', $data) && \array_key_exists('method', $data) && 'get' !== $data['method'])
+                ->thenInvalid('The identifier option should only be used with the "get" method.')
             ->end()
             ->children()
-            ->scalarNode('type')
-            ->isRequired()
-            ->validate()
-            ->ifNotInArray(array_keys(self::$endpoints))
-            ->thenInvalid(
-                sprintf('the value should be one of [%s], got %%s', implode(', ', array_keys(self::$endpoints)))
-            )
-            ->end()
-            ->end()
-            ->scalarNode('method')->isRequired()->end()
-            ->scalarNode('code')
-            ->validate()
-            ->ifTrue(isExpression())
-            ->then(asExpression())
-            ->end()
-            ->end()
-            ->scalarNode('file')
-            ->validate()
-            ->ifTrue(isExpression())
-            ->then(asExpression())
-            ->end()
-            ->end()
-            ->scalarNode('identifier')
-            ->validate()
-            ->ifTrue(isExpression())
-            ->then(asExpression())
-            ->end()
-            ->end()
-            ->append($filters->getConfigTreeBuilder())
+                ->scalarNode('type')
+                    ->isRequired()
+                    ->validate()
+                        ->ifNotInArray(array_keys(self::$endpoints))
+                        ->thenInvalid(
+                            sprintf('the value should be one of [%s], got %%s', implode(', ', array_keys(self::$endpoints)))
+                        )
+                    ->end()
+                ->end()
+                ->scalarNode('method')->isRequired()->end()
+                ->scalarNode('code')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->scalarNode('file')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->scalarNode('identifier')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->append((new Search())->getConfigTreeBuilder()->getRootNode())
             ->end()
         ;
 
