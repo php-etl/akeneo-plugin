@@ -6,13 +6,12 @@ namespace Kiboko\Plugin\Akeneo\Configuration;
 
 use Symfony\Component\Config;
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Search implements Config\Definition\ConfigurationInterface
 {
-    public function getConfigTreeBuilder(): TreeBuilder
+    public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
         $builder = new Config\Definition\Builder\TreeBuilder('search');
 
