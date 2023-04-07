@@ -16,7 +16,7 @@ final class Search implements Config\Definition\ConfigurationInterface
         $builder = new Config\Definition\Builder\TreeBuilder('search');
 
         /* @phpstan-ignore-next-line */
-        return $builder->getRootNode()
+        $builder->getRootNode()
             ->arrayPrototype()
             ->children()
             ->scalarNode('field')->cannotBeEmpty()->isRequired()->end()
@@ -45,5 +45,7 @@ final class Search implements Config\Definition\ConfigurationInterface
             ->end()
             ->end()
         ;
+
+        return $builder;
     }
 }
