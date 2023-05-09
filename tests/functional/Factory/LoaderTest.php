@@ -9,19 +9,57 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class LoaderTest extends TestCase
 {
-    public function testNormalizeEmptyConfiguration()
+    public function testValidateConfiguration()
     {
-        $this->expectException(
-            InvalidConfigurationException::class,
-        );
-
         $client = new Loader(new ExpressionLanguage());
-        $client->normalize([]);
+        $this->assertTrue($client->validate([
+            [
+                'type' => 'product',
+                'method' => 'upsert',
+                'code' => '123',
+            ]
+        ]));
     }
 
-    public function testValidateEmptyConfiguration()
+    public static function wrongConfigs(): \Generator
     {
+        yield [
+            'config' => [
+            ]
+        ];
+        yield [
+            'config' => [
+                'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'wrong',
+                'method' => 'upsert',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+            ]
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
+    public function testMissingCapacity(array $config): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
+
         $client = new Loader(new ExpressionLanguage());
-        $this->assertFalse($client->validate([]));
+        $this->assertFalse($client->validate($config));
+        $client->compile($config);
     }
 }

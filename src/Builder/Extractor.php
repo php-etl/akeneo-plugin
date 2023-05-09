@@ -11,19 +11,11 @@ use PhpParser\Node;
 final class Extractor implements StepBuilderInterface
 {
     private ?Node\Expr $logger = null;
-    private bool $withEnterpriseSupport = false;
     private ?Node\Expr $client = null;
-    private ?Builder $capacity = null;
 
-    public function __construct()
-    {
-    }
-
-    public function withEnterpriseSupport(bool $withEnterpriseSupport): self
-    {
-        $this->withEnterpriseSupport = $withEnterpriseSupport;
-
-        return $this;
+    public function __construct(
+        private readonly Builder $capacity,
+    ) {
     }
 
     public function withClient(Node\Expr $client): self
@@ -50,13 +42,6 @@ final class Extractor implements StepBuilderInterface
         return $this;
     }
 
-    public function withCapacity(Builder $capacity): self
-    {
-        $this->capacity = $capacity;
-
-        return $this;
-    }
-
     public function getNode(): Node
     {
         return new Node\Expr\New_(
@@ -74,9 +59,7 @@ final class Extractor implements StepBuilderInterface
                                 'params' => [
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
-                                        type: !$this->withEnterpriseSupport ?
-                                            new Node\Name\FullyQualified(name: \Akeneo\Pim\ApiClient\AkeneoPimClientInterface::class) :
-                                            new Node\Name\FullyQualified(name: \Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientInterface::class),
+                                        type: new Node\Name\FullyQualified(name: \Akeneo\Pim\ApiClient\AkeneoPimClientInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(

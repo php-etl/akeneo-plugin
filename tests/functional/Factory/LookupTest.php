@@ -9,25 +9,76 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class LookupTest extends TestCase
 {
-    public function testNormalizeEmptyConfiguration()
+    public function testValidateConfiguration()
     {
-        $this->expectException(
-            InvalidConfigurationException::class,
-        );
-
         $client = new Lookup(new ExpressionLanguage());
-        $client->normalize([
-            'condition' => [],
+        $this->assertTrue($client->validate([
+            [
+                'type' => 'product',
+                'method' => 'all',
+            ]
+        ]));
+
+        $client->compile([
             'type' => 'product',
+            'method' => 'all',
         ]);
     }
 
-    public function testValidateEmptyConfiguration()
+    public static function wrongConfigs(): \Generator
     {
+        yield [
+            'config' => [
+                'type' => 'product',
+                'condition' => [],
+            ]
+        ];
+        yield [
+            'config' => [
+                'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'wrong',
+                'method' => 'all',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'wrong',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'product',
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'assetMediaFile',
+                'file' => '123'
+            ]
+        ];
+        yield [
+            'config' => [
+                'type' => 'assetMediaFile',
+                'method' => 'wrong',
+                'file' => '123'
+            ]
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
+    public function testMissingCapacity(array $config): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionCode(0);
+        $this->expectExceptionMessage('Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.');
+
         $client = new Lookup(new ExpressionLanguage());
-        $this->assertFalse($client->validate([
-            'condition' => [],
-            'type' => 'product',
-        ]));
+        $this->assertFalse($client->validate($config));
+        $client->compile($config);
     }
 }

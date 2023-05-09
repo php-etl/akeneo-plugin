@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
         backupGlobals="true"
         colors="false"
         processIsolation="false"
@@ -18,16 +18,16 @@
         requireCoverageMetadata="false">
   <testsuites>
     <testsuite name="Functional tests">
-<!--        TODO: fix the tests-->
-<!--      <directory>tests/functional/</directory>-->
+      <directory>tests/functional/</directory>
     </testsuite>
   </testsuites>
-  <coverage>
+  <coverage/>
+  <php>
+    <ini name="allow_url_include" value="1"/>
+  </php>
+  <source>
     <include>
       <directory suffix=".php">src</directory>
     </include>
-  </coverage>
-  <php>
-    <ini name="allow_url_include" value="1" />
-  </php>
+  </source>
 </phpunit>

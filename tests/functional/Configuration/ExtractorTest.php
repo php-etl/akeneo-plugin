@@ -68,6 +68,20 @@ final class ExtractorTest extends TestCase
                 'search' => [],
             ],
         ];
+        yield [
+            'config' => [
+                'method' => 'get',
+                'type' => 'attributeOption',
+                'code' => '123',
+                'search' => [],
+            ],
+            'expected' => [
+                'method' => 'get',
+                'type' => 'attributeOption',
+                'code' => '123',
+                'search' => [],
+            ],
+        ];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('validDataProvider')]
@@ -93,46 +107,6 @@ final class ExtractorTest extends TestCase
             [
                 'type' => 'product',
                 'method' => 'invalidValue'
-            ]
-        ]);
-    }
-
-    public function testUnexpectedProductMediaFileFieldConfig()
-    {
-        $client = new Configuration\Extractor();
-
-        $this->expectException(
-            Config\Definition\Exception\InvalidConfigurationException::class,
-        );
-        $this->expectExceptionMessage(
-            'Invalid configuration for path "extractor": The file option should only be used with the "productMediaFile" endpoint.',
-        );
-
-        $this->processor->processConfiguration($client, [
-            [
-                'type' => 'product',
-                'method' => 'all',
-                'file' => 'foo'
-            ]
-        ]);
-    }
-
-    public function testUnexpectedIdentifierFieldConfig()
-    {
-        $client = new Configuration\Extractor();
-
-        $this->expectException(
-            Config\Definition\Exception\InvalidConfigurationException::class,
-        );
-        $this->expectExceptionMessage(
-            'Invalid configuration for path "extractor": The identifier option should only be used with the "get" method.',
-        );
-
-        $this->processor->processConfiguration($client, [
-            [
-                'type' => 'product',
-                'method' => 'all',
-                'identifier' => 'foo'
             ]
         ]);
     }

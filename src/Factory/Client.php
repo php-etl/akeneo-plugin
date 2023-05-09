@@ -48,7 +48,7 @@ final readonly class Client implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Configurator\InvalidConfigurationException|Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
+        } catch (Configurator\ConfigurationExceptionInterface) {
             return false;
         }
     }

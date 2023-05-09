@@ -7,6 +7,8 @@ use Kiboko\Contract\Packaging\FileInterface;
 use Kiboko\Plugin\Akeneo\Builder;
 use Kiboko\Plugin\Akeneo\Builder\AlternativeLookup;
 use Kiboko\Plugin\Akeneo\Factory\Repository;
+use PhpParser\Builder as Capacity;
+use PhpParser\Node;
 use PHPUnit\Framework\TestCase;
 
 final class LookupTest extends TestCase
@@ -26,7 +28,11 @@ final class LookupTest extends TestCase
 
     public function testMergeWithPackages(): void
     {
-        $builder = new Builder\Lookup(new AlternativeLookup());
+        $capacity = $this->createMock(Capacity::class);
+
+        $capacity->method('getNode')->willReturn(new Node\Stmt\Nop());
+
+        $builder = new Builder\Lookup(new AlternativeLookup($capacity));
 
         $child = $this->createMock(RepositoryInterface::class);
 
@@ -44,7 +50,11 @@ final class LookupTest extends TestCase
 
     public function testMergeWithFiles(): void
     {
-        $builder = new Builder\Lookup(new AlternativeLookup());
+        $capacity = $this->createMock(Capacity::class);
+
+        $capacity->method('getNode')->willReturn(new Node\Stmt\Nop());
+
+        $builder = new Builder\Lookup(new AlternativeLookup($capacity));
 
         $child = $this->createMock(RepositoryInterface::class);
 
