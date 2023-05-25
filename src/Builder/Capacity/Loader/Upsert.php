@@ -85,12 +85,7 @@ final class Upsert implements Builder
                                     name: $this->endpoint,
                                 ),
                                 new Node\Identifier('upsert'),
-                                array_merge([
-                                    $this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null,
-                                    $this->referenceEntityAttribute ? new Node\Arg(value: $this->referenceEntityAttribute) : null,
-                                    new Node\Arg(value: $this->code),
-                                    new Node\Arg(value: $this->data),
-                                ]),
+                                [$this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null, $this->referenceEntityAttribute ? new Node\Arg(value: $this->referenceEntityAttribute) : null, new Node\Arg(value: $this->code), new Node\Arg(value: $this->data)],
                             ),
                         ),
                         new Node\Stmt\Expression(
