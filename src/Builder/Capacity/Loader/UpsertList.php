@@ -66,7 +66,10 @@ final class UpsertList implements Builder
                                     name: $this->endpoint,
                                 ),
                                 new Node\Identifier('upsertList'),
-                                [$this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null, new Node\Arg(value: $this->data)],
+                                array_filter([
+                                    $this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null,
+                                    new Node\Arg(value: $this->data),
+                                ]),
                             ),
                         ),
                         new Node\Stmt\Expression(
