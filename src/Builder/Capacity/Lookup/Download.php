@@ -67,32 +67,128 @@ final class Download implements Builder
                     stmts: [
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\Assign(
-                                var: new Node\Expr\Variable('image'),
+                                var: new Node\Expr\Variable('data'),
                                 expr: new Node\Expr\MethodCall(
                                     var: new Node\Expr\MethodCall(
-                                        var: new Node\Expr\MethodCall(
-                                            var: new Node\Expr\MethodCall(
-                                                var: new Node\Expr\PropertyFetch(
-                                                    var: new Node\Expr\Variable('this'),
-                                                    name: new Node\Identifier('client'),
-                                                ),
-                                                name: $this->endpoint
-                                            ),
-                                            name: new Node\Identifier('download'),
-                                            args: array_filter(
-                                                [
-                                                    null !== $this->file ? new Node\Arg(
-                                                        value: $this->file,
-                                                        name: new Node\Identifier('code'),
-                                                    ) : null,
-                                                ],
-                                            ),
+                                        var: new Node\Expr\PropertyFetch(
+                                            var: new Node\Expr\Variable('this'),
+                                            name: new Node\Identifier('client'),
                                         ),
-                                        name: new Node\Identifier('getBody'),
+                                        name: $this->endpoint
                                     ),
-                                    name: new Node\Identifier('getContents'),
+                                    name: new Node\Identifier('download'),
+                                    args: array_filter(
+                                        [
+                                            null !== $this->file ? new Node\Arg(
+                                                value: $this->file,
+                                                name: new Node\Identifier('code'),
+                                            ) : null,
+                                        ],
+                                    ),
                                 ),
                             ),
+                        ),
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\Assign(
+                                var: new Node\Expr\Variable('content'),
+                                expr: new Node\Expr\MethodCall(
+                                    var: new Node\Expr\MethodCall(
+                                        var: new Node\Expr\Variable('data'),
+                                        name: new Node\Identifier('getBody')
+                                    ),
+                                    name: new Node\Identifier('getContents')
+                                )
+                            )
+                        ),
+                        new Node\Stmt\If_(
+                            cond: new Node\Expr\BooleanNot(
+                                new Node\Expr\FuncCall(
+                                    name: new Node\Name('is_string'),
+                                    args: [
+                                        new Node\Expr\Variable('content'),
+                                    ],
+                                ),
+                            ),
+                            subNodes: [
+                                'stmts' => [
+                                    new Node\Stmt\Return_(
+                                        expr: new Node\Expr\ConstFetch(
+                                            name: new Node\Name(name: 'null'),
+                                        ),
+                                    ),
+                                ],
+                            ],
+                        ),
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\Assign(
+                                var: new Node\Expr\Variable('image'),
+                                expr: new Node\Expr\FuncCall(
+                                    name: new Node\Name('fopen'),
+                                    args: [
+                                        new Node\Arg(new Node\Scalar\String_('php://temp')),
+                                        new Node\Arg(new Node\Scalar\String_('r+')),
+                                    ]
+                                ),
+                            ),
+                        ),
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\FuncCall(
+                                name: new Node\Name('fwrite'),
+                                args: [
+                                    new Node\Arg(new Node\Expr\Variable('image')),
+                                    new Node\Arg(new Node\Expr\Variable('content')),
+                                ]
+                            ),
+                        ),
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\FuncCall(
+                                name: new Node\Name('fseek'),
+                                args: [
+                                    new Node\Arg(new Node\Expr\Variable('image')),
+                                    new Node\Arg(new Node\Scalar\LNumber(0)),
+                                ]
+                            ),
+                        ),
+                        new Node\Stmt\If_(
+                            cond: new Node\Expr\FuncCall(
+                                name: new Node\Name('preg_match'),
+                                args: [
+                                    new Node\Arg(new Node\Scalar\String_('/filename="([^"]+)"/')),
+                                    new Node\Arg(
+                                        new Node\Expr\ArrayDimFetch(
+                                            var: new Node\Expr\MethodCall(
+                                                var: new Node\Expr\Variable('data'),
+                                                name: new Node\Identifier('getHeader'),
+                                                args: [
+                                                    new Node\Arg(new Node\Scalar\String_('content-disposition')),
+                                                ]
+                                            ),
+                                            dim: new Node\Scalar\LNumber(0)
+                                        )
+                                    ),
+                                    new Node\Expr\Variable('matches'),
+                                ]
+                            ),
+                            subNodes: [
+                                'stmts' => [
+                                    new Node\Stmt\Expression(
+                                        new Node\Expr\FuncCall(
+                                            name: new Node\Name('stream_context_set_option'),
+                                            args: [
+                                                new Node\Arg(new Node\Expr\Variable('image')),
+                                                new Node\Arg(new Node\Scalar\String_('http')),
+                                                new Node\Arg(new Node\Scalar\String_('filename')),
+                                                new Node\Arg(
+                                                    new Node\Expr\ArrayDimFetch(
+                                                        var: new Node\Expr\Variable('matches'),
+                                                        dim: new Node\Scalar\LNumber(1)
+                                                    )
+                                                ),
+                                            ]
+                                        )
+                                    ),
+                                ],
+                            ]
                         ),
                     ],
                     catches: [
