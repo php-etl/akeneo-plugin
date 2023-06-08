@@ -45,7 +45,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'assetManager',
     ];
 
-    private static array $noValueOperators = [
+    private static array $unaryOperators = [
         'EMPTY',
         'NOT EMPTY',
         'AT LEAST COMPLETE',
@@ -71,10 +71,10 @@ final class All implements Akeneo\Capacity\CapacityInterface
     {
         $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
-            if (\in_array($filter['operator'], self::$noValueOperators, true) && \array_key_exists('value', $filter)) {
+            if (\in_array($filter['operator'], self::$unaryOperators, true) && \array_key_exists('value', $filter)) {
                 throw new InvalidConfigurationException(sprintf('You should not provide a value for the %s operator', $filter['operator']));
             }
-            if (!\in_array($filter['operator'], self::$noValueOperators, true) && !\array_key_exists('value', $filter)) {
+            if (!\in_array($filter['operator'], self::$unaryOperators, true) && !\array_key_exists('value', $filter)) {
                 throw new InvalidConfigurationException(sprintf('You should provide a value for the %s operator', $filter['operator']));
             }
 
