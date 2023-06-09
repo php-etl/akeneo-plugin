@@ -9,7 +9,6 @@ use Symfony\Component\Config;
 
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\mutuallyDependentFields;
 
 final class Loader implements PluginConfigurationInterface
 {

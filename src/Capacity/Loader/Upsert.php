@@ -65,11 +65,11 @@ final class Upsert implements Akeneo\Capacity\CapacityInterface
             ->withData(line: new Node\Expr\Variable('line'))
         ;
 
-        if (array_key_exists('referenceEntity', $config)) {
+        if (\array_key_exists('referenceEntity', $config)) {
             $builder->withReferenceEntity(referenceEntity: new Node\Scalar\String_($config['referenceEntity']));
         }
 
-        if (array_key_exists('referenceEntityAttribute', $config)) {
+        if (\array_key_exists('referenceEntityAttribute', $config)) {
             $builder->withReferenceEntityAttribute(referenceEntityAttribute: compileValueWhenExpression($this->interpreter, $config['referenceEntityAttribute'], 'line'));
         }
 
