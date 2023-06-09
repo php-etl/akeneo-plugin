@@ -27,7 +27,8 @@ final class ServiceTest extends TestCase
                     'secret' => '1234',
                     'username' => '1234',
                     'password' => '1234'
-                ]
+                ],
+                'enterprise' => false,
             ],
             'expected_class' => \Kiboko\Plugin\Akeneo\Factory\Repository\Extractor::class,
             'actual' => [
@@ -63,7 +64,8 @@ final class ServiceTest extends TestCase
                     'secret' => '1234',
                     'username' => '1234',
                     'password' => '1234'
-                ]
+                ],
+                'enterprise' => false,
             ],
             'expected_class' => \Kiboko\Plugin\Akeneo\Factory\Repository\Loader::class,
             'actual' => [
