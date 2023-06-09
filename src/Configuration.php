@@ -25,6 +25,7 @@ final class Configuration implements PluginConfigurationInterface
             ->thenInvalid('Your configuration should either contain the "extractor" or the "loader" key, not both.')
             ->end()
             ->children()
+            ->booleanNode('enterprise')->setDeprecated('php-etl/akeneo-plugin', '0.7')->defaultFalse()->end()
             ->arrayNode('expression_language')
             ->scalarPrototype()->end()
             ->end()
