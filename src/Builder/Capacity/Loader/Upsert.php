@@ -14,6 +14,8 @@ final class Upsert implements Builder
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $code = null;
     private null|Node\Expr $data = null;
+    private null|Node\Expr $referenceEntity = null;
+    private null|Node\Expr $referenceEntityAttribute = null;
 
     public function __construct()
     {
@@ -36,6 +38,20 @@ final class Upsert implements Builder
     public function withData(Node\Expr $line): self
     {
         $this->data = $line;
+
+        return $this;
+    }
+
+    public function withReferenceEntity(Node\Expr $referenceEntity): self
+    {
+        $this->referenceEntity = $referenceEntity;
+
+        return $this;
+    }
+
+    public function withReferenceEntityAttribute(Node\Expr $referenceEntityAttribute): self
+    {
+        $this->referenceEntityAttribute = $referenceEntityAttribute;
 
         return $this;
     }
@@ -69,10 +85,12 @@ final class Upsert implements Builder
                                     name: $this->endpoint,
                                 ),
                                 new Node\Identifier('upsert'),
-                                [
+                                array_filter([
+                                    $this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null,
+                                    $this->referenceEntityAttribute ? new Node\Arg(value: $this->referenceEntityAttribute) : null,
                                     new Node\Arg(value: $this->code),
                                     new Node\Arg(value: $this->data),
-                                ],
+                                ]),
                             ),
                         ),
                         new Node\Stmt\Expression(
