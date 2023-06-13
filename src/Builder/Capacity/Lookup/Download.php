@@ -90,37 +90,6 @@ final class Download implements Builder
                         ),
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\Assign(
-                                var: new Node\Expr\Variable('content'),
-                                expr: new Node\Expr\MethodCall(
-                                    var: new Node\Expr\MethodCall(
-                                        var: new Node\Expr\Variable('data'),
-                                        name: new Node\Identifier('getBody')
-                                    ),
-                                    name: new Node\Identifier('getContents')
-                                )
-                            )
-                        ),
-                        new Node\Stmt\If_(
-                            cond: new Node\Expr\BooleanNot(
-                                new Node\Expr\FuncCall(
-                                    name: new Node\Name('is_string'),
-                                    args: [
-                                        new Node\Expr\Variable('content'),
-                                    ],
-                                ),
-                            ),
-                            subNodes: [
-                                'stmts' => [
-                                    new Node\Stmt\Return_(
-                                        expr: new Node\Expr\ConstFetch(
-                                            name: new Node\Name(name: 'null'),
-                                        ),
-                                    ),
-                                ],
-                            ],
-                        ),
-                        new Node\Stmt\Expression(
-                            expr: new Node\Expr\Assign(
                                 var: new Node\Expr\Variable('image'),
                                 expr: new Node\Expr\FuncCall(
                                     name: new Node\Name('fopen'),
@@ -133,10 +102,18 @@ final class Download implements Builder
                         ),
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\FuncCall(
-                                name: new Node\Name('fwrite'),
+                                name: new Node\Name('stream_copy_to_stream'),
                                 args: [
+                                    new Node\Arg(
+                                        new Node\Expr\MethodCall(
+                                            var: new Node\Expr\MethodCall(
+                                                var: new Node\Expr\Variable('data'),
+                                                name: new Node\Identifier('getBody')
+                                            ),
+                                            name: new Node\Identifier('detach')
+                                        )
+                                    ),
                                     new Node\Arg(new Node\Expr\Variable('image')),
-                                    new Node\Arg(new Node\Expr\Variable('content')),
                                 ]
                             ),
                         ),
