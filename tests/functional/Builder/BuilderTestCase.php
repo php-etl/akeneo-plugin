@@ -6,7 +6,6 @@ use functional\Kiboko\Plugin\Akeneo\PipelineRunner;
 use Kiboko\Contract\Pipeline\PipelineRunnerInterface;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamWrapper;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter;
 use PhpParser\Builder as DefaultBuilder;

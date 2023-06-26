@@ -6,6 +6,7 @@ namespace Kiboko\Plugin\Akeneo;
 
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use function Kiboko\Component\SatelliteToolbox\Configuration\mutuallyExclusiveFields;
 
 final class Configuration implements PluginConfigurationInterface
 {
@@ -35,6 +36,9 @@ final class Configuration implements PluginConfigurationInterface
                 ->variableNode('logger')
                     ->setDeprecated('php-etl/akeneo-plugin', '0.1')
                 ->end()
+            ->end()
+            ->validate()
+                ->always(mutuallyExclusiveFields('extract', 'transform', 'lookup'))
             ->end()
         ;
 

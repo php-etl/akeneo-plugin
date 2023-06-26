@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Plugin\Akeneo;
@@ -42,6 +41,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttributeOption',
         'referenceEntity',
         'assetManager',
+        'assetMediaFile',
     ];
 
     public function __construct(private ExpressionLanguage $interpreter)
@@ -68,11 +68,11 @@ final class All implements Akeneo\Capacity\CapacityInterface
             }
 
             $builder->addFilter(
-                field: compileValue($this->interpreter, $filter['field']),
-                operator: compileValue($this->interpreter, $filter['operator']),
-                value: \array_key_exists('value', $filter) ? compileValue($this->interpreter, $filter['value']) : null,
-                scope: \array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter['scope']) : null,
-                locale: \array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter['locale']) : null
+                field: compileValueWhenExpression($this->interpreter, $filter['field']),
+                operator: compileValueWhenExpression($this->interpreter, $filter['operator']),
+                value: \array_key_exists('value', $filter) ? compileValueWhenExpression($this->interpreter, $filter['value']) : null,
+                scope: \array_key_exists('scope', $filter) ? compileValueWhenExpression($this->interpreter, $filter['scope']) : null,
+                locale: \array_key_exists('locale', $filter) ? compileValueWhenExpression($this->interpreter, $filter['locale']) : null
             );
         }
 
@@ -90,7 +90,9 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (\in_array($config['type'], ['attributeOption', 'assetManager']) && \array_key_exists('code', $config)) {
+        if (\in_array($config['type'], ['attributeOption', 'assetManager', 'assetAttribute', 'assetAttributeOption', 'familyVariant', 'referenceEntityAttribute', 'referenceEntityAttributeOption', 'referenceEntityRecord'])
+            && \array_key_exists('code', $config)
+        ) {
             $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 

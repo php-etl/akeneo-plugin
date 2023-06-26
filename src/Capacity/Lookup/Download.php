@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Lookup;
 
+use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 use Kiboko\Contract\Configurator;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Download implements Akeneo\Capacity\CapacityInterface
 {
@@ -42,7 +44,7 @@ final class Download implements Akeneo\Capacity\CapacityInterface
         if (!\array_key_exists('file', $config)) {
             throw new Configurator\InvalidConfigurationException('The configuration option "file" should be defined.');
         }
-        $builder->withFile(compileValue($this->interpreter, $config['file']));
+        $builder->withFile(compileValueWhenExpression($this->interpreter, $config['file']));
 
         return $builder;
     }
