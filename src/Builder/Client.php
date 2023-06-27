@@ -10,7 +10,6 @@ use PhpParser\Node;
 
 final class Client implements Builder
 {
-    private bool $withEnterpriseSupport = false;
     private ?Node\Expr $username = null;
     private ?Node\Expr $password = null;
     private ?Node\Expr $token = null;
@@ -22,13 +21,6 @@ final class Client implements Builder
 
     public function __construct(private readonly Node\Expr $baseUrl, private readonly Node\Expr $clientId, private readonly Node\Expr $secret)
     {
-    }
-
-    public function withEnterpriseSupport(bool $withEnterpriseSupport): self
-    {
-        $this->withEnterpriseSupport = $withEnterpriseSupport;
-
-        return $this;
     }
 
     public function withToken(Node\Expr $token, Node\Expr $refreshToken): self
@@ -78,9 +70,7 @@ final class Client implements Builder
     public function getNode(): Node\Expr\MethodCall
     {
         $instance = new Node\Expr\New_(
-            !$this->withEnterpriseSupport ?
-                new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\AkeneoPimClientBuilder::class) :
-                new Node\Name\FullyQualified(\Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientBuilder::class),
+            new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\AkeneoPimClientBuilder::class),
             [
                 new Node\Arg($this->baseUrl),
             ],

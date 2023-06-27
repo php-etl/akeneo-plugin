@@ -52,7 +52,7 @@ final readonly class Loader implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Configurator\InvalidConfigurationException|Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
+        } catch (Configurator\ConfigurationExceptionInterface) {
             return false;
         }
     }
@@ -70,24 +70,14 @@ final readonly class Loader implements Configurator\FactoryInterface
 
     public function compile(array $config): Repository\Loader
     {
-        $builder = new Akeneo\Builder\Loader();
-
         try {
-            $builder->withCapacity(
+            $builder = new Akeneo\Builder\Loader(
                 $this->findCapacity($config)->getBuilder($config)
             );
         } catch (NoApplicableCapacityException $exception) {
             throw new Configurator\InvalidConfigurationException(message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.', previous: $exception);
         }
 
-        if (\array_key_exists('enterprise', $config)) {
-            $builder->withEnterpriseSupport($config['enterprise']);
-        }
-
-        try {
-            return new Repository\Loader($builder);
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new Configurator\InvalidConfigurationException(message: $exception->getMessage(), previous: $exception);
-        }
+        return new Repository\Loader($builder);
     }
 }

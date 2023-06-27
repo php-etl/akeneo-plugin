@@ -12,7 +12,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 #[Configurator\Pipeline(
     name: 'akeneo',
     dependencies: [
-        'akeneo/api-php-client-ee',
+        'akeneo/api-php-client',
         'laminas/laminas-diactoros',
         'php-http/guzzle7-adapter',
     ],
@@ -91,7 +91,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
                 $extractorBuilder = $extractor->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
-                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $extractorBuilder
                     ->withClient($client->getBuilder()->getNode())
@@ -110,7 +109,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
                 $loaderBuilder = $loader->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
-                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $loaderBuilder
                     ->withClient($client->getBuilder()->getNode())
@@ -129,7 +127,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
                 $lookupBuilder = $lookup->getBuilder();
 
                 $client = $clientFactory->compile($config['client']);
-                $client->getBuilder()->withEnterpriseSupport($config['enterprise']);
 
                 $lookupBuilder
                     ->withClient($client->getBuilder()->getNode())

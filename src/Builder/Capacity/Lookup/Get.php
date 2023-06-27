@@ -13,7 +13,7 @@ final class Get implements Builder
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $identifier = null;
     private null|Node\Expr $code = null;
-    private null|string $type = null;
+    private null|string $type = '';
 
     public function __construct()
     {
