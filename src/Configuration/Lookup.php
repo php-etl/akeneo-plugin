@@ -149,6 +149,14 @@ final class Lookup implements PluginConfigurationInterface
         /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
+                ->ifTrue(fn ($data) => \array_key_exists('conditional', $data) && \is_array($data['conditional']) && \count($data['conditional']) <= 0)
+                ->then(function ($data) {
+                    unset($data['conditional']);
+
+                    return $data;
+                })
+            ->end()
+            ->validate()
                 ->ifTrue(fn ($data) => !\array_key_exists('conditional', $data) && \is_array($data))
                 ->then(function (array $item) {
                     if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
@@ -169,14 +177,6 @@ final class Lookup implements PluginConfigurationInterface
             ->validate()
                 ->ifTrue(fn ($data) => !\array_key_exists('conditional', $data) && \array_key_exists('identifier', $data) && \array_key_exists('method', $data) && !\in_array($data['method'], ['get']))
                 ->thenInvalid('The identifier option should only be used with the "get" method.')
-            ->end()
-            ->validate()
-                ->ifTrue(fn ($data) => \array_key_exists('conditional', $data) && \is_array($data['conditional']) && \count($data['conditional']) <= 0)
-                ->then(function ($data) {
-                    unset($data['conditional']);
-
-                    return $data;
-                })
             ->end()
             ->children()
                 ->scalarNode('type')
@@ -223,10 +223,6 @@ final class Lookup implements PluginConfigurationInterface
         $builder->getRootNode()
             ->cannotBeEmpty()
             ->requiresAtLeastOneElement()
-            ->validate()
-                ->ifTrue(fn ($data) => (is_countable($data) ? \count($data) : 0) <= 0)
-                ->thenUnset()
-            ->end()
             ->arrayPrototype()
                 ->validate()
                     ->ifArray()

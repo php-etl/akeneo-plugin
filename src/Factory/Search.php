@@ -44,7 +44,7 @@ final readonly class Search implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
+        } catch (Configurator\ConfigurationExceptionInterface) {
             return false;
         }
     }

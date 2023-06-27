@@ -3,7 +3,6 @@
 namespace functional\Kiboko\Plugin\Akeneo\Builder;
 
 use Akeneo\Pim\ApiClient\AkeneoPimClientInterface;
-use Akeneo\PimEnterprise\ApiClient\AkeneoPimEnterpriseClientInterface;
 use functional\Kiboko\Plugin\Akeneo\Mock\ResponseFactory;
 use Http\Mock\Client;
 use Kiboko\Plugin\Akeneo\Builder;
@@ -56,27 +55,5 @@ final class ClientTest extends BuilderTestCase
         $client->withHttpClient($this->getClientNode());
 
         $this->assertNodeIsInstanceOf(AkeneoPimClientInterface::class, $client);
-        $this->assertNodeIsNotInstanceOf(AkeneoPimEnterpriseClientInterface::class, $client);
-    }
-
-    public function testWithTokenForEnterprise(): void
-    {
-        $client = new Builder\Client(
-            new Node\Scalar\String_('http://demo.akeneo.com'),
-            new Node\Scalar\String_(''),
-            new Node\Scalar\String_(''),
-        );
-
-        $client->withToken(
-            new Node\Scalar\String_(''),
-            new Node\Scalar\String_(''),
-        );
-
-        $client->withHttpClient($this->getClientNode());
-
-        $client->withEnterpriseSupport(true);
-
-        $this->assertNodeIsInstanceOf(AkeneoPimClientInterface::class, $client);
-        $this->assertNodeIsInstanceOf(AkeneoPimEnterpriseClientInterface::class, $client);
     }
 }

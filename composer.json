@@ -23,21 +23,14 @@
         "php-etl/satellite-toolbox": "*"
     },
     "require-dev": {
-        "phpunit/php-invoker": "*",
-        "johnkary/phpunit-speedtrap": "*",
-        "php-http/mock-client": "^1.4@dev",
         "symfony/yaml": "^6.0",
-        "laminas/laminas-diactoros": "^2.6",
-        "mybuilder/phpunit-accelerator": "*",
-        "php-etl/pipeline-contracts": "0.4.*",
+        "php-etl/phpunit-extension": "0.5.x-dev",
         "php-etl/bucket-contracts": "0.2.*",
-        "akeneo/api-php-client-ee": "^4.0",
+        "akeneo/api-php-client": "^9.0",
         "php-etl/bucket": "*",
         "guzzlehttp/psr7": "^2.0",
         "php-http/message": "^1.11",
         "php-http/curl-client": "^2.0",
-        "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^10.0",
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.0",
         "infection/infection": "^0.26.18",
@@ -55,7 +48,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.6.x-dev"
+            "dev-main": "0.7.x-dev"
         },
         "gyroscops": {
             "plugins": ["Kiboko\\Plugin\\Akeneo\\Service"]

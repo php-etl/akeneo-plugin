@@ -58,7 +58,7 @@ final readonly class Lookup implements Configurator\FactoryInterface
             $this->normalize($config);
 
             return true;
-        } catch (Configurator\InvalidConfigurationException|Symfony\InvalidTypeException|Symfony\InvalidConfigurationException) {
+        } catch (Configurator\ConfigurationExceptionInterface) {
             return false;
         }
     }
@@ -95,14 +95,12 @@ final readonly class Lookup implements Configurator\FactoryInterface
     {
         try {
             if (!\array_key_exists('conditional', $config)) {
-                $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
-                $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
-                $repository = new Repository\Lookup($builder);
-
                 try {
-                    $alternativeBuilder->withCapacity(
+                    $alternativeBuilder = new Akeneo\Builder\AlternativeLookup(
                         $this->findCapacity($config)->getBuilder($config)
                     );
+                    $builder = new Akeneo\Builder\Lookup($alternativeBuilder);
+                    $repository = new Repository\Lookup($builder);
                 } catch (NoApplicableCapacityException $exception) {
                     throw new Configurator\InvalidConfigurationException(message: 'Your Akeneo API configuration is using some unsupported capacity, check your "type" and "method" properties to a suitable set.', previous: $exception);
                 }
@@ -113,10 +111,8 @@ final readonly class Lookup implements Configurator\FactoryInterface
                 $repository = new Repository\Lookup($builder);
 
                 foreach ($config['conditional'] as $alternative) {
-                    $alternativeBuilder = new Akeneo\Builder\AlternativeLookup();
-
                     try {
-                        $alternativeBuilder->withCapacity(
+                        $alternativeBuilder = new Akeneo\Builder\AlternativeLookup(
                             $this->findCapacity($alternative)->getBuilder($alternative)
                         );
                     } catch (NoApplicableCapacityException $exception) {

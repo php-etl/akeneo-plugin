@@ -12,7 +12,7 @@ final class ListPerPageTest extends BuilderTestCase
 {
     public function testWithoutEndpoint()
     {
-        $capacity = new ListPerPage(new ExpressionLanguage());
+        $capacity = new ListPerPage();
 
         $this->expectException(MissingEndpointException::class);
         $this->expectExceptionMessage('Please check your capacity builder, you should have selected an endpoint.');
@@ -22,7 +22,7 @@ final class ListPerPageTest extends BuilderTestCase
 
     public function testWithEndpoint()
     {
-        $capacity = new ListPerPage(new ExpressionLanguage());
+        $capacity = new ListPerPage();
 
         $capacity->withEndpoint(new Node\Identifier('foo'));
 

@@ -15,8 +15,7 @@ Goal
 
 This package aims at integration the Akeneo PHP clients into the
 [Pipeline](https://github.com/php-etl/pipeline) stack. This integration is
-compatible with both [Akeneo Enterprise Edition client](https://github.com/akeneo/api-php-client-ee)
-and the [Akeneo Community Edition client](https://github.com/akeneo/api-php-client)
+compatible with the [Akeneo client](https://github.com/akeneo/api-php-client)
 
 Principles
 ---
@@ -32,7 +31,6 @@ Configuration format
 
 ```yaml
 akeneo:
-  enterprise: false
   extractor:
     type: productModel
     method: all
@@ -56,7 +54,6 @@ akeneo:
 
 ```yaml
 akeneo:
-  enterprise: true
   loader:
     type: productModel
     method: upsert

@@ -16,7 +16,7 @@ final class LookupTest extends TestCase
         $this->processor = new Config\Definition\Processor();
     }
 
-    public static function validDataProvider(): iterable
+    public static function validConfigs(): iterable
     {
         yield [
             'config' => [
@@ -26,7 +26,6 @@ final class LookupTest extends TestCase
                         'type' => 'attributeOption',
                         'code' => '@=input["code"]',
                         'method' => 'all',
-                        'search' => [],
                         'merge' => [
                             'map' => [
                                 0 => [
@@ -41,7 +40,6 @@ final class LookupTest extends TestCase
                         ],
                     ],
                 ],
-                'search' => [],
             ],
             'expected' => [
                 'conditional' => [
@@ -74,7 +72,6 @@ final class LookupTest extends TestCase
                 'type' => 'attributeOption',
                 'code' => '@=input["code"]',
                 'method' => 'all',
-                'search' => [],
                 'merge' => [
                     'map' => [
                         0 => [
@@ -107,33 +104,167 @@ final class LookupTest extends TestCase
                 ],
             ],
         ];
+
+        yield [
+            'config' => [
+                'type' => 'productMediaFile',
+                'file' => '123',
+                'method' => 'all',
+            ],
+            'expected' => [
+                'type' => 'productMediaFile',
+                'file' => '123',
+                'method' => 'all',
+                'search' => [],
+            ],
+        ];
+
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'listPerPage',
+            ],
+            'expected' => [
+                'type' => 'product',
+                'method' => 'listPerPage',
+                'search' => [],
+            ],
+        ];
+
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'all',
+                'merge' => [
+                    'map' => [
+                        [
+                            'field' => 'foo',
+                            'constant' => 'bar'
+                        ]
+                    ]
+                ],
+            ],
+            'expected' => [
+                'type' => 'product',
+                'method' => 'all',
+                'merge' => [
+                    'map' => [
+                        [
+                            'field' => 'foo',
+                            'constant' => 'bar'
+                        ]
+                    ]
+                ],
+                'search' => [],
+            ]
+        ];
+
+        yield [
+            'config' => [
+                'conditional' => [
+                    [
+                        'file' => '123',
+                        'type' => 'productMediaFile',
+                        'method' => 'download',
+                    ],
+                ],
+            ],
+            'expected' => [
+                'conditional' => [
+                    [
+                        'file' => '123',
+                        'type' => 'productMediaFile',
+                        'method' => 'download',
+                        'search' => [],
+                    ],
+                ],
+                'search' => [],
+            ]
+        ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('validDataProvider')]
-    public function testValidConfig(array $config, array $expected)
+    public static function wrongConfigs(): \Generator
+    {
+        yield [
+            'config' => [
+                'type' => 'product',
+                'method' => 'download'
+            ],
+            'excepted_message' => 'Invalid configuration for path "lookup": The value should be one of [listPerPage, all, get], got "download"',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
+        ];
+
+        yield [
+            'config' => [
+                'file' => '123',
+                'type' => 'product',
+                'method' => 'get',
+            ],
+            'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile" and "assetMediaFile" endpoints.',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
+        ];
+
+        yield [
+            'config' => [
+                'conditional' => [
+                    [
+                        'type' => 'product',
+                        'method' => 'wrong',
+                    ],
+                ],
+            ],
+            'excepted_message' => 'Invalid configuration for path "lookup.conditional.0": the value should be one of [listPerPage, all, get], got "wrong"',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
+        ];
+
+        yield [
+            'config' => [
+                'file' => '123',
+                'type' => 'product',
+                'method' => 'get',
+            ],
+            'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
+        ];
+
+        yield [
+            'config' => [
+                'conditional' => [
+                    [
+                        'identifier' => '123',
+                        'type' => 'product',
+                        'method' => 'all',
+                    ],
+                ],
+            ],
+            'excepted_message' => 'Invalid configuration for path "lookup.conditional.0": The identifier option should only be used with the "get" method.',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('validConfigs')]
+    public function testValidConfigs(array $config, array $expected)
     {
         $client = new Configuration\Lookup();
 
         $this->assertEquals($expected, $this->processor->processConfiguration($client, [$config]));
     }
 
-    public function testInvalidConfig()
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
+    public function testWrongConfigs(array $config, string $expectedMessage, string $exceptedClass)
     {
         $client = new Configuration\Lookup();
 
-        $this->expectException(
-            Config\Definition\Exception\InvalidConfigurationException::class,
+        $this->expectExceptionMessage(
+            $expectedMessage
         );
 
-        $this->expectExceptionMessage(
-            'Invalid configuration for path "lookup.type": The value should be one of [product, category, attribute, attributeOption, attributeGroup, family, productMediaFile, locale, channel, currency, measureFamily, associationType, familyVariant, productModel, publishedProduct, productModelDraft, productDraft, asset, assetCategory, assetTag, referenceEntityRecord, referenceEntityAttribute, referenceEntityAttributeOption, referenceEntity, assetManager, assetMediaFile], got "invalidType"',
+        $this->expectException(
+            $exceptedClass
         );
 
         $this->processor->processConfiguration($client, [
-            [
-                'type' => 'invalidType',
-                'method' => 'all'
-            ]
+            $config
         ]);
     }
 }
