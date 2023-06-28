@@ -7,7 +7,6 @@ namespace Kiboko\Plugin\Akeneo\Capacity\Loader;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class UpsertList implements Akeneo\Capacity\CapacityInterface
 {
@@ -62,8 +61,8 @@ final class UpsertList implements Akeneo\Capacity\CapacityInterface
             $builder->withReferenceEntity(referenceEntity: new Node\Scalar\String_($config['referenceEntity']));
         }
 
-        if (\array_key_exists('attribute', $config)) {
-            $builder->withAttributeCode(code: new Node\Scalar\String_($config['attribute']));
+        if (\array_key_exists('attributeCode', $config)) {
+            $builder->withAttributeCode(attributeCode: new Node\Scalar\String_($config['attributeCode']));
         }
 
         return $builder;
