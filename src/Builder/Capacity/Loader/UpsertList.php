@@ -14,10 +14,7 @@ final class UpsertList implements Builder
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $data = null;
     private null|Node\Expr $referenceEntity = null;
-
-    public function __construct()
-    {
-    }
+    private null|Node\Expr $attributeCode = null;
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
@@ -36,6 +33,13 @@ final class UpsertList implements Builder
     public function withReferenceEntity(Node\Expr $referenceEntity): self
     {
         $this->referenceEntity = $referenceEntity;
+
+        return $this;
+    }
+
+    public function withAttributeCode(Node\Expr $attributeCode): self
+    {
+        $this->attributeCode = $attributeCode;
 
         return $this;
     }
@@ -67,6 +71,7 @@ final class UpsertList implements Builder
                                 ),
                                 new Node\Identifier('upsertList'),
                                 array_filter([
+                                    $this->attributeCode ? new Node\Arg(value: $this->attributeCode) : null,
                                     $this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null,
                                     new Node\Arg(value: $this->data),
                                 ]),
