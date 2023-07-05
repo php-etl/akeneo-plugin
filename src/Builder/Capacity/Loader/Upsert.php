@@ -17,10 +17,6 @@ final class Upsert implements Builder
     private null|Node\Expr $referenceEntity = null;
     private null|Node\Expr $referenceEntityAttribute = null;
 
-    public function __construct()
-    {
-    }
-
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
