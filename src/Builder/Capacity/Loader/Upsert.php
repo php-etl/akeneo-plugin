@@ -136,6 +136,13 @@ final class Upsert implements Builder
                                                             key: new Node\Scalar\String_('exception'),
                                                         ),
                                                         new Node\Expr\ArrayItem(
+                                                            value: new Node\Expr\MethodCall(
+                                                                var: new Node\Expr\Variable('exception'),
+                                                                name: new Node\Identifier('getResponseErrors'),
+                                                            ),
+                                                            key: new Node\Scalar\String_('errors'),
+                                                        ),
+                                                        new Node\Expr\ArrayItem(
                                                             value: new Node\Expr\Variable('line'),
                                                             key: new Node\Scalar\String_('item'),
                                                         ),
