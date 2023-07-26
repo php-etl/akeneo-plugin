@@ -97,101 +97,112 @@ final class UpsertList implements Builder
                         new Node\Stmt\Catch_(
                             types: [
                                 new Node\Name\FullyQualified(
+                                    name: \Akeneo\Pim\ApiClient\Exception\UnprocessableEntityHttpException::class
+                                ),
+                            ],
+                            var: new Node\Expr\Variable('exception'),
+                            stmts: [
+                                new Node\Stmt\Expression(
+                                    expr: new Node\Expr\MethodCall(
+                                        var: new Node\Expr\PropertyFetch(
+                                            var: new Node\Expr\Variable('this'),
+                                            name: 'logger',
+                                        ),
+                                        name: new Node\Identifier('error'),
+                                        args: [
+                                            new Node\Arg(
+                                                value: new Node\Expr\MethodCall(
+                                                    var: new Node\Expr\Variable('exception'),
+                                                    name: new Node\Identifier('getMessage'),
+                                                ),
+                                            ),
+                                            new Node\Arg(
+                                                value: new Node\Expr\Array_(
+                                                    items: [
+                                                        new Node\Expr\ArrayItem(
+                                                            value: new Node\Expr\Variable('exception'),
+                                                            key: new Node\Scalar\String_('exception'),
+                                                        ),
+                                                        new Node\Expr\ArrayItem(
+                                                            value: new Node\Expr\MethodCall(
+                                                                var: new Node\Expr\Variable('exception'),
+                                                                name: new Node\Identifier('getResponseErrors'),
+                                                            ),
+                                                            key: new Node\Scalar\String_('errors'),
+                                                        ),
+                                                        new Node\Expr\ArrayItem(
+                                                            value: new Node\Expr\Variable('line'),
+                                                            key: new Node\Scalar\String_('items'),
+                                                        ),
+                                                    ],
+                                                    attributes: [
+                                                        'kind' => Node\Expr\Array_::KIND_SHORT,
+                                                    ],
+                                                ),
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                new Node\Stmt\Expression(
+                                    new Node\Expr\Assign(
+                                        var: new Node\Expr\Variable('line'),
+                                        expr: new Node\Expr\Yield_(
+                                            value: new Node\Expr\New_(
+                                                class: new Node\Name\FullyQualified(
+                                                    name: \Kiboko\Component\Bucket\RejectionResultBucket::class
+                                                ),
+                                                args: [
+                                                    new Node\Arg(
+                                                        value: new Node\Expr\Variable('line'),
+                                                    ),
+                                                ],
+                                            ),
+                                        ),
+                                    ),
+                                ),
+                            ]
+                        ),
+                        new Node\Stmt\Catch_(
+                            types: [
+                                new Node\Name\FullyQualified(
                                     name: \Akeneo\Pim\ApiClient\Exception\HttpException::class,
                                 ),
                             ],
                             var: new Node\Expr\Variable('exception'),
                             stmts: [
-                                new Node\Stmt\If_(
-                                    cond: new Node\Expr\Instanceof_(
-                                        expr: new Node\Expr\Variable('exception'),
-                                        class: new Node\Name(
-                                            name: \Akeneo\Pim\ApiClient\Exception\UnprocessableEntityHttpException::class
-                                        )
-                                    ),
-                                    subNodes: [
-                                        'stmts' => [
-                                            new Node\Stmt\Expression(
-                                                expr: new Node\Expr\MethodCall(
-                                                    var: new Node\Expr\PropertyFetch(
-                                                        var: new Node\Expr\Variable('this'),
-                                                        name: 'logger',
-                                                    ),
-                                                    name: new Node\Identifier('error'),
-                                                    args: [
-                                                        new Node\Arg(
-                                                            value: new Node\Expr\MethodCall(
-                                                                var: new Node\Expr\Variable('exception'),
-                                                                name: new Node\Identifier('getMessage'),
-                                                            ),
+                                new Node\Stmt\Expression(
+                                    expr: new Node\Expr\MethodCall(
+                                        var: new Node\Expr\PropertyFetch(
+                                            var: new Node\Expr\Variable('this'),
+                                            name: 'logger',
+                                        ),
+                                        name: new Node\Identifier('error'),
+                                        args: [
+                                            new Node\Arg(
+                                                value: new Node\Expr\MethodCall(
+                                                    var: new Node\Expr\Variable('exception'),
+                                                    name: new Node\Identifier('getMessage'),
+                                                ),
+                                            ),
+                                            new Node\Arg(
+                                                value: new Node\Expr\Array_(
+                                                    items: [
+                                                        new Node\Expr\ArrayItem(
+                                                            value: new Node\Expr\Variable('exception'),
+                                                            key: new Node\Scalar\String_('exception'),
                                                         ),
-                                                        new Node\Arg(
-                                                            value: new Node\Expr\Array_(
-                                                                items: [
-                                                                    new Node\Expr\ArrayItem(
-                                                                        value: new Node\Expr\Variable('exception'),
-                                                                        key: new Node\Scalar\String_('exception'),
-                                                                    ),
-                                                                    new Node\Expr\ArrayItem(
-                                                                        value: new Node\Expr\MethodCall(
-                                                                            var: new Node\Expr\Variable('exception'),
-                                                                            name: new Node\Identifier('getResponseErrors'),
-                                                                        ),
-                                                                        key: new Node\Scalar\String_('errors'),
-                                                                    ),
-                                                                    new Node\Expr\ArrayItem(
-                                                                        value: new Node\Expr\Variable('line'),
-                                                                        key: new Node\Scalar\String_('items'),
-                                                                    ),
-                                                                ],
-                                                                attributes: [
-                                                                    'kind' => Node\Expr\Array_::KIND_SHORT,
-                                                                ],
-                                                            ),
+                                                        new Node\Expr\ArrayItem(
+                                                            value: new Node\Expr\Variable('line'),
+                                                            key: new Node\Scalar\String_('items'),
                                                         ),
+                                                    ],
+                                                    attributes: [
+                                                        'kind' => Node\Expr\Array_::KIND_SHORT,
                                                     ],
                                                 ),
                                             ),
                                         ],
-                                        'else' => new Node\Stmt\Else_(
-                                            stmts: [
-                                                new Node\Stmt\Expression(
-                                                    expr: new Node\Expr\MethodCall(
-                                                        var: new Node\Expr\PropertyFetch(
-                                                            var: new Node\Expr\Variable('this'),
-                                                            name: 'logger',
-                                                        ),
-                                                        name: new Node\Identifier('error'),
-                                                        args: [
-                                                            new Node\Arg(
-                                                                value: new Node\Expr\MethodCall(
-                                                                    var: new Node\Expr\Variable('exception'),
-                                                                    name: new Node\Identifier('getMessage'),
-                                                                ),
-                                                            ),
-                                                            new Node\Arg(
-                                                                value: new Node\Expr\Array_(
-                                                                    items: [
-                                                                        new Node\Expr\ArrayItem(
-                                                                            value: new Node\Expr\Variable('exception'),
-                                                                            key: new Node\Scalar\String_('exception'),
-                                                                        ),
-                                                                        new Node\Expr\ArrayItem(
-                                                                            value: new Node\Expr\Variable('line'),
-                                                                            key: new Node\Scalar\String_('items'),
-                                                                        ),
-                                                                    ],
-                                                                    attributes: [
-                                                                        'kind' => Node\Expr\Array_::KIND_SHORT,
-                                                                    ],
-                                                                ),
-                                                            ),
-                                                        ],
-                                                    ),
-                                                ),
-                                            ],
-                                        ),
-                                    ],
+                                    ),
                                 ),
                                 new Node\Stmt\Expression(
                                     new Node\Expr\Assign(
