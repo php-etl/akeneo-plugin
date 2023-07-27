@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder;
 
-use Akeneo\Pim\ApiClient\Exception\UnprocessableEntityHttpException;
 use Kiboko\Contract\Configurator\StepBuilderInterface;
 use PhpParser\Builder;
 use PhpParser\Node;
