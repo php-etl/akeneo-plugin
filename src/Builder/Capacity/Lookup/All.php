@@ -13,6 +13,7 @@ final class All implements Builder
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $search = null;
     private null|Node\Expr $code = null;
+    private string $type = '';
 
     public function __construct()
     {
@@ -39,14 +40,22 @@ final class All implements Builder
         return $this;
     }
 
+    public function withType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function getNode(): Node
     {
         if (null === $this->endpoint) {
             throw new MissingEndpointException(message: 'Please check your capacity builder, you should have selected an endpoint.');
         }
 
-        return
-            new Node\Stmt\Foreach_(
+        return new Node\Stmt\Expression(
+            new Node\Expr\Assign(
+                var: new Node\Expr\Variable('lookup'),
                 expr: new Node\Expr\MethodCall(
                     var: new Node\Expr\MethodCall(
                         var: new Node\Expr\PropertyFetch(
@@ -69,29 +78,22 @@ final class All implements Builder
                             ),
                             null !== $this->code ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
+                                name: $this->compileCodeNamedArgument($this->type),
                             ) : null,
                         ],
                     ),
                 ),
-                valueVar: new Node\Expr\Variable('item'),
-                subNodes: [
-                    'stmts' => [
-                        new Node\Stmt\Expression(
-                            expr: new Node\Expr\Yield_(
-                                value: new Node\Expr\New_(
-                                    class: new Node\Name\FullyQualified(name: \Kiboko\Component\Bucket\AcceptanceResultBucket::class),
-                                    args: [
-                                        new Node\Arg(
-                                            new Node\Expr\Variable('item')
-                                        ),
-                                    ],
-                                ),
-                            ),
-                        ),
-                    ],
-                ]
-            );
+            ),
+        );
+    }
+
+    private function compileCodeNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
+            'assetManager' => new Node\Identifier('assetFamilyCode'),
+            default => new Node\Identifier('attributeCode')
+        };
     }
 
     private function compileSearch(): array

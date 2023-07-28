@@ -10,7 +10,6 @@ use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class All implements Akeneo\Capacity\CapacityInterface
@@ -79,11 +78,11 @@ final class All implements Akeneo\Capacity\CapacityInterface
             }
 
             $builder->addFilter(
-                field: compileValue($this->interpreter, $filter['field']),
-                operator: compileValue($this->interpreter, $filter['operator']),
-                value: \array_key_exists('value', $filter) ? compileValue($this->interpreter, $filter['value']) : null,
-                scope: \array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter['scope']) : null,
-                locale: \array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter['locale']) : null
+                field: compileValueWhenExpression($this->interpreter, $filter['field']),
+                operator: compileValueWhenExpression($this->interpreter, $filter['operator']),
+                value: \array_key_exists('value', $filter) ? compileValueWhenExpression($this->interpreter, $filter['value']) : null,
+                scope: \array_key_exists('scope', $filter) ? compileValueWhenExpression($this->interpreter, $filter['scope']) : null,
+                locale: \array_key_exists('locale', $filter) ? compileValueWhenExpression($this->interpreter, $filter['locale']) : null
             );
         }
 
@@ -93,6 +92,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\All())
+            ->withType((string) $config['type'])
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
         ;
 
@@ -100,7 +100,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (\in_array($config['type'], ['attributeOption', 'assetManager']) && \array_key_exists('code', $config)) {
+        if (\in_array($config['type'], ['attributeOption', 'assetManager', 'referenceEntityRecord']) && \array_key_exists('code', $config)) {
             $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 
