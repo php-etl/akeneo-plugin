@@ -9,7 +9,6 @@ use Symfony\Component\Config;
 
 use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
 use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\mutuallyDependentFields;
 
 final class Extractor implements PluginConfigurationInterface
 {
@@ -149,9 +148,6 @@ final class Extractor implements PluginConfigurationInterface
         /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-                ->always(mutuallyDependentFields('asset_family_code', 'asset_code'))
-            ->end()
-            ->validate()
                 ->ifTrue(fn ($data) => (\array_key_exists('asset_family_code', $data) || \array_key_exists('asset_code', $data))
                         && \array_key_exists('type', $data)
                         && !\in_array($data['type'], ['assetManager'], true))
@@ -159,21 +155,45 @@ final class Extractor implements PluginConfigurationInterface
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => (!\array_key_exists('asset_family_code', $data) || !\array_key_exists('asset_code', $data))
+                    && $data['method'] === 'get'
+                    && \array_key_exists('type', $data)
+                    && \in_array($data['type'], ['assetManager'], true))
+                ->thenInvalid('The asset_family_code and the asset_code options should be used with the "assetManager" endpoint.')
+            ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => !\array_key_exists('asset_family_code', $data)
+                    && $data['method'] === 'all'
                     && \array_key_exists('type', $data)
                     && \in_array($data['type'], ['assetManager'], true))
                 ->thenInvalid('The asset_family_code option should be used with the "assetManager" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => (\array_key_exists('attribute_code', $data) || \array_key_exists('code', $data))
+                        && $data['method'] === 'get'
                         && \array_key_exists('type', $data)
                         && !\in_array($data['type'], ['attributeOption'], true))
                 ->thenInvalid('The attribute_code and code options should only be used with the "attributeOption" endpoint.')
             ->end()
             ->validate()
+                ->ifTrue(fn ($data) => \array_key_exists('attribute_code', $data)
+                        && $data['method'] === 'all'
+                        && \array_key_exists('type', $data)
+                        && !\in_array($data['type'], ['attributeOption'], true))
+                ->thenInvalid('The attribute_code option should only be used with the "attributeOption" endpoint.')
+            ->end()
+            ->validate()
                 ->ifTrue(fn ($data) => (!\array_key_exists('attribute_code', $data) || !\array_key_exists('code', $data))
+                    && $data['method'] === 'get'
                     && \array_key_exists('type', $data)
                     && \in_array($data['type'], ['attributeOption'], true))
                 ->thenInvalid('The attribute_code and code options should be used with the "attributeOption" endpoint.')
+            ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => !\array_key_exists('attribute_code', $data)
+                    && $data['method'] === 'all'
+                    && \array_key_exists('type', $data)
+                    && \in_array($data['type'], ['attributeOption'], true))
+                ->thenInvalid('The attribute_code option should be used with the "attributeOption" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => \array_key_exists('file', $data)

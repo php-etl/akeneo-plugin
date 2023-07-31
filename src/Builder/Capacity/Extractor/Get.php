@@ -31,6 +31,27 @@ final class Get implements Builder
         return $this;
     }
 
+    public function withAssetManager(?Node\Expr $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function withAttributeOption(?Node\Expr $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    public function withAssetMediaFile(?Node\Expr $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
     public function getNode(): Node
     {
         if (null === $this->endpoint) {

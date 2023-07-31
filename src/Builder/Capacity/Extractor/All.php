@@ -12,7 +12,9 @@ final class All implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $search = null;
-    private null|Node\Expr $code = null;
+    private null|Node\Expr $attributeCode = null;
+    private null|Node\Expr $assetFamilyCode = null;
+    private null|Node\Expr $file = null;
     private null|string $type = null;
 
     public function __construct()
@@ -33,9 +35,24 @@ final class All implements Builder
         return $this;
     }
 
-    public function withCode(?Node\Expr $code): self
+    public function withAttributeOption(?Node\Expr $attributeCode): self
     {
-        $this->code = $code;
+        $this->attributeCode = $attributeCode;
+
+        return $this;
+    }
+
+    public function withAssetManager(?Node\Expr $assetFamilyCode): self
+    {
+        $this->assetFamilyCode = $assetFamilyCode;
+
+        return $this;
+    }
+
+
+    public function withFile(Node\Expr $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
@@ -75,8 +92,16 @@ final class All implements Builder
                                  ),
                                  name: new Node\Identifier('queryParameters'),
                              ),
-                             null !== $this->code ? new Node\Arg(
-                                 value: $this->code,
+                             null !== $this->attributeCode ? new Node\Arg(
+                                 value: $this->attributeCode,
+                                 name: $this->compileCodeNamedArgument($this->type),
+                             ) : null,
+                             null !== $this->assetFamilyCode ? new Node\Arg(
+                                 value: $this->assetFamilyCode,
+                                 name: $this->compileCodeNamedArgument($this->type),
+                             ) : null,
+                             null !== $this->file ? new Node\Arg(
+                                 value: $this->file,
                                  name: $this->compileCodeNamedArgument($this->type),
                              ) : null,
                          ],
