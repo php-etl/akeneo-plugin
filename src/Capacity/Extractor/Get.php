@@ -7,9 +7,6 @@ namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Get implements Akeneo\Capacity\CapacityInterface
 {
@@ -43,8 +40,9 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         'assetManager',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter)
-    {
+    public function __construct(
+        private readonly Akeneo\Handler\EndpointHandlerFactoryInterface $factory,
+    ) {
     }
 
     public function applies(array $config): bool
@@ -57,12 +55,10 @@ final class Get implements Akeneo\Capacity\CapacityInterface
 
     public function getBuilder(array $config): Builder
     {
-        $builder = (new Akeneo\Builder\Capacity\Extractor\Get())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+        return (new Akeneo\Builder\Capacity\Extractor\Get($this->factory->create($config['type'], $config)))
+            ->withEndpoint(
+                new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))),
+            )
         ;
-
-        $builder->withIdentifier(compileValueWhenExpression($this->interpreter, $config['identifier']));
-
-        return $builder;
     }
 }

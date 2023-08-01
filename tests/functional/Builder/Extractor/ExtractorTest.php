@@ -7,6 +7,9 @@ use functional\Kiboko\Plugin\Akeneo\Mock;
 use Kiboko\Component\PHPUnitExtension\Assert\ExtractorBuilderAssertTrait;
 use Kiboko\Plugin\Akeneo\Builder\Extractor;
 use Kiboko\Plugin\Akeneo\Capacity;
+use Kiboko\Plugin\Akeneo\DTO\GetDefaultEndpoint;
+use Kiboko\Plugin\Akeneo\Handler\GetDefaultEndpointHandler;
+use Kiboko\Plugin\Akeneo\Handler\GetEndpointHandlerFactory;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ExtractorTest extends BuilderTestCase
@@ -173,7 +176,7 @@ final class ExtractorTest extends BuilderTestCase
             ->withAuthenticatedByPassword()
         ;
 
-        $capacity = (new Capacity\Extractor\Get(new ExpressionLanguage()))->getBuilder([
+        $capacity = (new Capacity\Extractor\Get(new GetEndpointHandlerFactory(new ExpressionLanguage())))->getBuilder([
             'type' => 'product',
             'identifier' => '123qwerty'
         ]);

@@ -72,12 +72,14 @@ final class ExtractorTest extends TestCase
             'config' => [
                 'method' => 'get',
                 'type' => 'attributeOption',
+                'attribute_code' => 'color',
                 'code' => '123',
                 'search' => [],
             ],
             'expected' => [
                 'method' => 'get',
                 'type' => 'attributeOption',
+                'attribute_code' => 'color',
                 'code' => '123',
                 'search' => [],
             ],
