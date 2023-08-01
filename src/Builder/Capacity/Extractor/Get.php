@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Builder\Capacity\Extractor;
 
+use Kiboko\Plugin\Akeneo\Handler\EndpointArgumentHandlerInterface;
 use Kiboko\Plugin\Akeneo\MissingEndpointException;
 use PhpParser\Builder;
 use PhpParser\Node;
@@ -11,43 +12,15 @@ use PhpParser\Node;
 final class Get implements Builder
 {
     private null|Node\Expr|Node\Identifier $endpoint = null;
-    private null|Node\Expr $identifier = null;
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly EndpointArgumentHandlerInterface $handler,
+    ) {
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
-
-        return $this;
-    }
-
-    public function withIdentifier(?Node\Expr $identifier): self
-    {
-        $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function withAssetManager(?Node\Expr $identifier): self
-    {
-        $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function withAttributeOption(?Node\Expr $identifier): self
-    {
-        $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function withAssetMediaFile(?Node\Expr $identifier): self
-    {
-        $this->identifier = $identifier;
 
         return $this;
     }
@@ -73,16 +46,8 @@ final class Get implements Builder
                                     name: $this->endpoint
                                 ),
                                 name: new Node\Identifier('get'),
-                                args: array_filter(
-                                    [
-                                        new Node\Arg(
-                                            value: $this->identifier,
-                                            name: new Node\Identifier('code'),
-                                        ),
-                                    ],
-                                ),
+                                args: $this->handler->compileEndpointArguments(),
                             ),
-                            unpack: true,
                         ),
                     ],
                 ),

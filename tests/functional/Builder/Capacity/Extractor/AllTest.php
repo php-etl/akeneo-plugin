@@ -16,7 +16,7 @@ final class AllTest extends BuilderTestCase
         $this->expectException(MissingEndpointException::class);
         $this->expectExceptionMessage('Please check your capacity builder, you should have selected an endpoint.');
 
-        $capacity->withCode(new Node\Scalar\String_('foo'));
+        $capacity->withAttributeOption(new Node\Scalar\String_('foo'));
 
         $capacity->getNode();
     }
