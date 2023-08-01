@@ -49,7 +49,6 @@ final class All implements Builder
         return $this;
     }
 
-
     public function withFile(Node\Expr $file): self
     {
         $this->file = $file;

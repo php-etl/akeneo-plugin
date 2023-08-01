@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Kiboko\Plugin\Akeneo\Handler;
 
 use Kiboko\Plugin\Akeneo\DTO\GetAssetManager;
 use Kiboko\Plugin\Akeneo\DTO\GetAttributeOption;
 use Kiboko\Plugin\Akeneo\DTO\GetDefaultEndpoint;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final readonly class GetEndpointHandlerFactory implements EndpointHandlerFactoryInterface

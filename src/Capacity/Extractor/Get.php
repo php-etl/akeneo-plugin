@@ -8,8 +8,6 @@ use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
-
 final class Get implements Akeneo\Capacity\CapacityInterface
 {
     private static array $endpoints = [
@@ -60,6 +58,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         return (new Akeneo\Builder\Capacity\Extractor\Get($this->factory->create($config['type'], $config)))
             ->withEndpoint(
                 new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))),
-            );
+            )
+        ;
     }
 }

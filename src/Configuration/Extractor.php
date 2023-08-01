@@ -155,42 +155,42 @@ final class Extractor implements PluginConfigurationInterface
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => (!\array_key_exists('asset_family_code', $data) || !\array_key_exists('asset_code', $data))
-                    && $data['method'] === 'get'
+                    && 'get' === $data['method']
                     && \array_key_exists('type', $data)
                     && \in_array($data['type'], ['assetManager'], true))
                 ->thenInvalid('The asset_family_code and the asset_code options should be used with the "assetManager" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => !\array_key_exists('asset_family_code', $data)
-                    && $data['method'] === 'all'
+                    && 'all' === $data['method']
                     && \array_key_exists('type', $data)
                     && \in_array($data['type'], ['assetManager'], true))
                 ->thenInvalid('The asset_family_code option should be used with the "assetManager" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => (\array_key_exists('attribute_code', $data) || \array_key_exists('code', $data))
-                        && $data['method'] === 'get'
+                        && 'get' === $data['method']
                         && \array_key_exists('type', $data)
                         && !\in_array($data['type'], ['attributeOption'], true))
                 ->thenInvalid('The attribute_code and code options should only be used with the "attributeOption" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => \array_key_exists('attribute_code', $data)
-                        && $data['method'] === 'all'
+                        && 'all' === $data['method']
                         && \array_key_exists('type', $data)
                         && !\in_array($data['type'], ['attributeOption'], true))
                 ->thenInvalid('The attribute_code option should only be used with the "attributeOption" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => (!\array_key_exists('attribute_code', $data) || !\array_key_exists('code', $data))
-                    && $data['method'] === 'get'
+                    && 'get' === $data['method']
                     && \array_key_exists('type', $data)
                     && \in_array($data['type'], ['attributeOption'], true))
                 ->thenInvalid('The attribute_code and code options should be used with the "attributeOption" endpoint.')
             ->end()
             ->validate()
                 ->ifTrue(fn ($data) => !\array_key_exists('attribute_code', $data)
-                    && $data['method'] === 'all'
+                    && 'all' === $data['method']
                     && \array_key_exists('type', $data)
                     && \in_array($data['type'], ['attributeOption'], true))
                 ->thenInvalid('The attribute_code option should be used with the "attributeOption" endpoint.')
