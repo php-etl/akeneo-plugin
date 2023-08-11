@@ -13,6 +13,7 @@ final class ListPerPage implements Builder
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $search = null;
     private null|Node\Expr $code = null;
+    private null|string $type = null;
 
     public function __construct()
     {
@@ -32,9 +33,16 @@ final class ListPerPage implements Builder
         return $this;
     }
 
-    public function withCode(Node\Expr $code): self
+    public function withCode(?Node\Expr $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function withType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -69,7 +77,7 @@ final class ListPerPage implements Builder
                             ),
                             null !== $this->code ? new Node\Arg(
                                 value: $this->code,
-                                name: new Node\Identifier('attributeCode'),
+                                name: $this->compileCodeNamedArgument($this->type),
                             ) : null,
                         ],
                     ),
@@ -90,7 +98,7 @@ final class ListPerPage implements Builder
                             ),
                         ),
                     ],
-                ]
+                ],
             );
     }
 
@@ -106,5 +114,13 @@ final class ListPerPage implements Builder
                 new Node\Scalar\String_('search'),
             ),
         ];
+    }
+
+    private function compileCodeNamedArgument(string $type): Node\Identifier
+    {
+        return match ($type) {
+            'assetManager' => new Node\Identifier('assetFamilyCode'),
+            default => new Node\Identifier('attributeCode')
+        };
     }
 }

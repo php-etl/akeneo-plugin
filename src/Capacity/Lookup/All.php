@@ -42,6 +42,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttributeOption',
         'referenceEntity',
         'assetManager',
+        'assetMediaFile',
     ];
 
     private static array $unaryOperators = [
@@ -92,15 +93,17 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\All())
-            ->withType((string) $config['type'])
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withType($config['type'])
         ;
 
         if (isset($config['search']) && \is_array($config['search'])) {
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (\in_array($config['type'], ['attributeOption', 'assetManager', 'referenceEntityRecord']) && \array_key_exists('code', $config)) {
+        if (\in_array($config['type'], ['attributeOption', 'assetManager', 'assetAttribute', 'assetAttributeOption', 'familyVariant', 'referenceEntityAttribute', 'referenceEntityAttributeOption', 'referenceEntityRecord'])
+            && \array_key_exists('code', $config)
+        ) {
             $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 

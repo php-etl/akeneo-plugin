@@ -10,7 +10,7 @@ use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class ListPerPage implements Akeneo\Capacity\CapacityInterface
 {
@@ -41,6 +41,8 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
         'referenceEntityAttribute',
         'referenceEntityAttributeOption',
         'referenceEntity',
+        'assetManager',
+        'assetMediaFile',
     ];
 
     private static array $unaryOperators = [
@@ -77,11 +79,11 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
             }
 
             $builder->addFilter(
-                field: compileValue($this->interpreter, $filter['field']),
-                operator: compileValue($this->interpreter, $filter['operator']),
-                value: \array_key_exists('value', $filter) ? compileValue($this->interpreter, $filter['value']) : null,
-                scope: \array_key_exists('scope', $filter) ? compileValue($this->interpreter, $filter['scope']) : null,
-                locale: \array_key_exists('locale', $filter) ? compileValue($this->interpreter, $filter['locale']) : null
+                field: compileValueWhenExpression($this->interpreter, $filter['field']),
+                operator: compileValueWhenExpression($this->interpreter, $filter['operator']),
+                value: \array_key_exists('value', $filter) ? compileValueWhenExpression($this->interpreter, $filter['value']) : null,
+                scope: \array_key_exists('scope', $filter) ? compileValueWhenExpression($this->interpreter, $filter['scope']) : null,
+                locale: \array_key_exists('locale', $filter) ? compileValueWhenExpression($this->interpreter, $filter['locale']) : null
             );
         }
 
@@ -92,16 +94,17 @@ final class ListPerPage implements Akeneo\Capacity\CapacityInterface
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\ListPerPage())
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withType($config['type'])
         ;
 
         if (isset($config['search']) && \is_array($config['search'])) {
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (\in_array($config['type'], ['attributeOption'])
+        if (\in_array($config['type'], ['attributeOption', 'assetManager', 'assetAttribute', 'assetAttributeOption', 'familyVariant', 'referenceEntityAttribute', 'referenceEntityAttributeOption', 'referenceEntityRecord'])
             && \array_key_exists('code', $config)
         ) {
-            $builder->withCode(compileValue($this->interpreter, $config['code']));
+            $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 
         return $builder;

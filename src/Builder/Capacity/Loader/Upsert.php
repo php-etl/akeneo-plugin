@@ -109,7 +109,7 @@ final class Upsert implements Builder
                         new Node\Stmt\Catch_(
                             types: [
                                 new Node\Name\FullyQualified(
-                                    name: \Akeneo\Pim\ApiClient\Exception\UnprocessableEntityHttpException::class
+                                    name: \Akeneo\Pim\ApiClient\Exception\HttpException::class,
                                 ),
                             ],
                             var: new Node\Expr\Variable('exception'),

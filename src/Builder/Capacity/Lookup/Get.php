@@ -144,7 +144,7 @@ final class Get implements Builder
         );
     }
 
-    private function compileCodeNamedArgument(string $type): Node\Identifier
+    private function compileCodeNamedArgument(?string $type): Node\Identifier
     {
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
@@ -153,7 +153,7 @@ final class Get implements Builder
         };
     }
 
-    private function compileIdentifierNamedArgument(string $type): Node\Identifier
+    private function compileIdentifierNamedArgument(?string $type): Node\Identifier
     {
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('recordCode'),
