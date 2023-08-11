@@ -12,7 +12,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 #[Configurator\Pipeline(
     name: 'akeneo',
     dependencies: [
-        'akeneo/api-php-client-ee',
+        'akeneo/api-php-client',
         'laminas/laminas-diactoros',
         'php-http/guzzle7-adapter',
     ],
