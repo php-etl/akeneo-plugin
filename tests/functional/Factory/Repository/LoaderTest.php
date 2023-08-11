@@ -14,8 +14,7 @@ final class LoaderTest extends TestCase
 {
     public function fileMock(string $filename): FileInterface
     {
-        $file = $this->getMockBuilder(FileInterface::class)
-            ->getMock();
+        $file = $this->createMock(FileInterface::class);
 
         $file->method('getPath')
             ->willReturn($filename);
@@ -28,13 +27,13 @@ final class LoaderTest extends TestCase
 
     public function testMergeWithPackages(): void
     {
-        $capacity = $this->getMockBuilder(Capacity::class)->getMock();
+        $capacity = $this->createMock(Capacity::class);
 
         $capacity->method('getNode')->willReturn(new Node\Stmt\Nop());
 
         $builder = new Builder\Loader($capacity);
 
-        $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
+        $child = $this->createMock(RepositoryInterface::class);
 
         $child->method('getFiles')->willReturn([]);
         $child->method('getPackages')->willReturn(['baz/baz']);
@@ -50,13 +49,13 @@ final class LoaderTest extends TestCase
 
     public function testMergeWithFiles(): void
     {
-        $capacity = $this->getMockBuilder(Capacity::class)->getMock();
+        $capacity = $this->createMock(Capacity::class);
 
         $capacity->method('getNode')->willReturn(new Node\Stmt\Nop());
 
         $builder = new Builder\Loader($capacity);
 
-        $child = $this->getMockBuilder(RepositoryInterface::class)->getMock();
+        $child = $this->createMock(RepositoryInterface::class);
 
         $child->method('getFiles')->willReturn([
             $this->fileMock('baz.php')

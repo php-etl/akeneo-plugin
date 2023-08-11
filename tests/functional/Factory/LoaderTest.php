@@ -21,7 +21,7 @@ final class LoaderTest extends TestCase
         ]));
     }
 
-    public function wrongConfigs(): \Generator
+    public static function wrongConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -51,7 +51,7 @@ final class LoaderTest extends TestCase
         ];
     }
 
-    /** @dataProvider wrongConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
     public function testMissingCapacity(array $config): void
     {
         $this->expectException(InvalidConfigurationException::class);

@@ -10,17 +10,13 @@ use PhpParser\Node;
 
 final class ListPerPage implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr $search;
-    private null|Node\Expr $code;
-    private null|string $type;
+    private null|Node\Expr|Node\Identifier $endpoint = null;
+    private null|Node\Expr $search = null;
+    private null|Node\Expr $code = null;
+    private null|string $type = null;
 
     public function __construct()
     {
-        $this->endpoint = null;
-        $this->search = null;
-        $this->code = null;
-        $this->type = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self

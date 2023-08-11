@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Kiboko\Plugin\FastMap;
 use Symfony\Component\Config;
+
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Lookup implements PluginConfigurationInterface
 {
@@ -143,14 +144,12 @@ final class Lookup implements PluginConfigurationInterface
 
     public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
-        $filters = new Search();
-
         $builder = new Config\Definition\Builder\TreeBuilder('lookup');
 
         /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-                ->ifTrue(fn ($data) => \count($data['conditional']) <= 0)
+                ->ifTrue(fn ($data) => \array_key_exists('conditional', $data) && \is_array($data['conditional']) && \count($data['conditional']) <= 0)
                 ->then(function ($data) {
                     unset($data['conditional']);
 
@@ -161,7 +160,7 @@ final class Lookup implements PluginConfigurationInterface
                 ->ifTrue(fn ($data) => !\array_key_exists('conditional', $data) && \is_array($data))
                 ->then(function (array $item) {
                     if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                        throw new \InvalidArgumentException(sprintf('The value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
                     }
 
                     return $item;
@@ -208,7 +207,7 @@ final class Lookup implements PluginConfigurationInterface
                 ->end()
                 ->scalarNode('method')->end()
                 ->append((new FastMap\Configuration('merge'))->getConfigTreeBuilder()->getRootNode())
-                ->append($filters->getConfigTreeBuilder())
+                ->append((new Search())->getConfigTreeBuilder()->getRootNode())
                 ->append($this->getConditionalTreeBuilder()->getRootNode())
             ->end()
         ;
@@ -220,8 +219,6 @@ final class Lookup implements PluginConfigurationInterface
     {
         $builder = new Config\Definition\Builder\TreeBuilder('conditional');
 
-        $filters = new Search();
-
         /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->cannotBeEmpty()
@@ -231,7 +228,7 @@ final class Lookup implements PluginConfigurationInterface
                     ->ifArray()
                     ->then(function (array $item) {
                         if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                            throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                            throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
                         }
 
                         return $item;
@@ -289,7 +286,7 @@ final class Lookup implements PluginConfigurationInterface
                     ->end()
                     ->scalarNode('method')->isRequired()->end()
                     ->append((new FastMap\Configuration('merge'))->getConfigTreeBuilder()->getRootNode())
-                    ->append($filters->getConfigTreeBuilder())
+                    ->append((new Search())->getConfigTreeBuilder()->getRootNode())
                 ->end()
             ->end()
         ;

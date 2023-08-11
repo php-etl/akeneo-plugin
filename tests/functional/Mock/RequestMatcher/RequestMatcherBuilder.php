@@ -7,8 +7,8 @@ use PhpParser\Node;
 final class RequestMatcherBuilder implements RequestMatcherBuilderInterface
 {
     public function __construct(
-        private ?string $path = null,
-        private ?string $host = null,
+        private readonly ?string $path = null,
+        private readonly ?string $host = null,
         private $methods = [],
         private $schemes = []
     ) {}

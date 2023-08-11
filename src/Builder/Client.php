@@ -10,28 +10,17 @@ use PhpParser\Node;
 
 final class Client implements Builder
 {
-    private ?Node\Expr $username;
-    private ?Node\Expr $password;
-    private ?Node\Expr $token;
-    private ?Node\Expr $refreshToken;
-    private ?Node\Expr $httpClient;
-    private ?Node\Expr $httpRequestFactory;
-    private ?Node\Expr $httpStreamFactory;
-    private ?Node\Expr $fileSystem;
+    private ?Node\Expr $username = null;
+    private ?Node\Expr $password = null;
+    private ?Node\Expr $token = null;
+    private ?Node\Expr $refreshToken = null;
+    private ?Node\Expr $httpClient = null;
+    private ?Node\Expr $httpRequestFactory = null;
+    private ?Node\Expr $httpStreamFactory = null;
+    private ?Node\Expr $fileSystem = null;
 
-    public function __construct(
-        private Node\Expr $baseUrl,
-        private Node\Expr $clientId,
-        private Node\Expr $secret
-    ) {
-        $this->username = null;
-        $this->password = null;
-        $this->token = null;
-        $this->refreshToken = null;
-        $this->httpClient = null;
-        $this->httpRequestFactory = null;
-        $this->httpStreamFactory = null;
-        $this->fileSystem = null;
+    public function __construct(private readonly Node\Expr $baseUrl, private readonly Node\Expr $clientId, private readonly Node\Expr $secret)
+    {
     }
 
     public function withToken(Node\Expr $token, Node\Expr $refreshToken): self

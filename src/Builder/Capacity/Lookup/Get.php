@@ -10,17 +10,13 @@ use PhpParser\Node;
 
 final class Get implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint;
-    private null|Node\Expr $identifier;
-    private null|Node\Expr $code;
-    private null|string $type;
+    private null|Node\Expr|Node\Identifier $endpoint = null;
+    private null|Node\Expr $identifier = null;
+    private null|Node\Expr $code = null;
+    private null|string $type = '';
 
     public function __construct()
     {
-        $this->endpoint = null;
-        $this->identifier = null;
-        $this->code = null;
-        $this->type = null;
     }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
@@ -91,7 +87,7 @@ final class Get implements Builder
                 new Node\Stmt\Catch_(
                     types: [
                         new Node\Name\FullyQualified(
-                            name: 'Akeneo\Pim\ApiClient\Exception\NotFoundHttpException',
+                            name: \Akeneo\Pim\ApiClient\Exception\NotFoundHttpException::class,
                         ),
                     ],
                     var: new Node\Expr\Variable('exception'),

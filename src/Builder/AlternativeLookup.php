@@ -10,12 +10,11 @@ use PhpParser\Node;
 
 final class AlternativeLookup implements Builder
 {
-    private ?Builder $merge;
+    private ?Builder $merge = null;
 
     public function __construct(
-        private Builder $capacity,
+        private readonly Builder $capacity,
     ) {
-        $this->merge = null;
     }
 
     public function withMerge(Builder $merge): self

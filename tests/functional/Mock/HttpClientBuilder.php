@@ -13,7 +13,7 @@ final class HttpClientBuilder implements Builder
     private array $nodes;
 
     public function __construct(
-        private Mock\ResponseFactoryBuilder $responseFactory
+        private readonly Mock\ResponseFactoryBuilder $responseFactory
     ) {
     }
 

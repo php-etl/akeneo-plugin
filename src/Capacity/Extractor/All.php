@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Capacity\Extractor;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 use Kiboko\Contract\Configurator\InvalidConfigurationException;
 use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
+use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
+
 final class All implements Akeneo\Capacity\CapacityInterface
 {
-    private static $endpoints = [
+    private static array $endpoints = [
         // Core Endpoints
         'product',
         'category',
@@ -44,7 +46,17 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'assetMediaFile',
     ];
 
-    public function __construct(private ExpressionLanguage $interpreter)
+    private static array $unaryOperators = [
+        'EMPTY',
+        'NOT EMPTY',
+        'AT LEAST COMPLETE',
+        'AT LEAST INCOMPLETE',
+        'ALL COMPLETE',
+        'ALL INCOMPLETE',
+        'UNCLASSIFIED',
+    ];
+
+    public function __construct(private readonly ExpressionLanguage $interpreter)
     {
     }
 
@@ -60,10 +72,10 @@ final class All implements Akeneo\Capacity\CapacityInterface
     {
         $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
-            if ('EMPTY' === $filter['operator'] && \array_key_exists('value', $filter)) {
-                throw new InvalidConfigurationException('You should not provide a value for the EMPTY operator');
+            if (\in_array($filter['operator'], self::$unaryOperators, true) && \array_key_exists('value', $filter)) {
+                throw new InvalidConfigurationException(sprintf('You should not provide a value for the %s operator', $filter['operator']));
             }
-            if ('EMPTY' !== $filter['operator'] && !\array_key_exists('value', $filter)) {
+            if (!\in_array($filter['operator'], self::$unaryOperators, true) && !\array_key_exists('value', $filter)) {
                 throw new InvalidConfigurationException(sprintf('You should provide a value for the %s operator', $filter['operator']));
             }
 
@@ -82,7 +94,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\All())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst($config['type']))))
+            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
             ->withType($config['type'])
         ;
 

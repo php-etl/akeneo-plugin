@@ -8,10 +8,10 @@ use PhpParser\Node;
 final class ExceptionBuilder implements Builder
 {
     /** @var Node\Expr[] */
-    private array $arguments;
+    private readonly array $arguments;
 
     public function __construct(
-        private string $class,
+        private readonly string $class,
         Node\Expr ...$arguments,
     ) {
         $this->arguments = $arguments;

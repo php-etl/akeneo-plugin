@@ -10,14 +10,12 @@ use PhpParser\Node;
 
 final class Loader implements StepBuilderInterface
 {
-    private ?Node\Expr $logger;
-    private ?Node\Expr $client;
+    private ?Node\Expr $logger = null;
+    private ?Node\Expr $client = null;
 
     public function __construct(
-        private Builder $capacity,
+        private readonly Builder $capacity,
     ) {
-        $this->logger = null;
-        $this->client = null;
     }
 
     public function withClient(Node\Expr $client): self

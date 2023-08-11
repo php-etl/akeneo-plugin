@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config;
+
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Extractor implements PluginConfigurationInterface
 {
@@ -142,8 +143,6 @@ final class Extractor implements PluginConfigurationInterface
 
     public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
-        $filters = new Search();
-
         $builder = new Config\Definition\Builder\TreeBuilder('extractor');
 
         /* @phpstan-ignore-next-line */
@@ -152,7 +151,7 @@ final class Extractor implements PluginConfigurationInterface
                 ->ifArray()
                 ->then(function (array $item) {
                     if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
                     }
 
                     return $item;
@@ -203,7 +202,7 @@ final class Extractor implements PluginConfigurationInterface
                         ->then(asExpression())
                     ->end()
                 ->end()
-                ->append($filters->getConfigTreeBuilder())
+                ->append((new Search())->getConfigTreeBuilder()->getRootNode())
             ->end()
         ;
 

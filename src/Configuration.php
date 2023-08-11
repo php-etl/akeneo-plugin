@@ -6,11 +6,10 @@ namespace Kiboko\Plugin\Akeneo;
 
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use function Kiboko\Component\SatelliteToolbox\Configuration\mutuallyExclusiveFields;
 
 final class Configuration implements PluginConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $client = new Configuration\Client();
         $extractor = new Configuration\Extractor();
@@ -22,12 +21,17 @@ final class Configuration implements PluginConfigurationInterface
         /* @phpstan-ignore-next-line */
         $builder->getRootNode()
             ->validate()
-            ->ifTrue(fn (array $value) => \array_key_exists('extractor', $value) && \array_key_exists('loader', $value))
-            ->thenInvalid('Your configuration should either contain the "extractor" or the "loader" key, not both.')
-            ->end()
-            ->children()
-                ->arrayNode('expression_language')
-                    ->scalarPrototype()->end()
+                ->ifTrue(fn (array $value) => \array_key_exists('extractor', $value) && \array_key_exists('loader', $value))
+                    ->thenInvalid('Your configuration should either contain the "extractor" or the "loader" key, not both.')
+                ->end()
+                ->children()
+                    ->booleanNode('enterprise')
+                        ->setDeprecated('php-etl/akeneo-plugin', '0.7', '"enterprise" key is no longer needed as both Community and Enterprise use the same API now.')
+                        ->defaultFalse()
+                    ->end()
+                    ->arrayNode('expression_language')
+                        ->scalarPrototype()
+                    ->end()
                 ->end()
                 ->append(node: $extractor->getConfigTreeBuilder()->getRootNode())
                 ->append(node: $lookup->getConfigTreeBuilder()->getRootNode())
@@ -36,9 +40,6 @@ final class Configuration implements PluginConfigurationInterface
                 ->variableNode('logger')
                     ->setDeprecated('php-etl/akeneo-plugin', '0.1')
                 ->end()
-            ->end()
-            ->validate()
-                ->always(mutuallyExclusiveFields('extract', 'transform', 'lookup'))
             ->end()
         ;
 

@@ -9,7 +9,7 @@ use Kiboko\Plugin\Akeneo\Capacity;
 
 final class DownloadTest extends TestCase
 {
-    public function wrongConfigs(): \Generator
+    public static function wrongConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -20,7 +20,7 @@ final class DownloadTest extends TestCase
         ];
     }
 
-    /** @dataProvider wrongConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
     public function testWrongConfigs(array $config, string $expected_message): void
     {
         $this->expectException(InvalidConfigurationException::class);

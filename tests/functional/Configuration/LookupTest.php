@@ -16,7 +16,7 @@ final class LookupTest extends TestCase
         $this->processor = new Config\Definition\Processor();
     }
 
-    public function validConfigs(): iterable
+    public static function validConfigs(): iterable
     {
         yield [
             'config' => [
@@ -183,7 +183,7 @@ final class LookupTest extends TestCase
         ];
     }
 
-    public function wrongConfigs(): \Generator
+    public static function wrongConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -191,7 +191,7 @@ final class LookupTest extends TestCase
                 'method' => 'download'
             ],
             'excepted_message' => 'Invalid configuration for path "lookup": The value should be one of [listPerPage, all, get], got "download"',
-            'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
         ];
 
         yield [
@@ -201,7 +201,7 @@ final class LookupTest extends TestCase
                 'method' => 'get',
             ],
             'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile" and "assetMediaFile" endpoints.',
-            'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
         ];
 
         yield [
@@ -214,7 +214,7 @@ final class LookupTest extends TestCase
                 ],
             ],
             'excepted_message' => 'Invalid configuration for path "lookup.conditional.0": the value should be one of [listPerPage, all, get], got "wrong"',
-            'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
         ];
 
         yield [
@@ -224,7 +224,7 @@ final class LookupTest extends TestCase
                 'method' => 'get',
             ],
             'excepted_message' => 'Invalid configuration for path "lookup": The file option should only be used with the "productMediaFile',
-            'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
         ];
 
         yield [
@@ -238,11 +238,11 @@ final class LookupTest extends TestCase
                 ],
             ],
             'excepted_message' => 'Invalid configuration for path "lookup.conditional.0": The identifier option should only be used with the "get" method.',
-            'excepted_class' => 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException',
+            'excepted_class' => \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class,
         ];
     }
 
-    /** @dataProvider validConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validConfigs')]
     public function testValidConfigs(array $config, array $expected)
     {
         $client = new Configuration\Lookup();
@@ -250,17 +250,17 @@ final class LookupTest extends TestCase
         $this->assertEquals($expected, $this->processor->processConfiguration($client, [$config]));
     }
 
-    /** @dataProvider wrongConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
     public function testWrongConfigs(array $config, string $expectedMessage, string $exceptedClass)
     {
         $client = new Configuration\Lookup();
 
-        $this->expectException(
-            $exceptedClass
-        );
-
         $this->expectExceptionMessage(
             $expectedMessage
+        );
+
+        $this->expectException(
+            $exceptedClass
         );
 
         $this->processor->processConfiguration($client, [

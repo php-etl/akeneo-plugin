@@ -9,13 +9,11 @@ use PhpParser\Node;
 
 final class Lookup implements StepBuilderInterface
 {
-    private ?Node\Expr $logger;
-    private ?Node\Expr $client;
+    private ?Node\Expr $logger = null;
+    private ?Node\Expr $client = null;
 
-    public function __construct(private AlternativeLookup $alternative)
+    public function __construct(private readonly AlternativeLookup $alternative)
     {
-        $this->logger = null;
-        $this->client = null;
     }
 
     public function withClient(Node\Expr $client): self

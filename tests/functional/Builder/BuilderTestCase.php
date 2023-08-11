@@ -6,6 +6,8 @@ use functional\Kiboko\Plugin\Akeneo\PipelineRunner;
 use Kiboko\Contract\Pipeline\PipelineRunnerInterface;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\vfsStreamWrapper;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter;
 use PhpParser\Builder as DefaultBuilder;
@@ -17,7 +19,7 @@ abstract class BuilderTestCase extends TestCase
 
     protected function setUp(): void
     {
-        $this->fs = vfsStream::setup();
+        $this->fs = vfsStream::setup('root');
     }
 
     protected function tearDown(): void
@@ -41,11 +43,13 @@ abstract class BuilderTestCase extends TestCase
 
         try {
             $filename = sha1(random_bytes(128)) .'.php';
-            file_put_contents($this->fs->url() . '/' . $filename, $printer->prettyPrintFile([
+            $file = new vfsStreamFile($filename);
+            $file->setContent($printer->prettyPrintFile([
                 new Node\Stmt\Return_($builder->getNode()),
             ]));
+            $this->fs->addChild($file);
 
-            $actual = include $this->fs->url().'/'.$filename;
+            $actual = include vfsStream::url('root/'.$filename);
         } catch (\ParseError $exception) {
             echo $printer->prettyPrintFile([$builder->getNode()]);
             $this->fail($exception->getMessage());
@@ -60,11 +64,13 @@ abstract class BuilderTestCase extends TestCase
 
         try {
             $filename = sha1(random_bytes(128)) .'.php';
-            file_put_contents($this->fs->url() . '/' . $filename, $printer->prettyPrintFile([
+            $file = new vfsStreamFile($filename);
+            $file->setContent($printer->prettyPrintFile([
                 new Node\Stmt\Return_($builder->getNode()),
             ]));
+            $this->fs->addChild($file);
 
-            $actual = include $this->fs->url().'/'.$filename;
+            $actual = include vfsStream::url('root/'.$filename);
         } catch (\ParseError $exception) {
             echo $printer->prettyPrintFile([$builder->getNode()]);
             $this->fail($exception->getMessage());

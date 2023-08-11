@@ -9,7 +9,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 final class ServiceTest extends TestCase
 {
-    public function validConfigs(): \Generator
+    public static function validConfigs(): \Generator
     {
         /** Get */
         yield [
@@ -27,9 +27,10 @@ final class ServiceTest extends TestCase
                     'secret' => '1234',
                     'username' => '1234',
                     'password' => '1234'
-                ]
+                ],
+                'enterprise' => false,
             ],
-            'expected_class' => 'Kiboko\\Plugin\\Akeneo\\Factory\\Repository\\Extractor',
+            'expected_class' => \Kiboko\Plugin\Akeneo\Factory\Repository\Extractor::class,
             'actual' => [
                 [
                     'extractor' => [
@@ -63,9 +64,10 @@ final class ServiceTest extends TestCase
                     'secret' => '1234',
                     'username' => '1234',
                     'password' => '1234'
-                ]
+                ],
+                'enterprise' => false,
             ],
-            'expected_class' => 'Kiboko\\Plugin\\Akeneo\\Factory\\Repository\\Loader',
+            'expected_class' => \Kiboko\Plugin\Akeneo\Factory\Repository\Loader::class,
             'actual' => [
                 [
                     'expression_language' => [],
@@ -132,7 +134,7 @@ final class ServiceTest extends TestCase
         ]);
     }
 
-    /** @dataProvider validConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validConfigs')]
     public function testWithConfigurationAndProcessor(array $expected, string $expectedClass, array $actual): void
     {
         $service = new Akeneo\Service(new ExpressionLanguage());

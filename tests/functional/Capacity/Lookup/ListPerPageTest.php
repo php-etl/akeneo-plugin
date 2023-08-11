@@ -9,7 +9,7 @@ use Kiboko\Plugin\Akeneo\Capacity;
 
 final class ListPerPageTest extends TestCase
 {
-    public function wrongConfigs(): \Generator
+    public static function wrongConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -38,7 +38,7 @@ final class ListPerPageTest extends TestCase
         ];
     }
 
-    public function validConfigs(): \Generator
+    public static function validConfigs(): \Generator
     {
         yield [
             'config' => [
@@ -53,7 +53,7 @@ final class ListPerPageTest extends TestCase
         ];
     }
 
-    /** @dataProvider wrongConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongConfigs')]
     public function testWrongConfigs(array $config, string $expected_message): void
     {
         $this->expectException(InvalidConfigurationException::class);
@@ -62,11 +62,11 @@ final class ListPerPageTest extends TestCase
         (new Capacity\Lookup\ListPerPage(new ExpressionLanguage()))->getBuilder($config);
     }
 
-    /** @dataProvider validConfigs */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validConfigs')]
     public function testValidConfigs(array $config): void
     {
         $this->assertInstanceOf(
-            'PhpParser\Builder',
+            \PhpParser\Builder::class,
             (new Capacity\Lookup\ListPerPage(new ExpressionLanguage()))->getBuilder($config)
         );
     }

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Kiboko\Plugin\Akeneo\Configuration;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
-use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 use Kiboko\Contract\Configurator\PluginConfigurationInterface;
 use Symfony\Component\Config;
+
+use function Kiboko\Component\SatelliteToolbox\Configuration\asExpression;
+use function Kiboko\Component\SatelliteToolbox\Configuration\isExpression;
 
 final class Loader implements PluginConfigurationInterface
 {
@@ -174,7 +175,7 @@ final class Loader implements PluginConfigurationInterface
         ],
     ];
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): \Symfony\Component\Config\Definition\Builder\TreeBuilder
     {
         $builder = new Config\Definition\Builder\TreeBuilder('loader');
 
@@ -184,7 +185,7 @@ final class Loader implements PluginConfigurationInterface
                 ->ifArray()
                 ->then(function (array $item) {
                     if (!\in_array($item['method'], self::$endpoints[$item['type']])) {
-                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'])));
+                        throw new \InvalidArgumentException(sprintf('the value should be one of [%s], got %s', implode(', ', self::$endpoints[$item['type']]), json_encode($item['method'], \JSON_THROW_ON_ERROR)));
                     }
 
                     return $item;
@@ -199,18 +200,66 @@ final class Loader implements PluginConfigurationInterface
                     return $item;
                 })
             ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => \array_key_exists('reference_entity', $data)
+                    && \array_key_exists('type', $data)
+                    && !\in_array($data['type'], ['referenceEntityRecord', 'referenceEntityAttributeOption'], true))
+                ->thenInvalid('The reference_entity option should only be used with the "referenceEntityRecord" and "referenceEntityAttributeOption" endpoints.')
+            ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => !\array_key_exists('reference_entity', $data)
+                    && \array_key_exists('type', $data)
+                    && \in_array($data['type'], ['referenceEntityRecord', 'referenceEntityAttributeOption'], true))
+                ->thenInvalid('The reference_entity option should be used with the "referenceEntityRecord" and "referenceEntityAttributeOption" endpoints.')
+            ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => \array_key_exists('attribute_code', $data)
+                    && \array_key_exists('type', $data)
+                    && !\in_array($data['type'], ['attributeOption'], true))
+                ->thenInvalid('The attribute_code option should only be used with the "attributeOption" endpoint.')
+            ->end()
+            ->validate()
+                ->ifTrue(fn ($data) => !\array_key_exists('attribute_code', $data)
+                    && \array_key_exists('type', $data)
+                    && \in_array($data['type'], ['attributeOption'], true))
+                ->thenInvalid('The attribute_code option should be used with the "attributeOption" endpoint.')
+            ->end()
             ->children()
-                ->scalarNode('type')
-                    ->isRequired()
-                    ->validate()
-                        ->ifNotInArray(array_keys(self::$endpoints))
-                        ->thenInvalid(
+            ->scalarNode('type')
+            ->isRequired()
+            ->validate()
+            ->ifNotInArray(array_keys(self::$endpoints))
+            ->thenInvalid(
                             sprintf('the value should be one of [%s]', implode(', ', array_keys(self::$endpoints)))
                         )
                     ->end()
                 ->end()
                 ->scalarNode('method')->end()
                 ->scalarNode('code')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->scalarNode('reference_entity')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->scalarNode('reference_entity_attribute')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->scalarNode('reference_entity_attribute_option')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
+                ->scalarNode('attribute_code')
                     ->validate()
                         ->ifTrue(isExpression())
                         ->then(asExpression())

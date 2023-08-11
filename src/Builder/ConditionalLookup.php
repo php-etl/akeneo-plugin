@@ -9,16 +9,13 @@ use PhpParser\Node;
 
 final class ConditionalLookup implements StepBuilderInterface
 {
-    private ?Node\Expr $logger;
+    private ?Node\Expr $logger = null;
     /** @var iterable<array{0: Node\Expr, 1: AlternativeLookup}> */
-    private iterable $alternatives;
-    private ?Node\Expr $client;
+    private iterable $alternatives = [];
+    private ?Node\Expr $client = null;
 
     public function __construct()
     {
-        $this->logger = null;
-        $this->alternatives = [];
-        $this->client = null;
     }
 
     public function withClient(Node\Expr $client): self
@@ -95,16 +92,16 @@ final class ConditionalLookup implements StepBuilderInterface
                         ],
                         'elseifs' => array_map(
                             fn (Node\Expr $condition, AlternativeLookup $lookup) => new Node\Stmt\ElseIf_(
-                                    cond: $condition,
-                                    stmts: $this->compileAlternative($lookup)
-                                ),
+                                cond: $condition,
+                                stmts: $this->compileAlternative($lookup)
+                            ),
                             array_column($alternatives, 0),
                             array_column($alternatives, 1)
                         ),
                         'else' => new Node\Stmt\Else_(
                             stmts: [
                                 new Node\Stmt\Expression(
-                        expr: new Node\Expr\MethodCall(
+                                    expr: new Node\Expr\MethodCall(
                                         var: new Node\Expr\Variable('bucket'),
                                         name: new Node\Name('accept'),
                                         args: [
