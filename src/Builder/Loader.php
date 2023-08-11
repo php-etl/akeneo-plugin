@@ -49,7 +49,7 @@ final class Loader implements StepBuilderInterface
                 name: null,
                 subNodes: [
                     'implements' => [
-                        new Node\Name\FullyQualified(name: 'Kiboko\\Contract\\Pipeline\\LoaderInterface'),
+                        new Node\Name\FullyQualified(name: \Kiboko\Contract\Pipeline\LoaderInterface::class),
                     ],
                     'stmts' => [
                         new Node\Stmt\ClassMethod(
@@ -59,12 +59,12 @@ final class Loader implements StepBuilderInterface
                                 'params' => [
                                     new Node\Param(
                                         var: new Node\Expr\Variable('client'),
-                                        type: new Node\Name\FullyQualified(name: 'Akeneo\\Pim\\ApiClient\\AkeneoPimClientInterface'),
+                                        type: new Node\Name\FullyQualified(name: \Akeneo\Pim\ApiClient\AkeneoPimClientInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                     new Node\Param(
                                         var: new Node\Expr\Variable('logger'),
-                                        type: new Node\Name\FullyQualified(name: 'Psr\\Log\\LoggerInterface'),
+                                        type: new Node\Name\FullyQualified(name: \Psr\Log\LoggerInterface::class),
                                         flags: Node\Stmt\Class_::MODIFIER_PUBLIC,
                                     ),
                                 ],
@@ -136,7 +136,7 @@ final class Loader implements StepBuilderInterface
             ),
             args: [
                 new Node\Arg(value: $this->client),
-                new Node\Arg(value: $this->logger ?? new Node\Expr\New_(new Node\Name\FullyQualified('Psr\\Log\\NullLogger'))),
+                new Node\Arg(value: $this->logger ?? new Node\Expr\New_(new Node\Name\FullyQualified(\Psr\Log\NullLogger::class))),
             ],
         );
     }

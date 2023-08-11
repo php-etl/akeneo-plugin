@@ -88,7 +88,7 @@ final class ListPerPage implements Builder
                         new Node\Stmt\Expression(
                             expr: new Node\Expr\Yield_(
                                 value: new Node\Expr\New_(
-                                    class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                                    class: new Node\Name\FullyQualified(name: \Kiboko\Component\Bucket\AcceptanceResultBucket::class),
                                     args: [
                                         new Node\Arg(
                                             new Node\Expr\Variable('item')
@@ -99,7 +99,7 @@ final class ListPerPage implements Builder
                         ),
                     ],
                 ],
-             );
+            );
     }
 
     private function compileSearch(): array

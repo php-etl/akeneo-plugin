@@ -230,8 +230,8 @@ final class Loader implements PluginConfigurationInterface
             ->validate()
             ->ifNotInArray(array_keys(self::$endpoints))
             ->thenInvalid(
-                            sprintf('the value should be one of [%s]', implode(', ', array_keys(self::$endpoints)))
-                        )
+                sprintf('the value should be one of [%s]', implode(', ', array_keys(self::$endpoints)))
+            )
                     ->end()
                 ->end()
                 ->scalarNode('method')->end()

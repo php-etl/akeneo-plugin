@@ -93,8 +93,8 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\All())
-            ->withType((string) $config['type'])
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withType($config['type'])
         ;
 
         if (isset($config['search']) && \is_array($config['search'])) {

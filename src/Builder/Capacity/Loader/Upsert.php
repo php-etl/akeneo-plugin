@@ -94,7 +94,7 @@ final class Upsert implements Builder
                                 var: new Node\Expr\Variable('line'),
                                 expr: new Node\Expr\Yield_(
                                     value: new Node\Expr\New_(
-                                        class: new Node\Name\FullyQualified(name: 'Kiboko\\Component\\Bucket\\AcceptanceResultBucket'),
+                                        class: new Node\Name\FullyQualified(name: \Kiboko\Component\Bucket\AcceptanceResultBucket::class),
                                         args: [
                                             new Node\Arg(
                                                 value: new Node\Expr\Variable('line'),
@@ -109,7 +109,7 @@ final class Upsert implements Builder
                         new Node\Stmt\Catch_(
                             types: [
                                 new Node\Name\FullyQualified(
-                                    name: 'Akeneo\\Pim\\ApiClient\\Exception\\HttpException',
+                                    name: \Akeneo\Pim\ApiClient\Exception\HttpException::class,
                                 ),
                             ],
                             var: new Node\Expr\Variable('exception'),

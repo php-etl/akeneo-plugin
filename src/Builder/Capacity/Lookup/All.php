@@ -57,17 +57,15 @@ final class All implements Builder
         return (new IsolatedValueAppendingBuilder(
             new Node\Expr\Variable('input'),
             new Node\Expr\Variable('lookup'),
-            [
-                new Node\Stmt\If_(
+            array_filter([
+                $this->code ? new Node\Stmt\If_(
                     cond: new Node\Expr\FuncCall(
                         name: new Node\Name('is_null'),
-                        args: array_filter(
-                            [
-                                null !== $this->code ? new Node\Arg(
-                                    value: $this->code,
-                                ) : null,
-                            ],
-                        ),
+                        args: [
+                            new Node\Arg(
+                                value: $this->code,
+                            ),
+                        ],
                     ),
                     subNodes: [
                         'stmts' => [
@@ -78,7 +76,7 @@ final class All implements Builder
                             ),
                         ],
                     ],
-                ),
+                ) : null,
                 new Node\Stmt\TryCatch(
                     stmts: [
                         new Node\Stmt\Expression(
@@ -117,7 +115,7 @@ final class All implements Builder
                     catches: [
                         new Node\Stmt\Catch_(
                             types: [
-                                new Node\Name\FullyQualified('Akeneo\Pim\ApiClient\Exception\HttpException'),
+                                new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\Exception\HttpException::class),
                             ],
                             var: new Node\Expr\Variable('exception'),
                             stmts: [
@@ -169,7 +167,7 @@ final class All implements Builder
                 new Node\Stmt\Return_(
                     expr: new Node\Expr\Variable('items'),
                 ),
-            ],
+            ]),
             new Node\Expr\Variable('bucket')
         ))->getNode();
     }

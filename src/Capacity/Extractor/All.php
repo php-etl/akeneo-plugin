@@ -10,7 +10,6 @@ use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-use function Kiboko\Component\SatelliteToolbox\Configuration\compileValue;
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class All implements Akeneo\Capacity\CapacityInterface

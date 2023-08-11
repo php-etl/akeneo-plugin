@@ -70,7 +70,7 @@ final class Client implements Builder
     public function getNode(): Node\Expr\MethodCall
     {
         $instance = new Node\Expr\New_(
-            new Node\Name\FullyQualified('Akeneo\\Pim\\ApiClient\\AkeneoPimClientBuilder'),
+            new Node\Name\FullyQualified(\Akeneo\Pim\ApiClient\AkeneoPimClientBuilder::class),
             [
                 new Node\Arg($this->baseUrl),
             ],
