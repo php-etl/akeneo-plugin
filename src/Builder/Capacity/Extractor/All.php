@@ -13,11 +13,8 @@ final class All implements Builder
     private null|Node\Expr|Node\Identifier $endpoint = null;
     private null|Node\Expr $search = null;
     private null|Node\Expr $code = null;
-    private null|string $type = null;
-
-    public function __construct()
-    {
-    }
+    private null|Node\Expr $referenceEntity = null;
+    private null|Node\Expr $referenceEntityAttributeCode = null;
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
@@ -40,9 +37,16 @@ final class All implements Builder
         return $this;
     }
 
-    public function withType(string $type): self
+    public function withReferenceEntityCode(?Node\Expr $referenceEntity): self
     {
-        $this->type = $type;
+        $this->referenceEntity = $referenceEntity;
+
+        return $this;
+    }
+
+    public function withReferenceEntityAttributeOption(?Node\Expr $referenceEntityAttrbuteCode): self
+    {
+        $this->referenceEntityAttributeCode = $referenceEntityAttrbuteCode;
 
         return $this;
     }
@@ -64,23 +68,7 @@ final class All implements Builder
                          name: $this->endpoint
                      ),
                      name: new Node\Identifier('all'),
-                     args: array_filter(
-                         [
-                             new Node\Arg(
-                                 value: new Node\Expr\Array_(
-                                     items: $this->compileSearch(),
-                                     attributes: [
-                                         'kind' => Node\Expr\Array_::KIND_SHORT,
-                                     ]
-                                 ),
-                                 name: new Node\Identifier('queryParameters'),
-                             ),
-                             null !== $this->code ? new Node\Arg(
-                                 value: $this->code,
-                                 name: $this->compileCodeNamedArgument($this->type),
-                             ) : null,
-                         ],
-                     ),
+                     args: $this->compileArguments(),
                  ),
                  valueVar: new Node\Expr\Variable('item'),
                  subNodes: [
@@ -116,12 +104,43 @@ final class All implements Builder
         ];
     }
 
-    private function compileCodeNamedArgument(string $type): Node\Identifier
+    private function compileArguments(): array
     {
-        return match ($type) {
-            'assetManager' => new Node\Identifier('assetFamilyCode'),
-            'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
-            default => new Node\Identifier('attributeCode')
-        };
+        $args = [];
+
+        if (null !== $this->search) {
+            $args[] = new Node\Arg(
+                value: new Node\Expr\Array_(
+                    items: $this->compileSearch(),
+                    attributes: [
+                        'kind' => Node\Expr\Array_::KIND_SHORT,
+                    ]
+                ),
+                name: new Node\Identifier('queryParameters'),
+            );
+        }
+
+        if (null !== $this->code) {
+            $args[] = new Node\Arg(
+                value: $this->code,
+                name: new Node\Identifier('attributeCode'),
+            );
+        }
+
+        if (null !== $this->referenceEntity) {
+            $args[] = new Node\Arg(
+                value: $this->referenceEntity,
+                name: new Node\Identifier('referenceEntityCode'),
+            );
+        }
+
+        if (null !== $this->referenceEntity) {
+            $args[] = new Node\Arg(
+                value: $this->referenceEntityAttributeCode,
+                name: new Node\Identifier('attributeCode'),
+            );
+        }
+
+        return $args;
     }
 }
