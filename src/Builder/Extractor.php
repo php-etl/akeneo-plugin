@@ -15,8 +15,7 @@ final class Extractor implements StepBuilderInterface
 
     public function __construct(
         private readonly Builder $capacity,
-    ) {
-    }
+    ) {}
 
     public function withClient(Node\Expr $client): self
     {

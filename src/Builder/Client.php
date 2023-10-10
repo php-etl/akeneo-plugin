@@ -19,9 +19,7 @@ final class Client implements Builder
     private ?Node\Expr $httpStreamFactory = null;
     private ?Node\Expr $fileSystem = null;
 
-    public function __construct(private readonly Node\Expr $baseUrl, private readonly Node\Expr $clientId, private readonly Node\Expr $secret)
-    {
-    }
+    public function __construct(private readonly Node\Expr $baseUrl, private readonly Node\Expr $clientId, private readonly Node\Expr $secret) {}
 
     public function withToken(Node\Expr $token, Node\Expr $refreshToken): self
     {

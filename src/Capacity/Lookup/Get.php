@@ -43,9 +43,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
         'assetManager',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter)
-    {
-    }
+    public function __construct(private readonly ExpressionLanguage $interpreter) {}
 
     public function applies(array $config): bool
     {
