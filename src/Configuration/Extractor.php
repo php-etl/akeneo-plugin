@@ -176,7 +176,7 @@ final class Extractor implements PluginConfigurationInterface
             ->validate()
                 ->ifTrue(fn ($data) => \array_key_exists('reference_entity', $data)
                     && \array_key_exists('type', $data)
-                    && !\in_array($data['type'], ['referenceEntity', 'referenceEntityAttributeOption'], true))
+                    && !\in_array($data['type'], ['referenceEntityRecord', 'referenceEntityAttributeOption'], true))
                 ->thenInvalid('The reference_entity option should only be used with the "referenceEntity" and "referenceEntityAttributeOption" endpoints.')
             ->end()
             ->validate()
