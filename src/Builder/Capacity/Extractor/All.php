@@ -134,7 +134,7 @@ final class All implements Builder
             );
         }
 
-        if (null !== $this->referenceEntity) {
+        if (null !== $this->referenceEntityAttributeCode) {
             $args[] = new Node\Arg(
                 value: $this->referenceEntityAttributeCode,
                 name: new Node\Identifier('attributeCode'),
