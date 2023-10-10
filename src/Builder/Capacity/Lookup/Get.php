@@ -15,9 +15,7 @@ final class Get implements Builder
     private null|Node\Expr $code = null;
     private null|string $type = '';
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {

@@ -45,9 +45,7 @@ final class Upsert implements Akeneo\Capacity\CapacityInterface
         'referenceEntity',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter)
-    {
-    }
+    public function __construct(private readonly ExpressionLanguage $interpreter) {}
 
     public function applies(array $config): bool
     {

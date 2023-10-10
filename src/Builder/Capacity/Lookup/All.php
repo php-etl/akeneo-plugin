@@ -15,9 +15,7 @@ final class All implements Builder
     private null|Node\Expr $code = null;
     private string $type = '';
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {

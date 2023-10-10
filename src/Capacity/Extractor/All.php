@@ -55,9 +55,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'UNCLASSIFIED',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter)
-    {
-    }
+    public function __construct(private readonly ExpressionLanguage $interpreter) {}
 
     public function applies(array $config): bool
     {
@@ -96,7 +94,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
             ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
         ;
 
-        if (isset($config['search']) && \is_array($config['search']) && count($config['search']) > 0) {
+        if (isset($config['search']) && \is_array($config['search']) && \count($config['search']) > 0) {
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
@@ -104,11 +102,11 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
 
-        if ($config['type'] == 'referenceEntityRecord') {
+        if ('referenceEntityRecord' == $config['type']) {
             $builder->withReferenceEntityCode(compileValueWhenExpression($this->interpreter, $config['reference_entity']));
         }
 
-        if ($config['type'] == 'referenceEntityAttributeOption') {
+        if ('referenceEntityAttributeOption' == $config['type']) {
             $builder->withReferenceEntityCode(compileValueWhenExpression($this->interpreter, $config['reference_entity']));
             $builder->withReferenceEntityAttributeOption(compileValueWhenExpression($this->interpreter, $config['reference_entity_option']));
         }

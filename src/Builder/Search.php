@@ -11,8 +11,7 @@ final class Search implements Builder
 {
     public function __construct(
         private array $filters = []
-    ) {
-    }
+    ) {}
 
     public function addFilter(
         Node\Expr $field,

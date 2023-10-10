@@ -54,9 +54,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'UNCLASSIFIED',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter)
-    {
-    }
+    public function __construct(private readonly ExpressionLanguage $interpreter) {}
 
     public function applies(array $config): bool
     {
