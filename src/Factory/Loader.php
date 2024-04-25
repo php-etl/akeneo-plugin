@@ -25,6 +25,7 @@ final readonly class Loader implements Configurator\FactoryInterface
         $this->configuration = new Akeneo\Configuration\Loader();
         $this->capacities = [
             new Akeneo\Capacity\Loader\Upsert($this->interpreter),
+            new Akeneo\Capacity\Loader\Create($this->interpreter),
             new Akeneo\Capacity\Loader\UpsertList(),
         ];
     }
