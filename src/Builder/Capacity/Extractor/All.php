@@ -125,7 +125,7 @@ final class All implements Builder
                         new Node\Expr\ArrayItem(
                             $this->withEnrichedAttributes,
                             new Node\Scalar\String_('with_enriched_attributes'),
-                        )
+                        ),
                     ]
                 );
             }
@@ -165,7 +165,7 @@ final class All implements Builder
             $args[] = new Node\Arg(
                 value: new Node\Expr\Array_(
                     items: [
-                            new Node\Expr\ArrayItem(
+                        new Node\Expr\ArrayItem(
                             $this->withEnrichedAttributes,
                             new Node\Scalar\String_('with_enriched_attributes'),
                         ),
