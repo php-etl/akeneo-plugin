@@ -55,7 +55,9 @@ final class All implements Akeneo\Capacity\CapacityInterface
         'UNCLASSIFIED',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter) {}
+    public function __construct(private readonly ExpressionLanguage $interpreter)
+    {
+    }
 
     public function applies(array $config): bool
     {
@@ -98,7 +100,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
-        if (isset($config['with_enriched_attributes']) && $config['type'] === 'category') {
+        if (isset($config['with_enriched_attributes']) && 'category' === $config['type']) {
             $builder->withEnrichedAttributes(compileValueWhenExpression($this->interpreter, $config['with_enriched_attributes']));
         }
 

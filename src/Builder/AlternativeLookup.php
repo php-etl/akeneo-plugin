@@ -14,7 +14,8 @@ final class AlternativeLookup implements Builder
 
     public function __construct(
         private readonly Builder $capacity,
-    ) {}
+    ) {
+    }
 
     public function withMerge(Builder $merge): self
     {

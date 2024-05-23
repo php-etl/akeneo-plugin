@@ -175,7 +175,7 @@ final class Loader implements PluginConfigurationInterface
         ],
     ];
 
-    public function getConfigTreeBuilder(): \Symfony\Component\Config\Definition\Builder\TreeBuilder
+    public function getConfigTreeBuilder(): Config\Definition\Builder\TreeBuilder
     {
         $builder = new Config\Definition\Builder\TreeBuilder('loader');
 

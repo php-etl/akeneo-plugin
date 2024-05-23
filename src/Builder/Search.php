@@ -11,14 +11,15 @@ final class Search implements Builder
 {
     public function __construct(
         private array $filters = []
-    ) {}
+    ) {
+    }
 
     public function addFilter(
         Node\Expr $field,
         Node\Expr $operator,
-        Node\Expr $value = null,
-        Node\Expr $scope = null,
-        Node\Expr $locale = null
+        ?Node\Expr $value = null,
+        ?Node\Expr $scope = null,
+        ?Node\Expr $locale = null
     ): self {
         $arguments = [
             new Node\Arg(

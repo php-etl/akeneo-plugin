@@ -14,7 +14,9 @@ final class ConditionalLookup implements StepBuilderInterface
     private iterable $alternatives = [];
     private ?Node\Expr $client = null;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function withClient(Node\Expr $client): self
     {
