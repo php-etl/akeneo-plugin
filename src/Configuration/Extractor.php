@@ -238,6 +238,12 @@ final class Extractor implements PluginConfigurationInterface
                         ->then(asExpression())
                     ->end()
                 ->end()
+                ->scalarNode('with_enriched_attributes')
+                    ->validate()
+                        ->ifTrue(isExpression())
+                        ->then(asExpression())
+                    ->end()
+                ->end()
                 ->append((new Search())->getConfigTreeBuilder()->getRootNode())
             ->end()
         ;

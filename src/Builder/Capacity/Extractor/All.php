@@ -15,6 +15,7 @@ final class All implements Builder
     private null|Node\Expr $code = null;
     private null|Node\Expr $referenceEntity = null;
     private null|Node\Expr $referenceEntityAttributeCode = null;
+    private null|Node\Expr $withEnrichedAttributes = null;
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
@@ -47,6 +48,13 @@ final class All implements Builder
     public function withReferenceEntityAttributeOption(?Node\Expr $referenceEntityAttrbuteCode): self
     {
         $this->referenceEntityAttributeCode = $referenceEntityAttrbuteCode;
+
+        return $this;
+    }
+
+    public function withEnrichedAttributes(?Node\Expr $withEnrichedAttributes): self
+    {
+        $this->withEnrichedAttributes = $withEnrichedAttributes;
 
         return $this;
     }
@@ -138,6 +146,13 @@ final class All implements Builder
             $args[] = new Node\Arg(
                 value: $this->referenceEntityAttributeCode,
                 name: new Node\Identifier('attributeCode'),
+            );
+        }
+
+        if (null !== $this->withEnrichedAttributes) {
+            $args[] = new Node\Arg(
+                value: $this->withEnrichedAttributes,
+                name: new Node\Identifier('withEnrichedAttributes'),
             );
         }
 
