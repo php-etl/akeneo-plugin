@@ -14,10 +14,6 @@ final class ListPerPage implements Builder
     private ?Node\Expr $search = null;
     private ?Node\Expr $code = null;
 
-    public function __construct()
-    {
-    }
-
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
