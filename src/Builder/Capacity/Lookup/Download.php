@@ -14,10 +14,6 @@ final class Download implements Builder
     private Node\Expr|Node\Identifier|null $endpoint = null;
     private ?Node\Expr $file = null;
 
-    public function __construct()
-    {
-    }
-
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
