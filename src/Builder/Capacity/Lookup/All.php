@@ -15,10 +15,6 @@ final class All implements Builder
     private ?Node\Expr $code = null;
     private string $type = '';
 
-    public function __construct()
-    {
-    }
-
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
         $this->endpoint = $endpoint;
