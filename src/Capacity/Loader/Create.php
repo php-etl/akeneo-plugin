@@ -8,6 +8,7 @@ use Kiboko\Plugin\Akeneo;
 use PhpParser\Builder;
 use PhpParser\Node;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+
 use function Kiboko\Component\SatelliteToolbox\Configuration\compileValueWhenExpression;
 
 final class Create implements Akeneo\Capacity\CapacityInterface
@@ -16,7 +17,9 @@ final class Create implements Akeneo\Capacity\CapacityInterface
         'productMediaFile',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter) {}
+    public function __construct(private readonly ExpressionLanguage $interpreter)
+    {
+    }
 
     public function applies(array $config): bool
     {
@@ -28,11 +31,10 @@ final class Create implements Akeneo\Capacity\CapacityInterface
 
     public function getBuilder(array $config): Builder
     {
-        $builder = (new Akeneo\Builder\Capacity\Loader\Create())
+        return (new Akeneo\Builder\Capacity\Loader\Create())
             ->withEndpoint(endpoint: new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
             ->withCode(code: compileValueWhenExpression($this->interpreter, $config['code'], 'line'))
             ->withData(line: new Node\Expr\Variable('line["product"]'))
         ;
-        return $builder;
     }
 }

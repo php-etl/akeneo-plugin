@@ -50,7 +50,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
         try {
             return $this->processor->processConfiguration($this->configuration, $config);
         } catch (Symfony\InvalidTypeException|Symfony\InvalidConfigurationException $exception) {
-            throw new COnfigurator\InvalidConfigurationException($exception->getMessage(), 0, $exception);
+            throw new Configurator\InvalidConfigurationException($exception->getMessage(), 0, $exception);
         }
     }
 

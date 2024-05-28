@@ -11,10 +11,10 @@ use PhpParser\Node;
 
 final class UpsertList implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint = null;
-    private null|Node\Expr $data = null;
-    private null|Node\Expr $referenceEntity = null;
-    private null|Node\Expr $attributeCode = null;
+    private Node\Expr|Node\Identifier|null $endpoint = null;
+    private ?Node\Expr $data = null;
+    private ?Node\Expr $referenceEntity = null;
+    private ?Node\Expr $attributeCode = null;
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {

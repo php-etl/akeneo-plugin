@@ -11,11 +11,11 @@ use PhpParser\Node;
 
 final class Create implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint = null;
-    private null|Node\Expr $code = null;
-    private null|Node\Expr $data = null;
-    private null|Node\Expr $referenceEntity = null;
-    private null|Node\Expr $referenceEntityAttribute = null;
+    private Node\Expr|Node\Identifier|null $endpoint = null;
+    private ?Node\Expr $code = null;
+    private ?Node\Expr $data = null;
+    private ?Node\Expr $referenceEntity = null;
+    private ?Node\Expr $referenceEntityAttribute = null;
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
