@@ -82,6 +82,20 @@ final class ExtractorTest extends TestCase
                 'search' => [],
             ],
         ];
+        yield [
+            'config' => [
+                'method' => 'all',
+                'type' => 'category',
+                'search' => [],
+                'with_enriched_attributes' => true,
+            ],
+            'expected' => [
+                'method' => 'all',
+                'type' => 'category',
+                'search' => [],
+                'with_enriched_attributes' => true,
+            ],
+        ];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('validDataProvider')]

@@ -15,6 +15,7 @@ final class All implements Builder
     private ?Node\Expr $code = null;
     private ?Node\Expr $referenceEntity = null;
     private ?Node\Expr $referenceEntityAttributeCode = null;
+    private ?Node\Expr $withEnrichedAttributes = null;
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
@@ -47,6 +48,13 @@ final class All implements Builder
     public function withReferenceEntityAttributeOption(?Node\Expr $referenceEntityAttrbuteCode): self
     {
         $this->referenceEntityAttributeCode = $referenceEntityAttrbuteCode;
+
+        return $this;
+    }
+
+    public function withEnrichedAttributes(?Node\Expr $withEnrichedAttributes): self
+    {
+        $this->withEnrichedAttributes = $withEnrichedAttributes;
 
         return $this;
     }
@@ -109,9 +117,21 @@ final class All implements Builder
         $args = [];
 
         if (null !== $this->search) {
+            $items = $this->compileSearch();
+            if (null !== $this->withEnrichedAttributes) {
+                $items = array_merge(
+                    $this->compileSearch(),
+                    [
+                        new Node\Expr\ArrayItem(
+                            $this->withEnrichedAttributes,
+                            new Node\Scalar\String_('with_enriched_attributes'),
+                        ),
+                    ]
+                );
+            }
             $args[] = new Node\Arg(
                 value: new Node\Expr\Array_(
-                    items: $this->compileSearch(),
+                    items: $items,
                     attributes: [
                         'kind' => Node\Expr\Array_::KIND_SHORT,
                     ]
@@ -138,6 +158,23 @@ final class All implements Builder
             $args[] = new Node\Arg(
                 value: $this->referenceEntityAttributeCode,
                 name: new Node\Identifier('attributeCode'),
+            );
+        }
+
+        if (null !== $this->withEnrichedAttributes && null === $this->search) {
+            $args[] = new Node\Arg(
+                value: new Node\Expr\Array_(
+                    items: [
+                        new Node\Expr\ArrayItem(
+                            $this->withEnrichedAttributes,
+                            new Node\Scalar\String_('with_enriched_attributes'),
+                        ),
+                    ],
+                    attributes: [
+                        'kind' => Node\Expr\Array_::KIND_SHORT,
+                    ]
+                ),
+                name: new Node\Identifier('queryParameters'),
             );
         }
 

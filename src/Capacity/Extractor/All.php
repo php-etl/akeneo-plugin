@@ -100,6 +100,10 @@ final class All implements Akeneo\Capacity\CapacityInterface
             $builder->withSearch($this->compileFilters(...$config['search']));
         }
 
+        if (isset($config['with_enriched_attributes']) && 'category' === $config['type']) {
+            $builder->withEnrichedAttributes(compileValueWhenExpression($this->interpreter, $config['with_enriched_attributes']));
+        }
+
         if (\in_array($config['type'], ['attributeOption', 'assetManager']) && \array_key_exists('code', $config)) {
             $builder->withCode(compileValueWhenExpression($this->interpreter, $config['code']));
         }
