@@ -22,7 +22,9 @@ final class Download implements Akeneo\Capacity\CapacityInterface
         'assetMediaFile',
     ];
 
-    public function __construct(private readonly ExpressionLanguage $interpreter) {}
+    public function __construct(private readonly ExpressionLanguage $interpreter)
+    {
+    }
 
     public function applies(array $config): bool
     {

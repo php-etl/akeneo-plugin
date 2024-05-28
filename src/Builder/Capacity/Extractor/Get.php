@@ -10,10 +10,12 @@ use PhpParser\Node;
 
 final class Get implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint = null;
-    private null|Node\Expr $identifier = null;
+    private Node\Expr|Node\Identifier|null $endpoint = null;
+    private ?Node\Expr $identifier = null;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {

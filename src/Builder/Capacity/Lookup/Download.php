@@ -11,10 +11,12 @@ use PhpParser\Node;
 
 final class Download implements Builder
 {
-    private null|Node\Expr|Node\Identifier $endpoint = null;
-    private null|Node\Expr $file = null;
+    private Node\Expr|Node\Identifier|null $endpoint = null;
+    private ?Node\Expr $file = null;
 
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {

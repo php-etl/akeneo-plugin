@@ -9,7 +9,7 @@ use Kiboko\Plugin\Akeneo\MissingParameterException;
 use PhpParser\Builder;
 use PhpParser\Node;
 
-final class Upsert implements Builder
+final class Create implements Builder
 {
     private Node\Expr|Node\Identifier|null $endpoint = null;
     private ?Node\Expr $code = null;
@@ -80,7 +80,7 @@ final class Upsert implements Builder
                                     ),
                                     name: $this->endpoint,
                                 ),
-                                new Node\Identifier('upsert'),
+                                new Node\Identifier('create'),
                                 array_filter([
                                     $this->referenceEntity ? new Node\Arg(value: $this->referenceEntity) : null,
                                     $this->referenceEntityAttribute ? new Node\Arg(value: $this->referenceEntityAttribute) : null,

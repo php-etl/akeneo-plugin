@@ -12,7 +12,9 @@ final class Lookup implements StepBuilderInterface
     private ?Node\Expr $logger = null;
     private ?Node\Expr $client = null;
 
-    public function __construct(private readonly AlternativeLookup $alternative) {}
+    public function __construct(private readonly AlternativeLookup $alternative)
+    {
+    }
 
     public function withClient(Node\Expr $client): self
     {
