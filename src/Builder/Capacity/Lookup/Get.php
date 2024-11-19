@@ -13,7 +13,7 @@ final class Get implements Builder
     private Node\Expr|Node\Identifier|null $endpoint = null;
     private ?Node\Expr $identifier = null;
     private ?Node\Expr $code = null;
-    private ?string $type = '';
+    private string $type = '';
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
