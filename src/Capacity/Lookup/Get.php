@@ -55,7 +55,7 @@ final class Get implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\Get())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withEndpoint(new Node\Identifier(\sprintf('get%sApi', ucfirst((string) $config['type']))))
             ->withType($config['type'])
         ;
 

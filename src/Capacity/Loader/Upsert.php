@@ -60,7 +60,7 @@ final class Upsert implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Loader\Upsert())
-            ->withEndpoint(endpoint: new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withEndpoint(endpoint: new Node\Identifier(\sprintf('get%sApi', ucfirst((string) $config['type']))))
             ->withCode(code: compileValueWhenExpression($this->interpreter, $config['code'], 'line'))
             ->withData(line: new Node\Expr\Variable('line'))
         ;

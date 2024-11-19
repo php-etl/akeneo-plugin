@@ -145,7 +145,7 @@ final class Get implements Builder
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
             'assetManager' => new Node\Identifier('assetFamilyCode'),
-            default => new Node\Identifier('attributeCode')
+            default => new Node\Identifier('attributeCode'),
         };
     }
 
@@ -154,7 +154,7 @@ final class Get implements Builder
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('recordCode'),
             'assetManager' => new Node\Identifier('assetCode'),
-            default => new Node\Identifier('code')
+            default => new Node\Identifier('code'),
         };
     }
 }

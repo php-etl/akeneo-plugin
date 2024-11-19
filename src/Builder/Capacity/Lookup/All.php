@@ -88,7 +88,7 @@ final class All implements Builder
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
             'assetManager' => new Node\Identifier('assetFamilyCode'),
-            default => new Node\Identifier('attributeCode')
+            default => new Node\Identifier('attributeCode'),
         };
     }
 

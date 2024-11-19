@@ -72,10 +72,10 @@ final class All implements Akeneo\Capacity\CapacityInterface
         $builder = new Akeneo\Builder\Search();
         foreach ($filters as $filter) {
             if (\in_array($filter['operator'], self::$unaryOperators, true) && \array_key_exists('value', $filter)) {
-                throw new InvalidConfigurationException(sprintf('You should not provide a value for the %s operator', $filter['operator']));
+                throw new InvalidConfigurationException(\sprintf('You should not provide a value for the %s operator', $filter['operator']));
             }
             if (!\in_array($filter['operator'], self::$unaryOperators, true) && !\array_key_exists('value', $filter)) {
-                throw new InvalidConfigurationException(sprintf('You should provide a value for the %s operator', $filter['operator']));
+                throw new InvalidConfigurationException(\sprintf('You should provide a value for the %s operator', $filter['operator']));
             }
 
             $builder->addFilter(
@@ -93,7 +93,7 @@ final class All implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Extractor\All())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withEndpoint(new Node\Identifier(\sprintf('get%sApi', ucfirst((string) $config['type']))))
         ;
 
         if (isset($config['search']) && \is_array($config['search']) && \count($config['search']) > 0) {

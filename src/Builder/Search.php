@@ -10,7 +10,7 @@ use PhpParser\Node;
 final class Search implements Builder
 {
     public function __construct(
-        private array $filters = []
+        private array $filters = [],
     ) {
     }
 
@@ -19,7 +19,7 @@ final class Search implements Builder
         Node\Expr $operator,
         ?Node\Expr $value = null,
         ?Node\Expr $scope = null,
-        ?Node\Expr $locale = null
+        ?Node\Expr $locale = null,
     ): self {
         $arguments = [
             new Node\Arg(
