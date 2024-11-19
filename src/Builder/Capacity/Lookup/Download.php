@@ -97,18 +97,22 @@ final class Download implements Builder
                             ),
                         ),
                         new Node\Stmt\Expression(
+                            expr: new Node\Expr\Assign(
+                                var: new Node\Expr\Variable('imageFromAkeneo'),
+                                expr: new Node\Expr\MethodCall(
+                                    var: new Node\Expr\MethodCall(
+                                        var: new Node\Expr\Variable('data'),
+                                        name: new Node\Identifier('getBody')
+                                    ),
+                                    name: new Node\Identifier('detach')
+                                )
+                            ),
+                        ),
+                        new Node\Stmt\Expression(
                             expr: new Node\Expr\FuncCall(
                                 name: new Node\Name('stream_copy_to_stream'),
                                 args: [
-                                    new Node\Arg(
-                                        new Node\Expr\MethodCall(
-                                            var: new Node\Expr\MethodCall(
-                                                var: new Node\Expr\Variable('data'),
-                                                name: new Node\Identifier('getBody')
-                                            ),
-                                            name: new Node\Identifier('detach')
-                                        )
-                                    ),
+                                    new Node\Arg(new Node\Expr\Variable('imageFromAkeneo')),
                                     new Node\Arg(new Node\Expr\Variable('image')),
                                 ]
                             ),
@@ -162,6 +166,14 @@ final class Download implements Builder
                                     ),
                                 ],
                             ]
+                        ),
+                        new Node\Stmt\Expression(
+                            expr: new Node\Expr\FuncCall(
+                                name: new Node\Name('fclose'),
+                                args: [
+                                    new Node\Arg(new Node\Expr\Variable('imageFromAkeneo')),
+                                ]
+                            ),
                         ),
                     ],
                     catches: [
