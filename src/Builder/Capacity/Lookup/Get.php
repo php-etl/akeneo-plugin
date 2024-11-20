@@ -13,7 +13,7 @@ final class Get implements Builder
     private Node\Expr|Node\Identifier|null $endpoint = null;
     private ?Node\Expr $identifier = null;
     private ?Node\Expr $code = null;
-    private ?string $type = '';
+    private string $type = '';
 
     public function withEndpoint(Node\Expr|Node\Identifier $endpoint): self
     {
@@ -145,7 +145,7 @@ final class Get implements Builder
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('referenceEntityCode'),
             'assetManager' => new Node\Identifier('assetFamilyCode'),
-            default => new Node\Identifier('attributeCode')
+            default => new Node\Identifier('attributeCode'),
         };
     }
 
@@ -154,7 +154,7 @@ final class Get implements Builder
         return match ($type) {
             'referenceEntityRecord' => new Node\Identifier('recordCode'),
             'assetManager' => new Node\Identifier('assetCode'),
-            default => new Node\Identifier('code')
+            default => new Node\Identifier('code'),
         };
     }
 }

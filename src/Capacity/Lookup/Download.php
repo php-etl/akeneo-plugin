@@ -37,7 +37,7 @@ final class Download implements Akeneo\Capacity\CapacityInterface
     public function getBuilder(array $config): Builder
     {
         $builder = (new Akeneo\Builder\Capacity\Lookup\Download())
-            ->withEndpoint(new Node\Identifier(sprintf('get%sApi', ucfirst((string) $config['type']))))
+            ->withEndpoint(new Node\Identifier(\sprintf('get%sApi', ucfirst((string) $config['type']))))
         ;
 
         if (!\array_key_exists('file', $config)) {
