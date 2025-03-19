@@ -19,19 +19,18 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v4
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.2'
+                    coverage: none
             -   uses: actions/cache@v4
                 with:
                     path: '**/vendor'
                     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-composer-
-            -   uses: php-actions/composer@v6
-                with:
-                    args: --prefer-dist
-                    php_version: '8.2'
             -   name: PHPStan
-                uses: php-actions/phpstan@v3
-                with:
-                    path: src/
-                    level: 4
-                    php_version: '8.2'
+                run: | 
+                    wget -qO phpstan.phar https://github.com/phpstan/phpstan/releases/latest/download/phpstan.phar
+                    chmod +x phpstan.phar
+                    ./phpstan.phar analyse src --level=4
