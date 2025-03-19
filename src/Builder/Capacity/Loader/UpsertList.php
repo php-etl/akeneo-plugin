@@ -153,6 +153,15 @@ final class UpsertList implements Builder
                                                 ),
                                                 args: [
                                                     new Node\Arg(
+                                                        value: new Node\Expr\MethodCall(
+                                                            var: new Node\Expr\Variable('exception'),
+                                                            name: new Node\Identifier('getMessage'),
+                                                        ),
+                                                    ),
+                                                    new Node\Arg(
+                                                        value: new Node\Expr\Variable('exception'),
+                                                    ),
+                                                    new Node\Arg(
                                                         value: new Node\Expr\Variable('line'),
                                                     ),
                                                 ],
@@ -213,6 +222,15 @@ final class UpsertList implements Builder
                                                     name: \Kiboko\Component\Bucket\RejectionResultBucket::class
                                                 ),
                                                 args: [
+                                                    new Node\Arg(
+                                                        value: new Node\Expr\MethodCall(
+                                                            var: new Node\Expr\Variable('exception'),
+                                                            name: new Node\Identifier('getMessage'),
+                                                        ),
+                                                    ),
+                                                    new Node\Arg(
+                                                        value: new Node\Expr\Variable('exception'),
+                                                    ),
                                                     new Node\Arg(
                                                         value: new Node\Expr\Variable('line'),
                                                     ),
