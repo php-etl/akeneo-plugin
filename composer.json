@@ -33,7 +33,7 @@
         "php-http/curl-client": "^2.0",
         "phpstan/phpstan": "^2.1",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "infection/infection": "^0.26.18",
+        "infection/infection": "^0.28",
         "rector/rector": "^2.3"
     },
     "autoload": {
