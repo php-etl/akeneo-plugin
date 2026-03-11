@@ -2,7 +2,7 @@
 
 namespace functional\Kiboko\Plugin\Akeneo\Mock;
 
-use Laminas\Diactoros\Response;
+use GuzzleHttp\Psr7\Response;
 use PhpParser\Builder;
 use PhpParser\Node;
 

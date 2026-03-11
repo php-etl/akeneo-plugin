@@ -1,3 +1,3 @@
 <?php declare(strict_types=1);
 
-return new \Laminas\Diactoros\Response(body: new \Laminas\Diactoros\Stream(__DIR__.'/products.all.json'), status: 200);
+return new \GuzzleHttp\Psr7\Response(200, [], \GuzzleHttp\Psr7\Utils::streamFor(fopen(__DIR__.'/products.all.json', 'r')));
